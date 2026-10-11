@@ -1,8 +1,8 @@
 <?php
 class Database {
     private $host = "sql100.infinityfree.com";
-    private $db_name = "ifo_40658765_Sistema_de_Gestion_de_Inventario";
-    private $username = "ifo_40658765";
+    private $db_name = "if0_40658765_Sistema_de_Gestion_de_Inventario";
+    private $username = "if0_40658765";
     private $password = "gZGM9LZ9Cy9hR3K"; // ⚠️ Reemplaza con tu contraseña real
     public $conn;
 
