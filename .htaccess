@@ -1,11 +1,6 @@
 RewriteEngine On
 RewriteBase /Sistema-de-Gestion-de-Inventario/
 
-# Redirigir todo a la carpeta public
-RewriteCond %{REQUEST_URI} !^/Sistema-de-Gestion-de-Inventario/public/
-RewriteRule ^(.*)$ public/$1 [L]
-
-# Dentro de public, redirigir a index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ public/index.php?url=$1 [QSA,L]
+# Redirigir todo el tráfico a la carpeta public
+RewriteRule ^$ public/ [L]
+RewriteRule (.*) public/$1 [L]

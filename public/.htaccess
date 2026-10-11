@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /Sistema-de-Gestion-de-Inventario/public/
+
+# Si el archivo o directorio existe, no hacer nada
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirigir todo lo demás a index.php pasando la url como parámetro
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
