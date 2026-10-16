@@ -1,5 +1,6 @@
 <?php
 require_once '../models/Producto.php';
+require_once '../models/Categoria.php';
 
 class ProductoController {
     
@@ -29,7 +30,7 @@ class ProductoController {
                 ':stock' => $_POST['stock'],
                 ':stock_min' => $_POST['stock_minimo'],
                 ':fecha_venc' => $_POST['fecha_vencimiento'] ?: null,
-                ':categoria' => $_POST['categoria_id']
+                ':categoria' => (($_POST['categoria_id'] ?? '') !== '' ? (int)$_POST['categoria_id'] : null)
             ];
             $model = new Producto();
             if ($model->crear($data)) {
@@ -37,6 +38,7 @@ class ProductoController {
                 exit;
             }
         }
+        $categorias = (new Categoria())->getAll();
         require_once '../views/productos/crear.php';
     }
 
@@ -55,7 +57,7 @@ class ProductoController {
                 ':stock' => $_POST['stock'],
                 ':stock_min' => $_POST['stock_minimo'],
                 ':fecha_venc' => $_POST['fecha_vencimiento'] ?: null,
-                ':categoria' => $_POST['categoria_id'],
+                ':categoria' => (($_POST['categoria_id'] ?? '') !== '' ? (int)$_POST['categoria_id'] : null),
                 ':id' => $id
             ];
             $model->actualizar($data);
@@ -64,6 +66,8 @@ class ProductoController {
         }
 
         $producto = $model->getById($id);
+        if (!$producto) { http_response_code(404); exit('Producto no encontrado.'); }
+        $categorias = (new Categoria())->getAll();
         require_once '../views/productos/editar.php';
     }
 

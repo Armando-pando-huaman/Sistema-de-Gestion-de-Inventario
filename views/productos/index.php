@@ -6,7 +6,7 @@
         <h2><i class="bi bi-capsule-pill me-2"></i> Productos</h2>
         <p>Consulta y administra los productos de tu botica.</p>
     </div>
-    <a href="index.php?c=Producto&a=crear" class="fv-btn-light"><i class="bi bi-plus-circle"></i> Nuevo Producto</a>
+    <div class="fv-product-head-actions"><a href="index.php?c=Categoria&a=index" class="fv-btn-light"><i class="bi bi-tags"></i> Categorías</a><a href="index.php?c=Producto&a=crear" class="fv-btn-light"><i class="bi bi-plus-circle"></i> Nuevo Producto</a></div>
 </section>
 
 <div class="fv-panel">

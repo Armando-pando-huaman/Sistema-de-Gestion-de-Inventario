@@ -138,5 +138,4 @@
     </div>
 </div>
 
-<script src="js/script.js"></script>
 <?php require_once '../views/layouts/footer.php'; ?>
