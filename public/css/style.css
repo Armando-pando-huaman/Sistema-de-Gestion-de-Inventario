@@ -1,3 +1,12 @@
+/* FARMA VIDA HC - STYLE.CSS COMPLETO Y ORGANIZADO
+   Incluye secciones 01 a 11. No cargar además style-modular.css.
+*/
+
+/* =========================================================
+   SECCIÓN 01 | BASE / RESET
+   Estilos generales del sitio
+   ========================================================= */
+
 /* ===== Reset y Base ===== */
 * {
     margin: 0;
@@ -10,6 +19,11 @@ body {
     background: #f4f6f9;
     color: #333;
 }
+
+/* =========================================================
+   SECCIÓN 02 | LOGIN
+   Pantalla de acceso
+   ========================================================= */
 
 /* ===== Login ===== */
 .login-body {
@@ -121,6 +135,11 @@ body {
     color: #c0392b;
 }
 
+/* =========================================================
+   SECCIÓN 03 | NAVBAR BASE
+   Reglas generales del menú
+   ========================================================= */
+
 /* ===== Navbar ===== */
 .navbar {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -130,6 +149,11 @@ body {
     font-weight: 700;
     font-size: 1.3rem;
 }
+
+/* =========================================================
+   SECCIÓN 04 | DASHBOARD BASE
+   Tarjetas originales, compatibilidad
+   ========================================================= */
 
 /* ===== Cards del Dashboard ===== */
 .stat-card {
@@ -168,6 +192,11 @@ body {
     margin: 0;
 }
 
+/* =========================================================
+   SECCIÓN 05 | TABLAS GENERALES
+   Estilos de tablas compartidas
+   ========================================================= */
+
 /* ===== Tablas ===== */
 .table {
     background: #fff;
@@ -181,6 +210,11 @@ body {
     letter-spacing: 0.5px;
 }
 
+/* =========================================================
+   SECCIÓN 06 | VENTAS / PUNTO DE VENTA
+   Tarjetas de productos del punto de venta
+   ========================================================= */
+
 /* ===== Punto de Venta ===== */
 .producto-item .border {
     transition: all 0.2s;
@@ -191,9 +225,690 @@ body {
     border-color: #667eea !important;
 }
 
+/* =========================================================
+   SECCIÓN 07 | RESPONSIVE GENERAL
+   Ajustes del login en móviles
+   ========================================================= */
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
     .login-card {
         padding: 30px 20px;
     }
+}
+
+/* =========================================================
+   SECCIÓN 08 | IMPRESIÓN GENERAL
+   Impresión de páginas
+   ========================================================= */
+
+/* ===== Estilos para impresión ===== */
+@media print {
+    .navbar, .btn, .card-header, footer, .no-print {
+        display: none !important;
+    }
+    body {
+        background: #fff !important;
+        font-size: 11px;
+    }
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+    }
+    .card-body {
+        padding: 8px !important;
+    }
+    .table {
+        font-size: 10px;
+    }
+    .stat-card {
+        color: #000 !important;
+        background: #f5f5f5 !important;
+        border: 1px solid #ccc;
+    }
+    h1, h2, h3, h4, h5 {
+        page-break-after: avoid;
+    }
+}
+
+/* =========================================================
+   SECCIÓN 09 | CABECERA FARMAVIDAHC
+   Menú, logo de enfermera y diseño adaptable
+   ========================================================= */
+
+/* ==================================================
+   FarmaVidaHC - CABECERA MODERNA (PC Y MÓVIL)
+   No cambia estilos de formularios ni lógica del sistema
+   ================================================== */
+.fv-navbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e1efe9;
+  box-shadow: 0 7px 25px rgba(20, 90, 70, .09);
+  padding: 12px clamp(12px, 2.4vw, 38px);
+  position: relative;
+  z-index: 1030;
+}
+.fv-navbar .container-fluid { gap: 12px; }
+.fv-navbar .navbar-brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: #11664d; font-size: 1.25rem; line-height: 1.05;
+  letter-spacing: -.5px; margin-right: clamp(12px, 2vw, 32px);
+  white-space: nowrap;
+}
+.fv-navbar .navbar-brand:hover { color: #0c805b; }
+.fv-brand-icon {
+  display: grid; place-items: center; width: 48px; height: 48px;
+  border-radius: 15px; font-size: 29px;
+  background: linear-gradient(145deg, #e5fff1, #e3f3ff);
+  border: 1px solid #bcead8;
+  box-shadow: 0 3px 10px rgba(28, 136, 100, .12);
+}
+.fv-brand-text { display: block; font-weight: 800; }
+.fv-brand-text > span { color: #1eaa7b; }
+.fv-brand-text small { display: block; margin-top: 4px; font-size: 10px; font-weight: 600; letter-spacing: .7px; color: #7c938c; }
+.fv-navbar .navbar-nav { gap: 3px; align-items: center; }
+.fv-navbar .nav-link {
+  color: #426257; font-size: .9rem; font-weight: 600;
+  border-radius: 11px; padding: 11px 12px !important;
+  transition: background .2s, color .2s, transform .2s;
+  white-space: nowrap;
+}
+.fv-navbar .nav-link i { color: #14a77b; margin-right: 5px; }
+.fv-navbar .nav-link:hover, .fv-navbar .nav-link:focus,
+.fv-navbar .nav-link.show {
+  background: #eaf8f1; color: #087854;
+}
+.fv-navbar .dropdown-menu {
+  border: 1px solid #e5f0e9; border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(18, 67, 53, .13);
+  padding: 8px; min-width: 220px;
+}
+.fv-navbar .dropdown-item { border-radius: 9px; padding: 10px 12px; color: #426257; font-size: .9rem; }
+.fv-navbar .dropdown-item i { color: #15a478; margin-right: 8px; }
+.fv-navbar .dropdown-item:hover, .fv-navbar .dropdown-item:focus { background: #eaf8f1; color: #087854; }
+.fv-navbar .fv-user-avatar {
+  display: inline-grid; place-items: center; width: 31px; height: 31px;
+  background: #e3f7ed; color: #087854; border-radius: 50%; margin-right: 4px;
+}
+.fv-navbar .fv-user-avatar i { margin: 0; }
+.fv-navbar .badge { background: #eaf7ef !important; color: #14785a !important; border: 1px solid #cce9db; font-weight: 600; }
+.fv-navbar .navbar-toggler {
+  color: #087854; border: 1px solid #cce9db; border-radius: 12px;
+  padding: 6px 12px; font-size: 1.65rem; box-shadow: none;
+}
+.fv-navbar .navbar-toggler:focus { box-shadow: 0 0 0 3px #bcebd8; }
+@media (max-width: 1199.98px) {
+  .fv-navbar .navbar-collapse { margin-top: 12px; padding-top: 10px; border-top: 1px solid #e7f1ec; }
+  .fv-navbar .navbar-nav { align-items: stretch; gap: 2px; }
+  .fv-navbar .nav-link { padding: 12px 14px !important; white-space: normal; }
+  .fv-navbar .dropdown-menu { box-shadow: none; border-radius: 12px; margin: 4px 0 8px; }
+  .fv-navbar .dropdown-menu-end { right: auto; left: 0; }
+}
+/* Bootstrap navbar-expand-lg se despliega por debajo de 992px. */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .fv-navbar .navbar-nav { gap: 0; }
+  .fv-navbar .nav-link { font-size: .79rem; padding: 9px 6px !important; }
+  .fv-navbar .navbar-brand { font-size: 1.1rem; margin-right: 10px; }
+  .fv-brand-icon { width: 40px; height: 40px; font-size: 24px; }
+}
+@media (max-width: 575.98px) {
+  .fv-navbar { padding: 9px 10px; }
+  .fv-navbar .navbar-brand { font-size: 1.15rem; gap: 8px; }
+  .fv-brand-icon { width: 43px; height: 43px; font-size: 26px; }
+  .fv-navbar .navbar-collapse { max-height: calc(100dvh - 90px); overflow-y: auto; }
+  .fv-navbar .dropdown-item { white-space: normal; }
+  main.container-fluid { padding-left: 14px !important; padding-right: 14px !important; }
+}
+@media print { .fv-navbar { display: none !important; } }
+
+/* =========================================================
+   SECCIÓN 10 | DASHBOARD FARMAVIDAHC
+   Panel principal moderno
+   ========================================================= */
+
+/* ==========================================================
+   FarmaVidaHC | Dashboard moderno
+   Se aplica solo al contenedor .fv-dashboard.
+   No modifica navbar, login, ventas ni otras vistas.
+   ========================================================== */
+.fv-dashboard {
+    --fv-green: #087f61;
+    --fv-ink: #173c35;
+    --fv-muted: #72877f;
+    --fv-border: #e4eee9;
+    color: var(--fv-ink);
+}
+.fv-dashboard .fv-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 25px 28px;
+    margin-bottom: 23px;
+    border-radius: 22px;
+    background: linear-gradient(115deg, #087e61, #14a77d 70%, #39bd9c);
+    box-shadow: 0 12px 28px rgba(7, 115, 86, .16);
+    color: #fff;
+}
+.fv-dashboard .fv-welcome h2 {
+    margin: 5px 0 7px;
+    font-size: clamp(1.35rem, 2.4vw, 1.95rem);
+    font-weight: 800;
+}
+.fv-dashboard .fv-welcome p { margin: 0; color: #e2fff3; }
+.fv-dashboard .fv-welcome .fv-eyebrow {
+    color: #d0ffea;
+    text-transform: uppercase;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .13em;
+}
+.fv-dashboard .fv-welcome .fv-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    white-space: nowrap;
+    font-size: .87rem;
+}
+.fv-dashboard .fv-stat {
+    min-height: 164px;
+    border: 1px solid var(--fv-border) !important;
+    border-radius: 20px !important;
+    background: #fff !important;
+    box-shadow: 0 7px 22px rgba(25, 79, 64, .055);
+    color: var(--fv-ink) !important;
+    padding: 20px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform .2s, box-shadow .2s;
+}
+.fv-dashboard .fv-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 13px 28px rgba(25, 79, 64, .11);
+}
+.fv-dashboard .fv-stat .fv-stat-icon {
+    display: inline-grid;
+    place-items: center;
+    position: static;
+    transform: none;
+    opacity: 1;
+    width: 47px;
+    height: 47px;
+    border-radius: 14px;
+    font-size: 1.35rem;
+    background: var(--fv-icon-bg);
+    color: var(--fv-icon-color);
+}
+.fv-dashboard .fv-stat h6 {
+    font-size: .82rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--fv-muted);
+    opacity: 1;
+    margin: 12px 0 5px;
+    font-weight: 650;
+}
+.fv-dashboard .fv-stat h2 {
+    font-size: clamp(1.6rem, 2.7vw, 2.1rem);
+    color: var(--fv-ink);
+    font-weight: 800;
+    line-height: 1.1;
+}
+.fv-dashboard .fv-stat--products { --fv-icon-bg: #e7f0ff; --fv-icon-color: #3877d5; }
+.fv-dashboard .fv-stat--moves { --fv-icon-bg: #e0f7ed; --fv-icon-color: #07895f; }
+.fv-dashboard .fv-stat--low { --fv-icon-bg: #fff3d8; --fv-icon-color: #ce8a0a; }
+.fv-dashboard .fv-stat--expiry { --fv-icon-bg: #ffe8ec; --fv-icon-color: #d64c64; }
+
+.fv-dashboard .fv-panel {
+    border: 1px solid var(--fv-border) !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 7px 22px rgba(25, 79, 64, .055) !important;
+}
+.fv-dashboard .fv-panel .card-header {
+    background: #fff !important;
+    color: var(--fv-ink) !important;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--fv-border);
+    font-weight: 700;
+}
+.fv-dashboard .fv-panel .card-header > i {
+    display: inline-grid;
+    place-items: center;
+    width: 35px;
+    height: 35px;
+    margin-right: 7px;
+    border-radius: 11px;
+    color: #cf8c13;
+    background: #fff3dc;
+    vertical-align: middle;
+}
+.fv-dashboard .fv-panel--moves .card-header > i { color: #147bb1; background: #e7f5ff; }
+.fv-dashboard .fv-panel--quick .card-header > i { color: #0a8c69; background: #e4f8ef; }
+.fv-dashboard .fv-panel .list-group-item {
+    padding: 15px 20px;
+    border-color: #eef3f0;
+    gap: 12px;
+}
+.fv-dashboard .fv-panel .list-group-item strong {
+    overflow-wrap: anywhere;
+    font-size: .9rem;
+}
+.fv-dashboard .fv-panel .badge {
+    padding: 8px 10px;
+    font-size: .74rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.fv-dashboard .fv-panel .table { margin: 0; border-radius: 0; }
+.fv-dashboard .fv-panel .table thead th {
+    padding: 14px 16px;
+    background: #f5faf7;
+    color: #6b8278;
+    border: 0;
+    font-size: .75rem;
+    white-space: nowrap;
+}
+.fv-dashboard .fv-panel .table tbody td {
+    padding: 13px 16px;
+    border-color: #edf3ef;
+    vertical-align: middle;
+}
+.fv-dashboard .fv-table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.fv-dashboard .fv-table-scroll .table { min-width: 460px; }
+.fv-dashboard .fv-quick-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 112px;
+    border: 1px solid var(--fv-border);
+    border-radius: 15px;
+    background: #fbfdfc;
+    color: #2a5549;
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: 15px 8px;
+    text-align: center;
+    transition: background .2s, transform .2s, border-color .2s;
+}
+.fv-dashboard .fv-quick-link:hover {
+    background: #eaf9f1;
+    border-color: #a9dfc8;
+    color: #086d50;
+    transform: translateY(-2px);
+}
+.fv-dashboard .fv-quick-link i {
+    font-size: 1.45rem;
+    color: var(--fv-quick-color, #0e9972);
+}
+.fv-dashboard .fv-empty { padding: 34px 18px; color: #7a8d84; text-align: center; }
+.fv-dashboard .fv-empty i { font-size: 2rem; color: #12a67b; }
+@media (max-width: 575.98px) {
+    .fv-dashboard .fv-welcome { padding: 19px 17px; flex-direction: column; align-items: flex-start; border-radius: 17px; }
+    .fv-dashboard .fv-welcome .fv-date { padding: 8px 10px; font-size: .8rem; }
+    .fv-dashboard .fv-stat { padding: 15px !important; min-height: 142px; border-radius: 16px !important; }
+    .fv-dashboard .fv-stat .fv-stat-icon { width: 40px; height: 40px; font-size: 1.15rem; }
+    .fv-dashboard .fv-stat h6 { font-size: .74rem; }
+    .fv-dashboard .fv-stat h2 { font-size: 1.6rem; }
+    .fv-dashboard .fv-panel { border-radius: 16px !important; }
+    .fv-dashboard .fv-panel .card-header { padding: 14px; font-size: .9rem; }
+    .fv-dashboard .fv-panel .list-group-item { padding: 12px 14px; }
+    .fv-dashboard .fv-quick-link { min-height: 98px; font-size: .82rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .fv-dashboard .fv-stat, .fv-dashboard .fv-quick-link { transition: none; }
+}
+@media print {
+    .fv-dashboard .fv-welcome { background: #fff !important; color: #000 !important; border: 1px solid #ddd; }
+    .fv-dashboard .fv-welcome p, .fv-dashboard .fv-welcome .fv-eyebrow { color: #000; }
+    .fv-dashboard .fv-quick-link { display: none !important; }
+}
+
+/* =========================================================
+   SECCIÓN 11 | PRODUCTOS FARMAVIDAHC
+   Listado, creación y edición de productos
+   ========================================================= */
+
+/* FarmaVidaHC: solo pantallas de productos */
+.fv-products { --fv-green:#078563; --fv-ink:#173d35; --fv-muted:#71857e; --fv-border:#e1eee8; color:var(--fv-ink); }
+.fv-products .fv-page-head { display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:22px;padding:22px 25px;border-radius:20px;background:linear-gradient(110deg,#087d60,#16ab80);color:#fff;box-shadow:0 12px 28px rgba(7,115,86,.14); }
+.fv-products .fv-page-head h2 {font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:800;margin:3px 0 5px;}
+.fv-products .fv-page-head p {color:#e0fff1;margin:0;font-size:.91rem;}
+.fv-products .fv-eyebrow {font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:#c9f9e6;}
+.fv-products .fv-btn-light {display:inline-flex;align-items:center;gap:8px;border-radius:12px;padding:11px 16px;text-decoration:none;background:#fff;color:#087456;font-weight:700;border:1px solid rgba(255,255,255,.7);}
+.fv-products .fv-btn-light:hover {background:#e9fff4;color:#05664a;}
+.fv-products .fv-panel {border:1px solid var(--fv-border);border-radius:19px;box-shadow:0 8px 24px rgba(25,79,64,.06);background:#fff;overflow:hidden;}
+.fv-products .fv-panel-top {display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 22px;border-bottom:1px solid var(--fv-border);}
+.fv-products .fv-panel-top h5 {font-weight:750;margin:0;font-size:1rem;}
+.fv-products .fv-panel-top small {color:var(--fv-muted);}
+.fv-products .fv-table-wrap {overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.fv-products .fv-table {margin:0;min-width:790px;border-radius:0;vertical-align:middle;}
+.fv-products .fv-table thead th {background:#f4faf7;color:#59766b;border-bottom:1px solid #e3eee9;padding:15px 13px;font-size:.75rem;letter-spacing:.02em;white-space:nowrap;}
+.fv-products .fv-table tbody td {padding:14px 13px;border-color:#edf3ef;font-size:.88rem;}
+.fv-products .fv-table tbody tr:hover td {background:#f9fdfa;}
+.fv-products .fv-product-name {font-weight:750;color:var(--fv-ink);}
+.fv-products .fv-code {font-size:.79rem;color:#627c71;}
+.fv-products .fv-category {background:#eaf5f0;color:#14795a;border-radius:30px;padding:6px 10px;display:inline-block;font-size:.78rem;}
+.fv-products .fv-stock {display:inline-flex;align-items:center;gap:5px;border-radius:30px;padding:7px 11px;font-size:.77rem;font-weight:750;}
+.fv-products .fv-stock.ok {background:#e4f8ed;color:#0c8a61;}
+.fv-products .fv-stock.low {background:#fff0e6;color:#b65a20;}
+.fv-products .fv-icon-btn {display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;text-decoration:none;margin-right:4px;}
+.fv-products .fv-icon-btn.edit {background:#fff4d8;color:#9c6a05;}
+.fv-products .fv-icon-btn.delete {background:#ffe9ec;color:#c84055;}
+.fv-products .fv-icon-btn:hover {filter:brightness(.95);}
+.fv-products .fv-form-body {padding:25px;}
+.fv-products .fv-section-title {font-weight:800;color:#28564a;margin:0 0 18px;font-size:1rem;display:flex;align-items:center;gap:9px;}
+.fv-products .fv-section-title i {display:inline-grid;place-items:center;background:#e8f7ef;color:#088363;border-radius:10px;width:34px;height:34px;}
+.fv-products .form-label {font-weight:650;color:#47665b;font-size:.85rem;margin-bottom:7px;}
+.fv-products .form-control,.fv-products .form-select {border:1px solid #dbe8e1;border-radius:11px;padding:11px 13px;background:#fcfefd;min-height:45px;}
+.fv-products textarea.form-control {min-height:86px;}
+.fv-products .form-control:focus,.fv-products .form-select:focus {border-color:#17a77e;box-shadow:0 0 0 .2rem rgba(19,160,117,.12);background:#fff;}
+.fv-products .fv-form-actions {display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding-top:20px;margin-top:23px;border-top:1px solid var(--fv-border);}
+.fv-products .fv-save {background:#0c966e;color:white;border:1px solid #0c966e;border-radius:11px;padding:11px 20px;font-weight:700;}
+.fv-products .fv-save:hover {background:#087757;color:#fff;}
+.fv-products .fv-cancel {background:#f1f5f3;color:#466359;border:1px solid #e0eae4;border-radius:11px;padding:11px 20px;font-weight:700;text-decoration:none;}
+.fv-products .fv-cancel:hover {background:#e8f0eb;color:#264d40;}
+.fv-products .fv-note {font-size:.8rem;color:var(--fv-muted);}
+@media(max-width:575.98px){
+ .fv-products .fv-page-head {padding:19px 16px;border-radius:16px;}
+ .fv-products .fv-page-head .fv-btn-light {width:100%;justify-content:center;}
+ .fv-products .fv-panel {border-radius:16px;}
+ .fv-products .fv-panel-top {padding:15px;}
+ .fv-products .fv-form-body {padding:16px;}
+ .fv-products .fv-form-actions>* {flex:1;text-align:center;justify-content:center;}
+}
+@media print {.fv-products .fv-page-head {background:#fff!important;color:#000!important;border:1px solid #ddd;}.fv-products .fv-page-head p {color:#000;}.fv-products .fv-icon-btn,.fv-products .fv-btn-light,.fv-products .fv-form-actions {display:none!important;}}
+
+/* =========================================================
+   SECCIÓN 12 | TEMA CLÍNICO PREMIUM - TODOS LOS MÓDULOS
+   Dashboard verde, Productos azul, Ventas turquesa,
+   Movimientos ámbar, Reportes violeta, Usuarios índigo.
+   Requiere js/tema-clinico.js para detectar el controlador MVC.
+   ========================================================= */
+
+/* ================================================================
+   FARMAVIDAHC | TEMA CLÍNICO PREMIUM v2
+   Complemento para css/style.css existente.
+   SECCIONES:
+   01 Tokens y módulos | 02 Espacio | 03 Cabeceras | 04 Tarjetas
+   05 Tablas | 06 Formularios | 07 Botones | 08 Estados
+   09 Navegación | 10 Responsive | 11 Impresión
+   ================================================================ */
+
+/* 01. COLORES POR MÓDULO: definidos en el contenedor body por tema-clinico.js */
+body.fv-theme {
+  --fv-accent:#07886a; --fv-accent-dark:#055e4b; --fv-accent-rgb:7,136,106;
+  --fv-accent-soft:#e1f8ee; --fv-ink:#173a38; --fv-subtle:#66827d;
+  --fv-line:#dcebe8; --fv-paper:#fff; --fv-canvas:#f2f8f8;
+  --fv-shadow:0 5px 20px rgba(25,76,79,.075);
+  background:radial-gradient(circle at 90% 5%,rgba(var(--fv-accent-rgb),.085),transparent 34%),var(--fv-canvas);
+  color:var(--fv-ink);
+}
+body.fv-theme.fv-module-dashboard {--fv-accent:#07886a;--fv-accent-dark:#055e4b;--fv-accent-rgb:7,136,106;--fv-accent-soft:#e1f8ee;}
+body.fv-theme.fv-module-producto {--fv-accent:#2366c7;--fv-accent-dark:#174b98;--fv-accent-rgb:35,102,199;--fv-accent-soft:#e7f0ff;}
+body.fv-theme.fv-module-venta {--fv-accent:#008f9a;--fv-accent-dark:#006a77;--fv-accent-rgb:0,143,154;--fv-accent-soft:#dff8f9;}
+body.fv-theme.fv-module-movimiento {--fv-accent:#c9790a;--fv-accent-dark:#945405;--fv-accent-rgb:201,121,10;--fv-accent-soft:#fff1d9;}
+body.fv-theme.fv-module-reporte {--fv-accent:#7846b5;--fv-accent-dark:#552c89;--fv-accent-rgb:120,70,181;--fv-accent-soft:#f1e9ff;}
+body.fv-theme.fv-module-usuario {--fv-accent:#4455bc;--fv-accent-dark:#303d8f;--fv-accent-rgb:68,85,188;--fv-accent-soft:#e9edff;}
+
+/* 02. ESPACIO: utilizar ancho real de la ventana, sin ensanchar login */
+body.fv-theme main.container-fluid,
+body.fv-theme main.container,
+body.fv-theme .fv-content-area {
+  width:100%;max-width:none;padding:clamp(12px,1.45vw,24px)!important;
+}
+body.fv-theme main .row {--bs-gutter-x:clamp(12px,1.2vw,20px);--bs-gutter-y:clamp(12px,1.2vw,20px);}
+body.fv-theme main h1,body.fv-theme main h2,body.fv-theme main h3 {letter-spacing:-.035em;}
+body.fv-theme main > h2,body.fv-theme main > .d-flex > h2 {font-size:clamp(1.4rem,2vw,1.85rem);font-weight:800;color:var(--fv-accent-dark);}
+
+/* 03. ENCABEZADOS: banda potente, diferenciada por módulo */
+body.fv-theme main .fv-page-head,
+body.fv-theme main .fv-welcome {
+  padding:clamp(16px,1.6vw,24px)!important;margin-bottom:16px!important;
+  border:1px solid rgba(255,255,255,.25);border-radius:18px!important;
+  background:linear-gradient(115deg,var(--fv-accent-dark) 0%,var(--fv-accent) 70%,rgba(var(--fv-accent-rgb),.77) 100%)!important;
+  box-shadow:0 12px 26px rgba(var(--fv-accent-rgb),.19)!important;color:#fff!important;
+}
+body.fv-theme main .fv-page-head h2,body.fv-theme main .fv-welcome h2 {color:#fff!important;}
+body.fv-theme main .fv-page-head p,body.fv-theme main .fv-welcome p {color:#e8fffc!important;}
+body.fv-theme main .fv-eyebrow {color:#e0fff7!important;}
+body.fv-theme main .fv-page-head .fv-btn-light {color:var(--fv-accent-dark)!important;}
+
+/* 04. TARJETAS Y PANELES: compactos, con sombras y profundidad */
+body.fv-theme main .card,body.fv-theme main .fv-panel {
+  border:1px solid var(--fv-line)!important;border-radius:16px!important;
+  box-shadow:var(--fv-shadow)!important;background:var(--fv-paper);
+}
+body.fv-theme main .card-header,
+body.fv-theme main .fv-panel-top {
+  background:linear-gradient(90deg,var(--fv-accent-soft),#fff 80%)!important;
+  border-bottom:1px solid var(--fv-line)!important;color:var(--fv-accent-dark)!important;
+  padding:12px 16px!important;font-weight:800;
+}
+body.fv-theme main .card-body {padding:clamp(12px,1.3vw,20px);}
+body.fv-theme main .fv-stat {min-height:132px!important;padding:15px!important;}
+body.fv-theme main .fv-stat h6 {margin-top:7px!important;}
+body.fv-theme main .fv-stat h2 {font-size:clamp(1.5rem,2vw,2rem)!important;}
+body.fv-theme main .fv-quick-link {min-height:84px!important;}
+
+/* 05. TABLAS: mostrar más filas, sin cortar datos en móvil */
+body.fv-theme main .table-responsive,
+body.fv-theme main .fv-table-wrap,
+body.fv-theme main .fv-table-scroll {overflow-x:auto;-webkit-overflow-scrolling:touch;}
+body.fv-theme main .table {background:#fff;margin-bottom:0;font-size:.85rem;}
+body.fv-theme main .table thead th {
+  background:linear-gradient(120deg,var(--fv-accent-dark),var(--fv-accent))!important;
+  color:#fff!important;padding:10px 11px!important;font-size:.72rem;
+  border-color:rgba(255,255,255,.13)!important;letter-spacing:.025em;
+  white-space:nowrap;vertical-align:middle;
+}
+body.fv-theme main .table tbody td {padding:9px 11px!important;vertical-align:middle;border-color:#eaf0ee;}
+body.fv-theme main .table tbody tr:nth-child(even) td {background:#f9fcfb;}
+body.fv-theme main .table tbody tr:hover td {background:var(--fv-accent-soft)!important;}
+body.fv-theme main .fv-table {min-width:750px;}
+body.fv-theme main .fv-product-name {font-weight:800;}
+body.fv-theme main .fv-category {background:var(--fv-accent-soft);color:var(--fv-accent-dark);}
+
+/* 06. FORMULARIOS: dos o más columnas según espacio disponible */
+body.fv-theme main .form-label {font-size:.81rem;font-weight:750;color:#47645f;margin-bottom:5px;}
+body.fv-theme main .form-control,
+body.fv-theme main .form-select {
+  min-height:39px;padding:8px 11px;border:1px solid #d4e4e1;
+  border-radius:10px;background:#fff;font-size:.89rem;
+}
+body.fv-theme main textarea.form-control {min-height:76px;}
+body.fv-theme main .form-control:focus,
+body.fv-theme main .form-select:focus {border-color:var(--fv-accent);box-shadow:0 0 0 3px rgba(var(--fv-accent-rgb),.14);}
+body.fv-theme main .fv-form-body {padding:clamp(14px,1.6vw,24px)!important;}
+body.fv-theme main .fv-section-title {margin-bottom:10px!important;color:var(--fv-accent-dark);}
+
+/* 07. BOTONES: colores fuertes para acciones importantes */
+body.fv-theme main .btn {border-radius:10px;font-size:.85rem;font-weight:750;padding:8px 13px;box-shadow:0 3px 8px rgba(0,0,0,.055);}
+body.fv-theme main .btn-primary,
+body.fv-theme main .btn-success,
+body.fv-theme main .fv-save {
+  background:linear-gradient(110deg,var(--fv-accent-dark),var(--fv-accent))!important;
+  color:#fff!important;border:1px solid var(--fv-accent)!important;
+  box-shadow:0 6px 14px rgba(var(--fv-accent-rgb),.2)!important;
+}
+body.fv-theme main .btn-primary:hover,
+body.fv-theme main .btn-success:hover,
+body.fv-theme main .fv-save:hover {filter:brightness(1.08);transform:translateY(-1px);}
+body.fv-theme main .btn-danger {background:linear-gradient(110deg,#a91e43,#e14664);border-color:#bd3150;color:#fff;}
+body.fv-theme main .btn-warning {background:linear-gradient(110deg,#b96a0d,#f1a42d);border-color:#d18820;color:#fff;}
+body.fv-theme main .fv-icon-btn {width:32px;height:32px;}
+
+/* 08. ESTADOS: significados consistentes */
+body.fv-theme main .badge {font-size:.73rem;font-weight:800;padding:6px 9px;border-radius:9px;}
+body.fv-theme main .badge.bg-success {background:#0c9169!important;}
+body.fv-theme main .badge.bg-danger {background:#c93253!important;}
+body.fv-theme main .badge.bg-warning {background:#d4880b!important;color:#fff!important;}
+body.fv-theme main .fv-stock.ok {background:#dff8e9;color:#067a53;}
+body.fv-theme main .fv-stock.low {background:#ffe7e9;color:#a82642;}
+
+/* 09. NAVBAR: se mantiene la marca verde clínica */
+body.fv-theme .fv-navbar {border-bottom:2px solid #bce8d8;}
+body.fv-theme .fv-navbar .nav-link.active,
+body.fv-theme .fv-navbar .nav-link[aria-current="page"] {background:#e2f7ee;color:#066f50;}
+
+/* 10. ADAPTACIÓN: PC ancho, portátil, tablet y móvil */
+@media (min-width:1400px) {
+  body.fv-theme main .table {font-size:.88rem;}
+  body.fv-theme main .card-body {padding:18px;}
+}
+@media (max-width:991.98px) {
+  body.fv-theme main.container-fluid,body.fv-theme main.container {padding:12px!important;}
+  body.fv-theme main .fv-page-head,body.fv-theme main .fv-welcome {border-radius:15px!important;}
+}
+@media (max-width:575.98px) {
+  body.fv-theme main .fv-page-head,body.fv-theme main .fv-welcome {padding:15px!important;}
+  body.fv-theme main .card-body {padding:12px;}
+  body.fv-theme main .fv-stat {min-height:125px!important;padding:12px!important;}
+  body.fv-theme main .table {font-size:.81rem;}
+  body.fv-theme main .table tbody td {padding:8px 9px!important;}
+  body.fv-theme main .fv-quick-link {min-height:82px!important;}
+  body.fv-theme main .fv-form-actions {gap:8px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  body.fv-theme main .btn {transition:none!important;transform:none!important;}
+}
+
+/* 11. IMPRESIÓN: quitar efectos decorativos, conservar información */
+@media print {
+  body.fv-theme {background:#fff!important;}
+  body.fv-theme main .card,body.fv-theme main .fv-panel {box-shadow:none!important;}
+  body.fv-theme main .table thead th {background:#eee!important;color:#000!important;}
+  body.fv-theme main .fv-page-head,body.fv-theme main .fv-welcome {background:#fff!important;color:#000!important;box-shadow:none!important;}
+  body.fv-theme main .fv-page-head h2,body.fv-theme main .fv-welcome h2,body.fv-theme main .fv-page-head p,body.fv-theme main .fv-welcome p {color:#000!important;}
+}
+
+/* 12. DETALLES ADICIONALES DE PRESENTACIÓN Y ACCESIBILIDAD */
+body.fv-theme main .btn:focus-visible,
+body.fv-theme main a:focus-visible {outline:3px solid var(--fv-accent);outline-offset:3px;}
+body.fv-theme main .fv-panel-top h5 {color:var(--fv-accent-dark);}
+body.fv-theme main .fv-section-title i {background:var(--fv-accent-soft);color:var(--fv-accent-dark);}
+body.fv-theme main .fv-quick-link:hover {background:var(--fv-accent-soft);border-color:var(--fv-accent);color:var(--fv-accent-dark);}
+body.fv-theme main .fv-form-actions {margin-top:12px;padding-top:14px;}
+body.fv-theme main .fv-products .fv-table {min-width:750px;}
+body.fv-theme main .fv-products .fv-page-head {margin-bottom:14px;}
+body.fv-theme main .fv-dashboard .fv-welcome {margin-bottom:14px;}
+body.fv-theme main .fv-dashboard .fv-stat .fv-stat-icon {width:42px;height:42px;}
+body.fv-theme main .fv-dashboard .fv-stat h2 {line-height:1.08;}
+@media (max-width:575.98px) {
+  body.fv-theme main .fv-products .fv-form-actions > * {min-width:120px;}
+  body.fv-theme main .fv-products .fv-table {min-width:720px;}
+}
+
+
+/* ================================================================
+   SECCIÓN 13 | DASHBOARD PREMIUM CON COLORES REALES
+   Compatible con el dashboard actual, sin JS y sin depender de <main>.
+   Esta sección debe permanecer AL FINAL del archivo.
+   ================================================================ */
+.fv-dashboard {
+  --dash-blue:#1758bd; --dash-teal:#008b84;
+  --dash-orange:#bb6708; --dash-rose:#ba2c57;
+  width:100%; max-width:none; padding-bottom:16px;
+}
+.fv-dashboard .fv-welcome {
+  background:linear-gradient(110deg,#064a3e 0%,#087b64 52%,#13b39a 100%)!important;
+  color:#fff!important; border:1px solid rgba(255,255,255,.2)!important;
+  box-shadow:0 12px 28px rgba(5,100,83,.23)!important;
+  padding:18px 22px!important; margin-bottom:14px!important;
+  border-radius:17px!important;
+}
+.fv-dashboard .fv-welcome h2,.fv-dashboard .fv-welcome p,
+.fv-dashboard .fv-welcome .fv-eyebrow {color:#fff!important;}
+.fv-dashboard .fv-welcome .fv-date {background:rgba(255,255,255,.18)!important;border:1px solid rgba(255,255,255,.24);}
+/* Los !important de la sección 10 dejaban las tarjetas blancas. */
+.fv-dashboard .stat-card.fv-stat {
+  position:relative; isolation:isolate; overflow:hidden;
+  min-height:128px!important; padding:17px 18px!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  border-radius:17px!important;
+  color:#fff!important;
+  box-shadow:0 9px 21px var(--dash-shadow)!important;
+  background:linear-gradient(120deg,var(--dash-dark),var(--dash-light))!important;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.fv-dashboard .stat-card.fv-stat::after {
+  content:''; position:absolute; z-index:-1; right:-38px; top:-55px;
+  width:150px; height:150px; border-radius:50%;
+  background:rgba(255,255,255,.09);
+}
+.fv-dashboard .fv-stat--products {--dash-dark:#133f96;--dash-light:#2877e0;--dash-shadow:rgba(25,86,179,.23);}
+.fv-dashboard .fv-stat--moves {--dash-dark:#00625f;--dash-light:#0ab5a6;--dash-shadow:rgba(0,126,119,.22);}
+.fv-dashboard .fv-stat--low {--dash-dark:#95500a;--dash-light:#ef9d1e;--dash-shadow:rgba(180,101,11,.23);}
+.fv-dashboard .fv-stat--expiry {--dash-dark:#982049;--dash-light:#eb5276;--dash-shadow:rgba(177,45,88,.23);}
+.fv-dashboard .stat-card.fv-stat h6,
+.fv-dashboard .stat-card.fv-stat h2 {color:#fff!important;opacity:1!important;}
+.fv-dashboard .stat-card.fv-stat h6 {font-size:.81rem!important;letter-spacing:.01em;margin:10px 0 3px!important;}
+.fv-dashboard .stat-card.fv-stat h2 {font-size:clamp(1.65rem,2.4vw,2.1rem)!important;line-height:1.08;}
+.fv-dashboard .stat-card.fv-stat .fv-stat-icon {
+  position:static!important; transform:none!important; opacity:1!important;
+  display:inline-grid!important; place-items:center;
+  width:38px!important;height:38px!important;
+  border-radius:11px!important; background:rgba(255,255,255,.18)!important;
+  color:#fff!important;font-size:1.25rem!important;
+}
+.fv-dashboard .stat-card.fv-stat:hover {transform:translateY(-3px);filter:saturate(1.08);}
+/* Encabezados intensos: alerta naranja, movimientos azul, accesos verde. */
+.fv-dashboard .fv-panel .card-header {
+  background:linear-gradient(105deg,#925009,#dc8a13)!important;
+  color:#fff!important;border-bottom:0!important;
+  padding:11px 15px!important;font-weight:800!important;
+}
+.fv-dashboard .fv-panel--moves .card-header {background:linear-gradient(105deg,#134e9c,#2480ce)!important;}
+.fv-dashboard .fv-panel--quick .card-header {background:linear-gradient(105deg,#075d4c,#10a182)!important;}
+.fv-dashboard .fv-panel .card-header a {color:#fff!important;}
+.fv-dashboard .fv-panel .card-header > span > i,
+.fv-dashboard .fv-panel .card-header > i {
+  color:#fff!important;background:rgba(255,255,255,.16)!important;
+  border-radius:9px; padding:7px; margin-right:5px;
+}
+.fv-dashboard .fv-panel {border-radius:16px!important;overflow:hidden;box-shadow:0 7px 20px rgba(19,73,87,.10)!important;}
+.fv-dashboard .fv-panel .list-group-item {padding:10px 14px!important;}
+.fv-dashboard .fv-panel .table thead th {
+  background:linear-gradient(105deg,#164d94,#287bc6)!important;
+  color:#fff!important;padding:9px 10px!important;
+}
+.fv-dashboard .fv-panel .table tbody td {padding:9px 10px!important;}
+.fv-dashboard .fv-panel .badge.bg-danger {background:#c42e50!important;color:#fff!important;}
+.fv-dashboard .fv-panel .badge.bg-success {background:#078965!important;color:#fff!important;}
+/* Accesos rápidos: cuatro bloques de color, no solo iconos coloreados. */
+.fv-dashboard .fv-quick-link {
+  min-height:79px!important;flex-direction:row!important;gap:10px!important;
+  background:linear-gradient(120deg,var(--quick-dark),var(--quick-light))!important;
+  color:#fff!important;border:1px solid rgba(255,255,255,.2)!important;
+  box-shadow:0 6px 14px var(--quick-shadow)!important;
+  padding:12px 10px!important;border-radius:13px!important;
+}
+.fv-dashboard .fv-quick-link i {color:#fff!important;font-size:1.3rem!important;}
+.fv-dashboard .fv-quick-link:hover {filter:brightness(1.09);transform:translateY(-2px);}
+.fv-dashboard .fv-quick-link--product {--quick-dark:#154a9d;--quick-light:#327ee0;--quick-shadow:rgba(29,91,186,.2);}
+.fv-dashboard .fv-quick-link--sale {--quick-dark:#006c72;--quick-light:#09a7a5;--quick-shadow:rgba(0,133,140,.2);}
+.fv-dashboard .fv-quick-link--movement {--quick-dark:#9c5508;--quick-light:#e69b1a;--quick-shadow:rgba(181,105,12,.2);}
+.fv-dashboard .fv-quick-link--user {--quick-dark:#343b94;--quick-light:#6374d6;--quick-shadow:rgba(70,81,172,.2);}
+.fv-dashboard .fv-quick-link--inventory {--quick-dark:#075a47;--quick-light:#10a27a;--quick-shadow:rgba(7,123,93,.2);}
+@media(max-width:575.98px) {
+ .fv-dashboard .fv-welcome {padding:15px!important;}
+ .fv-dashboard .stat-card.fv-stat {min-height:119px!important;padding:13px!important;}
+ .fv-dashboard .fv-quick-link {min-height:74px!important;font-size:.79rem!important;}
+}
+@media print {
+ .fv-dashboard .stat-card.fv-stat,.fv-dashboard .fv-panel .card-header {
+  background:#fff!important;color:#000!important;box-shadow:none!important;border:1px solid #ccc!important;
+ }
+ .fv-dashboard .stat-card.fv-stat h2,.fv-dashboard .stat-card.fv-stat h6 {color:#000!important;}
+ .fv-dashboard .fv-quick-link {display:none!important;}
 }
