@@ -1,0 +1,46 @@
+.fv-pos{max-width:1450px;margin:0 auto}.fv-pos-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.3rem}.fv-pos-head small{color:#64748b;font-weight:700;letter-spacing:.08em}.fv-pos-head h2{margin:.2rem 0;font-weight:800}.fv-pos-head p{margin:0;color:#64748b}.fv-pos-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:1.25rem}.fv-pos-card{background:var(--bs-body-bg,#fff);border:1px solid var(--bs-border-color,#dbe3ee);border-radius:18px;padding:1.3rem;box-shadow:0 5px 20px rgba(15,23,42,.05);min-width:0}.fv-pos-card h5{font-weight:750;margin-bottom:1.1rem}.fv-search{display:flex;gap:.5rem;margin-bottom:1rem}.fv-pos-products{max-height:550px;overflow:auto;display:grid;gap:.55rem}.fv-pos-product{display:flex;align-items:center;justify-content:space-between;gap:1rem;border:1px solid var(--bs-border-color,#ddd);border-radius:12px;padding:.8rem}.fv-pos-product[hidden]{display:none}.fv-pos-product small{display:block;color:#64748b}.fv-pos-total{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #ddd;padding-top:1rem}.fv-pos-total strong{font-size:1.65rem;color:#15803d}.fv-qty{width:72px;min-width:60px}.fv-scan-modal[hidden],#fv-scan-fallback[hidden]{display:none!important}.fv-scan-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1rem}.fv-scan-dialog{width:min(100%,540px);max-height:95vh;overflow:auto;background:#fff;color:#172033;border-radius:16px;padding:1.1rem}.fv-scan-heading{display:flex;justify-content:space-between;align-items:center}.fv-scan-heading button{border:0;background:none;font-size:2rem}.fv-scan-dialog video{display:block;width:100%;max-height:55vh;object-fit:contain;background:#111;border-radius:12px}#fv-scan-fallback{width:100%}@media(max-width:950px){.fv-pos-grid{grid-template-columns:1fr}}@media(max-width:500px){.fv-pos-head{align-items:flex-start}.fv-search .btn{font-size:.85rem}.fv-pos-card{padding:.8rem}}
+
+/* ===== Ajustes responsive del POS FarmaVidaHC (solo Ventas) ===== */
+.fv-pos,.fv-pos *{box-sizing:border-box}
+.fv-pos{width:100%;min-width:0}
+.fv-pos-head{flex-wrap:wrap}
+.fv-pos-head>div{flex:1 1 260px;min-width:0}
+.fv-pos-head h2,.fv-pos-head p{overflow-wrap:anywhere}
+.fv-pos-grid{min-width:0}
+.fv-pos-card,.fv-pos-products,.fv-pos-product>div{min-width:0}
+.fv-pos-product strong,.fv-pos-product small{overflow-wrap:anywhere;word-break:normal}
+.fv-pos .table-responsive{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fv-pos .table-responsive table{width:100%;min-width:340px}
+.fv-pos .table-responsive th,.fv-pos .table-responsive td{vertical-align:middle}
+.fv-pos .fv-search input{flex:1 1 auto;min-width:0;width:0}
+.fv-pos .fv-search button{flex:0 0 auto}
+.fv-pos .fv-pos-total{gap:10px;flex-wrap:wrap}
+.fv-pos .fv-pos-total strong{white-space:nowrap}
+@media(max-width:950px){.fv-pos-grid{grid-template-columns:minmax(0,1fr)}.fv-pos-products{max-height:390px}}
+@media(max-width:575.98px){
+ .fv-pos{width:100%;max-width:100%;padding:0}
+ .fv-pos-head{display:flex;align-items:stretch;gap:8px;margin-bottom:12px}
+ .fv-pos-head>div{flex:1 1 100%;width:100%}
+ .fv-pos-head h2{font-size:clamp(1.25rem,5vw,1.65rem)}
+ .fv-pos-head p{font-size:.84rem}
+ .fv-pos-head>a.btn{flex:1 1 calc(50% - 8px);min-width:0;white-space:normal;text-align:center;font-size:.78rem;padding:9px 6px}
+ .fv-pos-grid{gap:12px}
+ .fv-pos-card{padding:12px;border-radius:14px;max-width:100%}
+ .fv-pos-card h5{font-size:1rem;margin-bottom:12px}
+ .fv-pos .fv-search{gap:6px}
+ .fv-pos .fv-search .btn{font-size:.78rem;padding:8px 9px;white-space:nowrap}
+ .fv-pos-products{max-height:330px;gap:8px}
+ .fv-pos-product{flex-wrap:wrap;align-items:flex-start;gap:9px;padding:11px}
+ .fv-pos-product>div{flex:1 1 100%;width:100%}
+ .fv-pos-product .fv-add{width:100%;min-height:38px}
+ .fv-pos-product .fv-presentation-buttons,.fv-pos-product .fv-add-options,.fv-pos-product .fv-presentation-actions{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+ .fv-pos-product button{max-width:100%;white-space:normal}
+ .fv-pos .table-responsive{margin:0 -2px;width:calc(100% + 4px)}
+ .fv-pos .table-responsive table{font-size:.78rem;min-width:340px}
+ .fv-pos .table-responsive th,.fv-pos .table-responsive td{padding:8px 6px!important}
+ .fv-pos .fv-qty{width:58px;min-width:52px;padding:5px!important}
+ .fv-pos .fv-pos-total{align-items:center}
+ .fv-pos .fv-pos-total strong{font-size:1.35rem}
+ .fv-pos #btnVender{min-height:46px}
+}
+@media(max-width:360px){.fv-pos-head>a.btn{flex-basis:100%}.fv-pos .fv-search .btn{font-size:.72rem;padding:8px 6px}.fv-pos-card{padding:10px}}

@@ -1,5 +1,6 @@
 <?php require_once '../views/layouts/header.php'; ?>
 <div class="fv-products fv-product-editor">
+<?php if (!empty($error)): ?><div class="alert alert-danger"><?= htmlspecialchars($error,ENT_QUOTES,'UTF-8') ?></div><?php endif; ?>
 <section class="fv-page-head">
     <div>
         <span class="fv-eyebrow">FarmaVidaHC · Gestión de productos</span>
@@ -34,7 +35,7 @@
                 <input id="precio_venta" type="number" step="0.01" name="precio_venta" class="form-control" value="<?= htmlspecialchars((string)($producto['precio_venta'] ?? '')) ?>" required>
             </div>
             <div class="col-6 col-md-2">
-                <label class="form-label" for="stock">Stock *</label>
+                <label class="form-label" for="stock" id="fv-stock-label">Stock *</label>
                 <input id="stock" type="number" name="stock" class="form-control" value="<?= htmlspecialchars((string)($producto['stock'] ?? '0')) ?>" required>
             </div>
             <div class="col-6 col-md-2">
@@ -61,7 +62,23 @@
                 <small class="fv-category-hint">Selecciona una categoría existente o crea una nueva.</small>
             </div>
             <div class="col-md-4 fv-category-create-action"><a class="fv-category-add-btn" href="index.php?c=Categoria&a=index"><i class="bi bi-tags"></i> Administrar categorías</a></div>
-            <div class="col-12">
+            
+<div class="col-12 mt-3"><h5 class="fv-section-title"><i class="bi bi-boxes"></i> Presentaciones de venta</h5></div>
+<div class="col-12"><label class="form-check"><input class="form-check-input" type="checkbox" id="fv-frac" name="es_fraccionable" value="1" <?= (int)($producto['es_fraccionable'] ?? ($_POST['es_fraccionable'] ?? 0)) === 1 ? 'checked' : '' ?>><span class="form-check-label">¿Permitir venta fraccionada (caja, blíster, pastilla)?</span></label></div>
+<div class="col-12" id="fv-frac-fields" hidden>
+ <div class="row g-3">
+  <div class="col-sm-4"><label class="form-label">Blísteres por caja</label><input class="form-control" type="number" min="1" name="blisters_por_caja" value="<?= htmlspecialchars((string)($producto['blisters_por_caja'] ?? ($_POST['blisters_por_caja'] ?? 1)),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Pastillas por blíster</label><input class="form-control" type="number" min="1" name="unidades_por_blister" value="<?= htmlspecialchars((string)($producto['unidades_por_blister'] ?? ($_POST['unidades_por_blister'] ?? 1)),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Total de pastillas por caja</label><output id="fv-frac-total" class="form-control bg-light"></output></div>
+  <div class="col-sm-4"><label class="form-label">Precio por pastilla (S/)</label><input class="form-control" name="precio_unidad" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_unidad'] ?? ($_POST['precio_unidad'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Precio por blíster (S/)</label><input class="form-control" name="precio_blister" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_blister'] ?? ($_POST['precio_blister'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Precio por caja (S/)</label><input class="form-control" name="precio_caja" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_caja'] ?? ($_POST['precio_caja'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
+ </div>
+</div>
+<div class="col-12"><small id="fv-stock-hint" class="text-muted"></small></div>
+<script src="js/fv-fraccion-productos.js"></script>
+
+<div class="col-12">
                 <div class="fv-form-actions">
                     <a href="index.php?c=Producto&a=index" class="fv-cancel"><i class="bi bi-x-circle me-1"></i> Cancelar</a>
                     <button type="submit" class="fv-save"><i class="bi bi-check-circle me-1"></i> Actualizar</button>

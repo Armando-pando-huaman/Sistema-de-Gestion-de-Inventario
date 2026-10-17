@@ -115,17 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Confirmar antes de enviar
-        document.getElementById('formVenta').addEventListener('submit', (e) => {
-            if (carrito.length === 0) {
-                e.preventDefault();
-                alert('El carrito está vacío.');
-                return;
-            }
-            if (!confirm('¿Confirmar venta por S/ ' + totalTexto.textContent + '?')) {
-                e.preventDefault();
-            }
-        });
+    
     }
 
     // ===== AUTO-CERRAR ALERTAS =====
