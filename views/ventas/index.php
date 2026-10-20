@@ -27,6 +27,6 @@ require_once '../views/layouts/header.php'; ?>
  </div>
 </div>
 <div class="fv-scan-modal" id="fv-scan-modal" hidden role="dialog" aria-modal="true" aria-labelledby="fv-scan-title"><div class="fv-scan-dialog"><div class="fv-scan-heading"><h3 id="fv-scan-title">Escanear producto</h3><button type="button" data-fv-scan-close aria-label="Cerrar">×</button></div><p>Apunta la cámara al QR o código de barras.</p><video id="fv-scan-video" autoplay playsinline muted></video><div id="fv-scan-fallback" hidden></div><p id="fv-scan-status" role="status" aria-live="polite"></p><button type="button" class="btn btn-outline-secondary" data-fv-scan-close>Cerrar</button></div></div>
-<script src="js/fv-ventas.js?v=20261017-4"></script>
+<script src="js/fv-ventas.js?v=20261020-1"></script>
 <script src="js/fv-product-scan.js"></script>
 <?php require_once '../views/layouts/footer.php'; ?>

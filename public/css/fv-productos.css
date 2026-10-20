@@ -1,0 +1,164 @@
+/* Crear y editar: aprovechar el ancho disponible en escritorio. */
+@media screen and (min-width: 992px) {
+    body.fv-app .fv-product-editor { max-width: 1600px; width: 100%; }
+    body.fv-app .fv-product-editor .fv-page-head { padding: 12px 20px !important; margin-bottom: 12px !important; }
+    .fv-product-editor .fv-page-head h2 { font-size: 1.5rem; }
+    .fv-product-editor .fv-page-head p { font-size: 13px; }
+    body.fv-app .fv-product-editor .fv-form-body { padding: 16px 20px !important; }
+    .fv-product-editor .fv-product-form { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px 16px; margin: 0; }
+    .fv-product-editor .fv-product-form > [class*="col-"] { grid-column: span 12; width: auto; min-width: 0; padding: 0; margin: 0; }
+    .fv-product-editor .fv-product-form > .fv-field-code { grid-column: span 3; }
+    .fv-product-editor .fv-product-form > .fv-field-name { grid-column: span 4; }
+    .fv-product-editor .fv-product-form > .fv-field-description { grid-column: span 5; }
+    body.fv-app main .fv-product-editor .fv-field-description textarea { height: 40px; min-height: 40px; }
+    .fv-product-editor .fv-product-form > .fv-field-half,
+    .fv-product-editor .fv-product-form > .fv-field-stock,
+    .fv-product-editor .fv-product-form > .fv-field-minimum { grid-column: span 2; }
+    .fv-product-editor .fv-product-form > .fv-field-sale,
+    .fv-product-editor .fv-product-form > .fv-field-date { grid-column: span 3; }
+    .fv-product-editor .fv-product-form > .fv-field-category { grid-column: span 8; }
+    .fv-product-editor .fv-product-form > .fv-category-create-action { grid-column: span 4; align-items: center; }
+    .fv-product-editor .fv-product-form > .mt-4,
+    .fv-product-editor .fv-product-form > .mt-3 { margin-top: 2px !important; }
+    body.fv-app .fv-product-editor .fv-section-title { margin-bottom: 0 !important; font-size: 13px; }
+    .fv-product-editor .fv-section-title i { width: 28px; height: 28px; }
+    .fv-product-editor .fv-category-hint { font-size: 11px; }
+    .fv-product-editor .fv-fraction-note { margin-bottom: 10px; font-size: 12px; color: #52675e; }
+    body.fv-app .fv-product-editor .fv-form-actions { margin-top: 0 !important; padding-top: 10px; }
+    .fv-product-editor #fv-stock-hint { display: block; font-size: 12px; }
+}
+@media screen and (min-width: 1400px) {
+    .fv-product-editor #fv-frac-fields > .row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin: 0; }
+    .fv-product-editor #fv-frac-fields > .row > div { width: auto; min-width: 0; padding: 0; margin: 0; }
+    .fv-product-editor #fv-frac-fields .form-label { min-height: 34px; }
+}
+
+/* Ajustes exclusivos de productos en móvil. */
+@media screen and (max-width: 767.98px) {
+    body.fv-app .fv-products { min-width: 0; max-width: 100%; }
+    body.fv-app .fv-products .fv-page-head { padding: 16px !important; gap: 16px; }
+    .fv-products .fv-page-head > div { min-width: 0; max-width: 100%; }
+    .fv-products .fv-page-head h2,
+    .fv-products .fv-page-head p { overflow-wrap: anywhere; }
+    .fv-products .fv-page-head .fv-eyebrow { display: none; }
+    .fv-products .fv-product-head-actions { display: grid; grid-template-columns: 1fr; gap: 8px; width: 100%; }
+    .fv-products .fv-page-head .fv-btn-light { width: 100%; justify-content: center; white-space: normal; text-align: center; min-height: 44px; }
+    .fv-products .fv-panel-top { padding: 14px; }
+    body.fv-app main .fv-products .fv-table-wrap { overflow: visible; }
+    body.fv-app main .fv-products .fv-product-list { display: block; width: 100%; min-width: 0 !important; }
+    .fv-products .fv-product-list thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .fv-products .fv-product-list tbody { display: grid; gap: 12px; padding: 12px; }
+    .fv-products .fv-product-list tbody tr { display: grid; min-width: 0; border: 1px solid var(--fv-border); border-radius: 12px; overflow: hidden; }
+    .fv-products .fv-product-list tbody td { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; min-width: 0; overflow-wrap: anywhere; border: 0; box-shadow: none; }
+    .fv-products .fv-product-list td[data-label]::before { content: attr(data-label); color: #52675e; font-size: .8rem; font-weight: 600; flex-shrink: 0; }
+    .fv-products .fv-product-list tbody .fv-product-title { display: block; padding: 14px 12px; background: var(--care-soft, #eaf5f0); border-bottom: 1px solid var(--fv-border); font-size: 1rem; line-height: 1.5; }
+    .fv-products .fv-product-list tbody .fv-product-secondary { display: none; }
+    .fv-products .fv-product-list tbody .fv-product-actions { justify-content: flex-end; flex-wrap: wrap; border-top: 1px solid var(--fv-border); white-space: normal !important; }
+    .fv-products .fv-product-actions::before { margin-right: auto; }
+    .fv-products .fv-product-actions .fv-icon-btn { width: 44px; height: 44px; margin: 0; flex-shrink: 0; font-size: 1.1rem; }
+    .fv-products .fv-product-list tbody .fv-product-empty { display: block; }
+    body.fv-app .fv-product-editor .fv-form-body { padding: 14px !important; }
+    .fv-products .fv-product-form > div,
+    .fv-products .fv-product-form .row > div { min-width: 0; }
+    body.fv-app main .fv-products .fv-product-form .form-control,
+    body.fv-app main .fv-products .fv-product-form .form-select { min-width: 0; max-width: 100%; min-height: 44px; font-size: 16px; }
+    body.fv-app main .fv-products .fv-product-form .form-select { padding-right: 36px; text-overflow: ellipsis; }
+    .fv-products .fv-section-title { line-height: 1.5; }
+    .fv-products .fv-section-title i { flex-shrink: 0; }
+    .fv-products .fv-category-add-btn { width: 100%; justify-content: center; text-align: center; min-height: 44px; }
+    .fv-products .fv-category-hint { display: block; margin-top: 8px; }
+    .fv-products .fv-product-form .form-check-label { overflow-wrap: anywhere; }
+    .fv-products .fv-form-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fv-products .fv-form-actions > * { width: 100%; min-width: 0 !important; min-height: 46px; }
+    .fv-products .fv-form-actions .fv-save { grid-column: 2; grid-row: 1; }
+    .fv-products .fv-scan-btn { min-width: 44px; min-height: 44px; }
+}
+
+/* Formulario compacto como ventas: dos campos, o tres cuando hay espacio. */
+@media screen and (max-width: 767.98px) {
+    body.fv-app .fv-product-editor .fv-page-head { padding: 12px !important; gap: 8px; }
+    .fv-product-editor .fv-page-head p { display: none; }
+    .fv-product-editor .fv-page-head h2 { margin: 0; font-size: 1.2rem; }
+    .fv-product-editor .fv-page-head .fv-btn-light { padding: 7px 10px; min-height: 36px; font-size: 12px; }
+    body.fv-app .fv-product-editor .fv-form-body { padding: 10px !important; }
+    .fv-products .fv-product-form,
+    .fv-products .fv-product-form #fv-frac-fields > .row {
+        display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px 6px; margin: 0;
+    }
+    .fv-products .fv-product-form > [class*="col-"],
+    .fv-products .fv-product-form #fv-frac-fields > .row > div {
+        grid-column: span 6; width: auto; max-width: 100%; padding: 0; margin: 0;
+    }
+    .fv-products .fv-product-form > .fv-field-half,
+    .fv-products .fv-product-form > .fv-field-code,
+    .fv-products .fv-product-form > .fv-field-name,
+    .fv-products .fv-product-form > .fv-field-stock,
+    .fv-products .fv-product-form #fv-frac-fields > .row > div { grid-column: span 3; }
+    .fv-products .fv-product-form > .fv-field-sale,
+    .fv-products .fv-product-form > .fv-field-minimum,
+    .fv-products .fv-product-form > .fv-field-date { grid-column: span 2; }
+    .fv-product-editor .fv-scan-field { gap: 4px; }
+    .fv-product-editor .fv-scan-field .fv-scan-btn { min-width: 30px; padding: 4px; }
+    .fv-product-editor .fv-fraction-note { font-size: 11px; line-height: 1.5; color: #52675e; margin-bottom: 10px; }
+    .fv-products .fv-product-form > .mt-4,
+    .fv-products .fv-product-form > .mt-3 { margin-top: 6px !important; }
+    body.fv-app main .fv-products .fv-product-form .form-label {
+        display: block; font-size: 11px; line-height: 1.3; margin-bottom: 4px;
+        min-height: 28px; overflow-wrap: anywhere;
+    }
+    body.fv-app main .fv-products .fv-product-form .form-control,
+    body.fv-app main .fv-products .fv-product-form .form-select {
+        min-height: 38px; padding: 6px; font-size: 12px; border-radius: 8px;
+    }
+    body.fv-app main .fv-products .fv-product-form .form-select { padding-right: 22px; background-position: right 6px center; background-size: 10px; }
+    body.fv-app main .fv-products .fv-product-form textarea { min-height: 60px; }
+    body.fv-app main .fv-products .fv-field-description textarea { min-height: 44px; height: 44px; }
+    body.fv-app main .fv-products .fv-field-description .form-label,
+    body.fv-app main .fv-products .fv-field-code .form-label,
+    body.fv-app main .fv-products .fv-field-name .form-label { min-height: 0; }
+    body.fv-app main .fv-products .fv-field-date .form-control { padding: 6px 1px; font-size: 10px; }
+    body.fv-app .fv-product-editor .fv-section-title { font-size: 12px; gap: 6px; margin-bottom: 0 !important; }
+    .fv-product-editor .fv-section-title i { width: 26px; height: 26px; border-radius: 7px; }
+    .fv-product-editor .fv-category-hint { display: none; }
+    .fv-product-editor .form-check-label { font-size: 12px; line-height: 1.4; }
+    .fv-product-editor .fv-scan-btn { min-height: 38px; }
+    .fv-product-editor .fv-form-actions { gap: 6px; padding-top: 10px; margin-top: 0 !important; }
+    .fv-product-editor .fv-form-actions > * { padding: 9px 6px; font-size: 12px; min-height: 40px; }
+}
+@media screen and (min-width: 400px) and (max-width: 767.98px) {
+    .fv-products .fv-product-form #fv-frac-fields > .row > div { grid-column: span 2; }
+}
+@media screen and (max-width: 399.98px) {
+    .fv-products .fv-page-head h2 { font-size: 1.35rem; }
+    .fv-products .fv-product-list tbody { padding: 8px; }
+}
+
+/* Listado compacto: precio, stock y vencimiento comparten una fila. */
+@media screen and (max-width: 767.98px) {
+    body.fv-app .fv-product-catalog .fv-page-head { padding: 12px !important; gap: 10px; margin-bottom: 10px; }
+    .fv-product-catalog .fv-page-head h2 { font-size: 1.2rem; margin: 0; }
+    .fv-product-catalog .fv-page-head p { display: none; }
+    .fv-product-catalog .fv-product-head-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .fv-product-catalog .fv-page-head .fv-btn-light { font-size: 11px; padding: 8px 5px; gap: 5px; min-height: 38px; }
+    .fv-product-catalog .fv-panel-top { padding: 10px; gap: 5px; }
+    .fv-product-catalog .fv-panel-top h5 { font-size: 12px; }
+    .fv-product-catalog .fv-panel-top small { font-size: 10px; }
+    .fv-product-catalog .fv-product-list tbody { gap: 8px; padding: 8px; }
+    .fv-product-catalog .fv-product-list tbody tr { grid-template-columns: minmax(0, 1fr) minmax(0, .65fr) minmax(0, 1.1fr) auto; }
+    body.fv-app main .fv-product-catalog .fv-product-list tbody td { padding: 8px 4px !important; font-size: 11px; }
+    .fv-product-catalog .fv-product-list tbody td[data-label] { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 5px; }
+    .fv-product-catalog .fv-product-list td[data-label]::before { font-size: 9px; line-height: 1.3; }
+    body.fv-app main .fv-product-catalog .fv-product-list tbody .fv-product-title { grid-column: 1 / -1; padding: 10px 8px !important; font-size: 12px; }
+    .fv-product-catalog .fv-stock { padding: 4px 6px; font-size: 10px; max-width: 100%; overflow-wrap: anywhere; }
+    .fv-product-catalog .fv-product-list tbody td.fv-product-actions[data-label] { grid-column: 4; display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-end; gap: 4px; border-top: 0; }
+    .fv-product-catalog .fv-product-actions[data-label]::before { display: none; }
+    body.fv-app main .fv-product-catalog .fv-product-actions .fv-icon-btn { width: 30px; height: 34px; margin: 0; font-size: 14px; }
+    .fv-product-catalog .fv-product-list tbody .fv-product-empty { grid-column: 1 / -1; }
+}
+@media screen and (max-width: 359.98px) {
+    body.fv-app main .fv-product-catalog .fv-product-list tbody td { padding: 8px 2px !important; font-size: 10px; }
+    .fv-product-catalog .fv-product-list td[data-label]::before { font-size: 8px; }
+    .fv-product-catalog .fv-product-list tbody td.fv-product-actions[data-label] { gap: 3px; }
+    body.fv-app main .fv-product-catalog .fv-product-actions .fv-icon-btn { width: 26px; height: 32px; font-size: 13px; }
+}

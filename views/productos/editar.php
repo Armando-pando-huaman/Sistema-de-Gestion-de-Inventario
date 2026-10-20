@@ -1,4 +1,5 @@
 <?php require_once '../views/layouts/header.php'; ?>
+<link rel="stylesheet" href="css/fv-productos.css?v=7">
 <div class="fv-products fv-product-editor">
 <?php if (!empty($error)): ?><div class="alert alert-danger"><?= htmlspecialchars($error,ENT_QUOTES,'UTF-8') ?></div><?php endif; ?>
 <section class="fv-page-head">
@@ -11,43 +12,43 @@
 </section>
 <div class="fv-panel fv-editor-card">
     <div class="fv-form-body">
-        <form method="POST" class="row g-3">
+        <form method="POST" class="row g-3 fv-product-form">
             <div class="col-12"><h5 class="fv-section-title"><i class="bi bi-capsule"></i> Información del producto</h5></div>
-            <div class="col-md-4">
+            <div class="col-md-4 fv-field-code">
                 <label class="form-label" for="codigo_barras">Código de Barras</label>
                 <div class="fv-scan-field"><input id="codigo_barras" type="text" name="codigo_barras" class="form-control" autocomplete="off" inputmode="text" value="<?= htmlspecialchars((string)($producto['codigo_barras'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"><button class="fv-scan-btn" type="button" data-fv-scan-open title="Escanear código QR o barras"><i class="bi bi-upc-scan"></i><span>Escanear</span></button></div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 fv-field-name">
                 <label class="form-label" for="nombre">Nombre *</label>
                 <input id="nombre" type="text" name="nombre" class="form-control" value="<?= htmlspecialchars((string)($producto['nombre'] ?? '')) ?>" required>
             </div>
-            <div class="col-12">
+            <div class="col-12 fv-field-description">
                 <label class="form-label" for="descripcion">Descripción</label>
                 <textarea id="descripcion" name="descripcion" class="form-control" rows="2"><?= htmlspecialchars((string)($producto['descripcion'] ?? '')) ?></textarea>
             </div>
             <div class="col-12 mt-4"><h5 class="fv-section-title"><i class="bi bi-currency-exchange"></i> Precios y existencias</h5></div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md-3 fv-field-half">
                 <label class="form-label" for="precio_compra">Precio Compra</label>
                 <input id="precio_compra" type="number" step="0.01" name="precio_compra" class="form-control" value="<?= htmlspecialchars((string)($producto['precio_compra'] ?? '0.00')) ?>">
             </div>
-            <div class="col-6 col-md-3">
-                <label class="form-label" for="precio_venta">Precio Venta *</label>
-                <input id="precio_venta" type="number" step="0.01" name="precio_venta" class="form-control" value="<?= htmlspecialchars((string)($producto['precio_venta'] ?? '')) ?>" required>
-            </div>
-            <div class="col-6 col-md-2">
+            <div class="col-6 col-md-2 fv-field-stock">
                 <label class="form-label" for="stock" id="fv-stock-label">Stock *</label>
                 <input id="stock" type="number" name="stock" class="form-control" value="<?= htmlspecialchars((string)($producto['stock'] ?? '0')) ?>" required>
             </div>
-            <div class="col-6 col-md-2">
+            <div class="col-6 col-md-3 fv-field-sale">
+                <label class="form-label" for="precio_venta">Precio Venta *</label>
+                <input id="precio_venta" type="number" step="0.01" name="precio_venta" class="form-control" value="<?= htmlspecialchars((string)($producto['precio_venta'] ?? '')) ?>" required>
+            </div>
+            <div class="col-6 col-md-2 fv-field-minimum">
                 <label class="form-label" for="stock_minimo">Stock Mínimo</label>
                 <input id="stock_minimo" type="number" name="stock_minimo" class="form-control" value="<?= htmlspecialchars((string)($producto['stock_minimo'] ?? '5')) ?>">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 fv-field-date">
                 <label class="form-label" for="fecha_vencimiento">Vencimiento</label>
                 <input id="fecha_vencimiento" type="date" name="fecha_vencimiento" class="form-control" value="<?= htmlspecialchars((string)($producto['fecha_vencimiento'] ?? '')) ?>">
             </div>
             <div class="col-12 mt-4"><h5 class="fv-section-title"><i class="bi bi-tags"></i> Clasificación</h5></div>
-            <div class="col-md-8">
+            <div class="col-md-8 fv-field-category">
                 <label class="form-label" for="categoria_id">Categoría</label>
                 <select id="categoria_id" name="categoria_id" class="form-select">
                     <option value="">-- Seleccione --</option>
@@ -64,19 +65,20 @@
             <div class="col-md-4 fv-category-create-action"><a class="fv-category-add-btn" href="index.php?c=Categoria&a=index"><i class="bi bi-tags"></i> Administrar categorías</a></div>
             
 <div class="col-12 mt-3"><h5 class="fv-section-title"><i class="bi bi-boxes"></i> Presentaciones de venta</h5></div>
-<div class="col-12"><label class="form-check"><input class="form-check-input" type="checkbox" id="fv-frac" name="es_fraccionable" value="1" <?= (int)($producto['es_fraccionable'] ?? ($_POST['es_fraccionable'] ?? 0)) === 1 ? 'checked' : '' ?>><span class="form-check-label">¿Permitir venta fraccionada (caja, blíster, pastilla)?</span></label></div>
+<div class="col-12"><label class="form-check"><input class="form-check-input" type="checkbox" id="fv-frac" name="es_fraccionable" value="1" <?= (int)($producto['es_fraccionable'] ?? ($_POST['es_fraccionable'] ?? 0)) === 1 ? 'checked' : '' ?>><span class="form-check-label">Permitir venta por caja, paquete o unidad</span></label></div>
 <div class="col-12" id="fv-frac-fields" hidden>
+ <p class="fv-fraction-note">Configura cuántas unidades contiene la caja. Ejemplo: 10 paquetes de 10 guantes = 100 unidades. Si no hay paquete intermedio, usa 1 paquete por caja. En ventas puedes elegir caja, paquete o unidad.</p>
  <div class="row g-3">
-  <div class="col-sm-4"><label class="form-label">Blísteres por caja</label><input class="form-control" type="number" min="1" name="blisters_por_caja" value="<?= htmlspecialchars((string)($producto['blisters_por_caja'] ?? ($_POST['blisters_por_caja'] ?? 1)),ENT_QUOTES,'UTF-8') ?>"></div>
-  <div class="col-sm-4"><label class="form-label">Pastillas por blíster</label><input class="form-control" type="number" min="1" name="unidades_por_blister" value="<?= htmlspecialchars((string)($producto['unidades_por_blister'] ?? ($_POST['unidades_por_blister'] ?? 1)),ENT_QUOTES,'UTF-8') ?>"></div>
-  <div class="col-sm-4"><label class="form-label">Total de pastillas por caja</label><output id="fv-frac-total" class="form-control bg-light"></output></div>
-  <div class="col-sm-4"><label class="form-label">Precio por pastilla (S/)</label><input class="form-control" name="precio_unidad" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_unidad'] ?? ($_POST['precio_unidad'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
-  <div class="col-sm-4"><label class="form-label">Precio por blíster (S/)</label><input class="form-control" name="precio_blister" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_blister'] ?? ($_POST['precio_blister'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Paquetes / blísteres por caja</label><input class="form-control" type="number" min="1" name="blisters_por_caja" value="<?= htmlspecialchars((string)($producto['blisters_por_caja'] ?? ($_POST['blisters_por_caja'] ?? 1)),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Unidades por paquete / blíster</label><input class="form-control" type="number" min="1" name="unidades_por_blister" value="<?= htmlspecialchars((string)($producto['unidades_por_blister'] ?? ($_POST['unidades_por_blister'] ?? 1)),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Total de unidades por caja</label><output id="fv-frac-total" class="form-control bg-light"></output></div>
+  <div class="col-sm-4"><label class="form-label">Precio por unidad (S/)</label><input class="form-control" name="precio_unidad" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_unidad'] ?? ($_POST['precio_unidad'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
+  <div class="col-sm-4"><label class="form-label">Precio por paquete / blíster (S/)</label><input class="form-control" name="precio_blister" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_blister'] ?? ($_POST['precio_blister'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
   <div class="col-sm-4"><label class="form-label">Precio por caja (S/)</label><input class="form-control" name="precio_caja" type="number" step="0.01" min="0" value="<?= htmlspecialchars((string)($producto['precio_caja'] ?? ($_POST['precio_caja'] ?? '')),ENT_QUOTES,'UTF-8') ?>"></div>
  </div>
 </div>
 <div class="col-12"><small id="fv-stock-hint" class="text-muted"></small></div>
-<script src="js/fv-fraccion-productos.js"></script>
+<script src="js/fv-fraccion-productos.js?v=2"></script>
 
 <div class="col-12">
                 <div class="fv-form-actions">

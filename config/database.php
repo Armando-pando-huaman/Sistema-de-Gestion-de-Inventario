@@ -24,7 +24,15 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
-            die("Error de conexión: " . $e->getMessage());
+            error_log('Error de conexión a la base de datos: ' . $e->getMessage());
+            if (!headers_sent()) {
+                http_response_code(503);
+                header('Content-Type: text/html; charset=UTF-8');
+                header('Cache-Control: no-store');
+                header('Retry-After: 60');
+            }
+            require __DIR__ . '/../views/errors/database-unavailable.php';
+            exit;
         }
         return $this->conn;
     }

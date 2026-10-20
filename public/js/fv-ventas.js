@@ -7,7 +7,7 @@
  const cents=n=>Math.round(Number(n)*100), money=n=>(n/100).toFixed(2);
  const options=p=>{
    if(!Number(p.fraccionable)) return [{id:'unidad',name:'Producto completo',factor:1,price:p.precio_venta}];
-   const candidates=[{id:'unidad',name:'Pastilla / unidad',factor:1,price:p.precio_unidad},{id:'blister',name:'Blíster',factor:Number(p.unidad),price:p.precio_blister},{id:'caja',name:'Caja',factor:Number(p.caja),price:p.precio_caja}];
+   const candidates=[{id:'unidad',name:'Unidad',factor:1,price:p.precio_unidad},{id:'blister',name:'Paquete / blíster',factor:Number(p.unidad),price:p.precio_blister},{id:'caja',name:'Caja',factor:Number(p.caja),price:p.precio_caja}];
    return candidates.filter(x=>Number.isSafeInteger(x.factor)&&x.factor>=1&&x.price!==null&&x.price!==''&&Number.isFinite(Number(x.price))&&Number(x.price)>0);
  };
  const used=id=>[...cart.values()].filter(x=>x.id===id).reduce((n,x)=>{const p=products.find(p=>p.id===id);if(!p) return n;const o=options(p).find(o=>o.id===x.presentacion); return n+x.cantidad*(o?.factor||1);},0);
