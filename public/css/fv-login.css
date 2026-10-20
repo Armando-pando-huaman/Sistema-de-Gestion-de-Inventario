@@ -1,0 +1,82 @@
+/* Login aislado: se aplica solo a .login-body. Cambia --fv-login-primary
+   o asígnalo desde el color guardado en el perfil para sincronizar el tema. */
+body.login-body {
+  --fv-login-primary: var(--color-primario, var(--primary-color, #07866b));
+  --fv-login-ink: #183f37;
+  --fv-login-muted: #819b96;
+  margin: 0; min-height: 100vh; min-height: 100dvh;
+  background: #fff; color: var(--fv-login-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px; line-height: 1.55;
+}
+.login-body *, .login-body *::before, .login-body *::after { box-sizing: border-box; }
+.login-body .fv-login-layout { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; min-height: 100dvh; }
+.login-body .fv-login-story { position: relative; display: flex; flex-direction: column; min-width: 0; overflow: hidden; padding: 42px clamp(28px, 6vw, 96px) 32px; background: linear-gradient(145deg, #e6f8f1, #d1eee6); }
+.login-body .fv-login-brand, .login-body .fv-mobile-brand { display: flex; align-items: center; gap: 12px; }
+.login-body .fv-brand-mark { width: 40px; height: 40px; display: grid; place-items: center; flex: none; border-radius: 12px; background: var(--fv-login-primary); color: #fff; font-size: 23px; box-shadow: 0 8px 18px #006d5330; }
+.login-body .fv-login-brand strong, .login-body .fv-mobile-brand strong { display: block; font-size: 17px; letter-spacing: -.5px; }
+.login-body .fv-login-brand small, .login-body .fv-mobile-brand small { display: block; color: #71978d; font-size: 10px; }
+.login-body .fv-story-content { margin: auto 0; position: relative; z-index: 1; max-width: 510px; padding: 60px 0; }
+.login-body .fv-eyebrow { display: block; color: var(--fv-login-primary); font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+.login-body .fv-story-content h1 { margin: 25px 0 20px; font-size: clamp(35px, 4vw, 64px); font-weight: 500; line-height: 1.12; letter-spacing: -2px; }
+.login-body .fv-story-content h1 em { color: var(--fv-login-primary); font-style: normal; }
+.login-body .fv-story-content > p { max-width: 365px; color: #61847c; font-size: 14px; line-height: 1.8; }
+.login-body .fv-story-safe { display: flex; gap: 9px; align-items: center; margin-top: 32px; color: #477d70; font-size: 11px; font-weight: 600; flex-wrap: wrap; }
+.login-body .fv-story-foot { position: relative; z-index: 1; color: #79a499; font-size: 10px; }
+.login-body .fv-story-art { position: absolute; bottom: 11%; right: 4%; width: 240px; height: 240px; opacity: .18; display: grid; place-items: center; color: var(--fv-login-primary); }
+.login-body .fv-story-art > i { font-size: 95px; transform: rotate(-35deg); }
+.login-body .fv-art-ring { position: absolute; border: 1px solid currentColor; border-radius: 50%; }
+.login-body .fv-art-ring-1 { inset: 10px; } .login-body .fv-art-ring-2 { inset: 45px; }
+.login-body .fv-login-panel { display: grid; place-items: center; padding: 42px clamp(20px, 5vw, 80px); min-width: 0; }
+.login-body .fv-login-panel-inner { width: 100%; max-width: 390px; }
+.login-body .fv-mobile-brand { display: none; }
+.login-body .fv-login-panel h2 { margin: 20px 0 8px; font-size: clamp(28px, 2.5vw, 38px); font-weight: 500; letter-spacing: -1.2px; }
+.login-body .fv-login-intro { margin: 0 0 34px; color: var(--fv-login-muted); }
+.login-body .fv-field { margin-bottom: 20px; }
+.login-body .fv-field label { display: block; margin-bottom: 9px; font-size: 11px; font-weight: 700; color: #42635a; }
+.login-body .fv-input-wrap { position: relative; }
+.login-body .fv-input-wrap > i { position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: #8ca9a1; font-size: 16px; pointer-events: none; }
+.login-body .fv-input-wrap .form-control { width: 100%; min-height: 47px; border: 1px solid #dbe9e4; border-radius: 9px; background: #fff; padding: 10px 46px 10px 41px; font: inherit; font-size: 12px; color: var(--fv-login-ink); box-shadow: none; }
+.login-body .fv-input-wrap .form-control::placeholder { color: #a8bcb6; }
+.login-body .fv-input-wrap .form-control:focus { border-color: var(--fv-login-primary); box-shadow: 0 0 0 3px #008c691c; }
+.login-body .fv-password-toggle { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); width: 34px; height: 34px; border: 0; background: transparent; color: #8ca9a1; border-radius: 7px; }
+.login-body .fv-password-toggle:focus-visible { outline: 2px solid var(--fv-login-primary); }
+.login-body .fv-login-submit { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; min-height: 48px; margin-top: 27px; padding: 11px 18px; border: 0; border-radius: 9px; background: var(--fv-login-primary); color: white; font: inherit; font-weight: 700; cursor: pointer; box-shadow: 0 8px 18px #007b5d26; }
+.login-body .fv-login-submit:hover { filter: brightness(.94); color: #fff; }
+.login-body .fv-login-trust { margin-top: 68px; text-align: center; color: #90a9a1; font-size: 10px; }
+.login-body .fv-login-trust i { color: var(--fv-login-primary); margin-right: 6px; }
+.login-body .alert { font-family: system-ui, sans-serif; font-size: 13px; }
+@media (max-width: 767px) {
+  .login-body .fv-login-layout { display: block; }
+  .login-body .fv-login-story { display: none; }
+  .login-body .fv-login-panel { min-height: 100vh; min-height: 100dvh; padding: 28px 24px 30px; align-items: center; }
+  .login-body .fv-login-panel-inner { max-width: 420px; }
+  .login-body .fv-mobile-brand { display: flex; margin-bottom: clamp(45px, 10vh, 95px); }
+  .login-body .fv-login-panel h2 { font-size: 32px; }
+  .login-body .fv-login-intro { margin-bottom: 29px; }
+  .login-body .fv-login-trust { margin-top: 56px; }
+}
+@media (max-width: 350px) {
+  .login-body .fv-login-panel { padding-left: 16px; padding-right: 16px; }
+  .login-body .fv-mobile-brand { margin-bottom: 42px; }
+  .login-body .fv-login-panel h2 { font-size: 28px; }
+  .login-body .fv-login-trust { margin-top: 35px; }
+}
+
+/* Compatibilidad con paletas reales de FarmaVidaHC: html[data-fv-palette].
+   No cambia los estilos de otras páginas ni requiere alterar script.js. */
+html[data-fv-palette="mint"] body.login-body { --fv-login-primary:#087f61; --fv-login-soft:#e8f7f1; --fv-login-soft-2:#d1eee6; }
+html[data-fv-palette="blue"] body.login-body { --fv-login-primary:#2563a8; --fv-login-soft:#eaf4fb; --fv-login-soft-2:#d4e8f7; }
+html[data-fv-palette="lavender"] body.login-body { --fv-login-primary:#6750a4; --fv-login-soft:#f1edfb; --fv-login-soft-2:#e3dbf7; }
+html[data-fv-palette="coral"] body.login-body { --fv-login-primary:#c45c51; --fv-login-soft:#fff0eb; --fv-login-soft-2:#f9ddd3; }
+body.login-body .fv-login-story { background:linear-gradient(145deg,var(--fv-login-soft,#e8f7f1),var(--fv-login-soft-2,#d1eee6)); }
+body.login-body .fv-login-brand small,
+body.login-body .fv-mobile-brand small,
+body.login-body .fv-story-content > p,
+body.login-body .fv-story-safe,
+body.login-body .fv-story-foot { color:var(--fv-login-ink);opacity:.7; }
+body.login-body .fv-input-wrap .form-control:focus { box-shadow:0 0 0 3px var(--fv-login-soft,#e8f7f1); }
+@media (max-width:350px) {
+ body.login-body .fv-login-panel-inner { min-width:0; }
+ body.login-body .fv-login-panel h2 { overflow-wrap:break-word; }
+}
