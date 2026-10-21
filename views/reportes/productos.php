@@ -33,7 +33,7 @@
                 <?php foreach ($data['productosTop'] as $i => $p): ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
-                        <td><strong><?= htmlspecialchars($p['nombre']) ?></strong></td>
+                        <td><strong><?= htmlspecialchars($p['nombre']) ?></strong><?php if(isset($p['lote'])): ?><br><small>Lote: <?= htmlspecialchars($p['lote'],ENT_QUOTES,'UTF-8') ?></small><?php endif; ?></td>
                         <td><small class="text-muted"><?= htmlspecialchars($p['categoria'] ?? '-') ?></small></td>
                         <td class="text-center"><span class="badge bg-primary"><?= $p['total_vendido'] ?></span></td>
                         <td class="text-center"><?= $p['num_ventas'] ?></td>
@@ -50,7 +50,7 @@
 
 <!-- Productos menos vendidos + Por vencer -->
 <div class="row g-3">
-    <div class="col-md-6">
+    <div class="col-12">
         <div class="card shadow-sm">
             <div class="card-header bg-warning text-dark">
                 <i class="bi bi-arrow-down-circle"></i> Productos con Menos Rotación
@@ -78,36 +78,6 @@
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-danger text-white">
-                <i class="bi bi-calendar-x"></i> Productos Próximos a Vencer (90 días)
-            </div>
-            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
-                <table class="table table-sm mb-0">
-                    <thead class="table-light">
-                        <tr><th>Producto</th><th>Vence</th><th class="text-center">Días</th></tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($data['porVencer'] as $p): ?>
-                            <tr class="<?= $p['dias_restantes'] <= 30 ? 'table-danger' : ($p['dias_restantes'] <= 60 ? 'table-warning' : '') ?>">
-                                <td><small><?= htmlspecialchars($p['nombre']) ?></small></td>
-                                <td><small><?= date('d/m/Y', strtotime($p['fecha_vencimiento'])) ?></small></td>
-                                <td class="text-center">
-                                    <span class="badge bg-<?= $p['dias_restantes'] <= 30 ? 'danger' : ($p['dias_restantes'] <= 60 ? 'warning' : 'secondary') ?>">
-                                        <?= $p['dias_restantes'] ?> días
-                                    </span>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        <?php if (empty($data['porVencer'])): ?>
-                            <tr><td colspan="3" class="text-center text-muted py-3">No hay productos por vencer</td></tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 </div>
-
+<?php require __DIR__.'/lotes.php'; ?>
 <?php require_once '../views/layouts/footer.php'; ?>

@@ -55,12 +55,7 @@
                             <i class="bi bi-pencil"></i>
                         </a>
                         <?php if ($u['id'] != $_SESSION['user_id']): ?>
-                            <a href="index.php?c=Usuario&a=eliminar&id=<?= $u['id'] ?>" 
-                               class="btn btn-sm btn-danger" 
-                               onclick="return confirm('¿Eliminar al usuario <?= htmlspecialchars($u['nombre']) ?>?')"
-                               title="Eliminar">
-                                <i class="bi bi-trash"></i>
-                            </a>
+                            <form class="d-inline" method="post" action="index.php?c=Usuario&amp;a=eliminar"><input type="hidden" name="csrf" value="<?= $fvEsc(Seguridad::token()) ?>"><input type="hidden" name="id" value="<?= (int)$u['id'] ?>"><button class="btn btn-sm btn-danger" onclick="return confirm('¿Desactivar este usuario? Su historial se conservará.')" title="Desactivar usuario"><i class="bi bi-person-dash"></i></button></form>
                         <?php else: ?>
                             <button class="btn btn-sm btn-secondary" disabled title="No puedes eliminarte">
                                 <i class="bi bi-lock"></i>

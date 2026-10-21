@@ -1381,3 +1381,29 @@ body.fv-app .fv-product-editor .fv-form-actions {margin-top:10px!important;}
 #fv-scan-video,#fv-scan-fallback{width:100%;max-height:330px;object-fit:cover;border-radius:12px;background:#111;overflow:hidden}
 #fv-scan-status{min-height:35px;margin:10px 0;font-size:13px}
 @media(max-width:767.98px){.fv-categories-grid{grid-template-columns:1fr}body.fv-app .fv-product-editor .fv-form-body{padding:15px!important}.fv-product-head-actions{width:100%}.fv-product-head-actions a{flex:1;justify-content:center}.fv-scan-btn span{display:none}}
+
+/* Separación de operaciones y administración en ambos menús. */
+.fv-side-nav .fv-nav-admin-divider {
+ margin:14px 10px 6px;
+ padding-top:14px;
+ border-top:1px solid var(--care-border);
+ color:var(--care-primary);
+ font-size:10px;
+ font-weight:750;
+ letter-spacing:.08em;
+ text-transform:uppercase;
+}
+html[data-fv-mode="dark"] .fv-nav-admin-divider {color:var(--care-readable);}
+@media(min-width:992px){
+ html[data-fv-layout="horizontal"] .fv-side-nav .fv-nav-admin-divider {
+  align-self:center;
+  flex:0 0 1px;
+  width:1px;
+  height:28px;
+  margin:0 12px;
+  padding:0;
+  border-top:0;
+  border-left:1px solid var(--care-border);
+ }
+ html[data-fv-layout="horizontal"] .fv-nav-admin-divider span {display:none;}
+}

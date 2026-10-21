@@ -46,6 +46,7 @@
             <?php endif; ?>
             <div id="alertaLogin" class="alert alert-danger" style="display:none;" role="alert"></div>
             <form method="POST" id="loginForm">
+<input type="hidden" name="csrf" value="<?= htmlspecialchars(Seguridad::token(),ENT_QUOTES,'UTF-8') ?>">
                 <div class="fv-field">
                     <label for="email">Correo electrónico</label>
                     <div class="fv-input-wrap"><i class="bi bi-envelope" aria-hidden="true"></i><input type="email" name="email" id="email" class="form-control" placeholder="tu@botica.com" autocomplete="username" required autofocus></div>

@@ -1,5 +1,5 @@
 <?php
-require_once '../models/Usuario.php';
+require_once '../models/usuario.php';
 
 class UsuarioController {
 
@@ -143,7 +143,7 @@ class UsuarioController {
     public function eliminar() {
         $this->checkAdmin();
         
-        $id = $_GET['id'] ?? 0;
+        $id = $_POST['id'] ?? 0;
 
         if (!$id) {
             header("Location: index.php?c=Usuario&a=index");

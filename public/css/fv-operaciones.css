@@ -18,6 +18,11 @@
 .op-metrics small { color:#53636b; font-size:11px; }
 .op-metrics-four { grid-template-columns:repeat(4,minmax(0,1fr)); }
 .op-table-wrap { max-width:100%; overflow-x:auto; }
+.op-donut-layout { display:grid; grid-template-columns:minmax(240px,.8fr) minmax(0,1.2fr); gap:20px; align-items:center; }
+.op-donut-canvas { position:relative; height:330px; min-width:0; }
+.op-donut-key { display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:7px; background:var(--care-primary); }
+@media(max-width:767.98px){.op-donut-layout{grid-template-columns:minmax(0,1fr);gap:12px}.op-donut-canvas{height:290px}}
+@media print{.op-donut-layout{break-inside:avoid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}.op-donut-canvas{height:300px}}
 .fv-operations .card-body.p-0 { max-width:100%; overflow-x:auto; }
 .fv-operations .op-hour-chart { position:relative; height:260px; }
 .op-table-wrap table { margin:0; }

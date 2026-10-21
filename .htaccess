@@ -1,4 +1,5 @@
 RewriteEngine On
+RewriteRule ^(?:tests|\.git)(?:/|$) - [F,L]
 RewriteBase /Sistema-de-Gestion-de-Inventario/
 
 # Redirigir todo el tráfico a la carpeta public

@@ -1,4 +1,4 @@
-<?php
+<?php if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -30,7 +30,7 @@ try {
 } catch (PDOException $e) {
     echo "<p style='color:red'>❌ Falló la conexión al servidor MySQL.</p>";
     echo "<p><strong>Mensaje de error:</strong> " . $e->getMessage() . "</p>";
-    
+
     if (strpos($e->getMessage(), 'Access denied') !== false) {
         echo "<p>🔍 <strong>Diagnóstico:</strong> El problema está en el <strong>USUARIO o la CONTRASEÑA</strong>.</p>";
     } elseif (strpos($e->getMessage(), 'Unknown MySQL server host') !== false) {

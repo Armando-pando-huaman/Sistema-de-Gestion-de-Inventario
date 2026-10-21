@@ -11,7 +11,7 @@ class MovimientoController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 if (!is_string($_POST['csrf'] ?? null) || !hash_equals($_SESSION['mov_csrf'], $_POST['csrf'])) throw new RuntimeException('La sesión del formulario venció. Recarga la página.');
-                $movModel->registrar($_POST['producto_id'] ?? null, $_POST['tipo'] ?? '', $_POST['cantidad'] ?? null, $_POST['motivo'] ?? '', $_SESSION['user_id']);
+                $movModel->registrar($_POST['producto_id'] ?? null, $_POST['tipo'] ?? '', $_POST['cantidad'] ?? null, $_POST['motivo'] ?? '', $_SESSION['user_id'],$_POST);
                 $_SESSION['mov_success'] = 'Movimiento registrado y stock actualizado.';
                 header('Location: index.php?c=Movimiento&a=index'); exit;
             } catch (PDOException $e) { error_log($e->getMessage()); $error = 'No se pudo registrar el movimiento. Inténtalo nuevamente.'; }
@@ -34,6 +34,7 @@ class MovimientoController {
         $historial = $movModel->historial($filtros, filter_var($_GET['pagina'] ?? 1, FILTER_VALIDATE_INT) ?: 1);
         $productos = $prodModel->getAll();
         $motivos = Movimiento::motivos();
+        $lotes = (new Database())->getConnection()->query('SELECT l.*,p.nombre FROM lotes l JOIN productos p ON p.id=l.producto_id WHERE l.stock>0 ORDER BY p.nombre,l.vencimiento')->fetchAll();
         require '../views/movimientos/index.php';
     }
 }

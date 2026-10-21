@@ -24,9 +24,8 @@ class DashboardController {
         try {
             $db = new Database();
             $conn = $db->getConnection();
-            $stmt = $conn->query("SELECT COUNT(*) FROM productos 
-                WHERE fecha_vencimiento IS NOT NULL 
-                AND fecha_vencimiento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)");
+            $stmt = $conn->query("SELECT COUNT(DISTINCT producto_id) FROM lotes
+                WHERE stock>0 AND vencimiento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)");
             $porVencer = $stmt->fetchColumn();
         } catch (Exception $e) {
             $porVencer = 0;

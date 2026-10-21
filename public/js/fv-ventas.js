@@ -7,7 +7,7 @@
  const cents=n=>Math.round(Number(n)*100), money=n=>(n/100).toFixed(2);
  const options=p=>{
    if(!Number(p.fraccionable)) return [{id:'unidad',name:'Producto completo',factor:1,price:p.precio_venta}];
-   const candidates=[{id:'unidad',name:'Unidad',factor:1,price:p.precio_unidad},{id:'blister',name:'Paquete / blíster',factor:Number(p.unidad),price:p.precio_blister},{id:'caja',name:'Caja',factor:Number(p.caja),price:p.precio_caja}];
+   const candidates=[{id:'unidad',name:p.nombre_unidad||'Unidad',factor:1,price:p.precio_unidad},{id:'blister',name:p.nombre_paquete||'Paquete / blíster',factor:Number(p.unidad),price:p.precio_blister},{id:'caja',name:p.nombre_caja||'Caja',factor:Number(p.caja),price:p.precio_caja}];
    return candidates.filter(x=>Number.isSafeInteger(x.factor)&&x.factor>=1&&x.price!==null&&x.price!==''&&Number.isFinite(Number(x.price))&&Number(x.price)>0);
  };
  const used=id=>[...cart.values()].filter(x=>x.id===id).reduce((n,x)=>{const p=products.find(p=>p.id===id);if(!p) return n;const o=options(p).find(o=>o.id===x.presentacion); return n+x.cantidad*(o?.factor||1);},0);
@@ -55,7 +55,7 @@
    total.textContent=money(sum);sync();submit.disabled=!cart.size||sum<=0||products.some(p=>used(p.id)>Number(p.stock));
  }
  list.addEventListener('click',e=>{const button=e.target.closest('.fv-add');if(!button)return;const p=products.find(p=>p.el===button.closest('[data-producto]'));if(p)add(p,button.dataset.presentacion||options(p)[0]?.id);});
- function filter(){const q=search.value.trim().toLocaleLowerCase();const mobile=window.matchMedia('(max-width:767.98px)').matches;products.forEach(p=>p.el.hidden=(mobile&&!q)||!p.el.dataset.search.includes(q));const exact=products.find(p=>q&&p.codigo&&String(p.codigo).toLocaleLowerCase()===q);if(exact){add(exact,options(exact)[0]?.id);search.value='';products.forEach(p=>p.el.hidden=mobile);}const hint=document.getElementById('fv-mobile-search-hint');if(hint){hint.hidden=!(mobile&&!search.value.trim());}}
+ function filter(){const q=search.value.trim().toLocaleLowerCase();const mobile=window.matchMedia('(max-width:767.98px)').matches;products.forEach(p=>p.el.hidden=!p.el.dataset.search.includes(q));const exact=products.find(p=>q&&p.codigo&&String(p.codigo).toLocaleLowerCase()===q);if(exact){add(exact,options(exact)[0]?.id);search.value='';products.forEach(p=>p.el.hidden=false);}const hint=document.getElementById('fv-mobile-search-hint');if(hint){hint.hidden=true;}}
  search.addEventListener('input',filter);
  window.addEventListener('resize',filter);
  search.addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const q=search.value.trim().toLocaleLowerCase();const p=products.find(p=>String(p.codigo||'').toLocaleLowerCase()===q)||products.find(p=>!p.el.hidden);if(p){add(p,options(p)[0]?.id);search.value='';filter();}});

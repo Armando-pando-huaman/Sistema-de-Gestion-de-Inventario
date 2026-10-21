@@ -9,13 +9,16 @@ foreach ($progreso['serie'] as $fila) $maximo = max($maximo, $fila['total'], $fi
 <h3>Avance del negocio</h3>
 <p class="op-note">Del <?= $esc($progreso['inicio']) ?> al <?= $esc($progreso['fin']) ?>, comparado con <?= $esc($progreso['anterior_inicio']) ?> al <?= $esc($progreso['anterior_fin']) ?>. El día de hoy está en curso.</p>
 <div class="op-metrics op-metrics-four">
-<article><span>Ingresos por ventas</span><strong><?= $money($progreso['total']) ?></strong><small>Anterior: <?= $money($progreso['anterior']) ?></small></article>
+<article><span>Ventas brutas</span><strong><?= $money($progreso['total']) ?></strong><small>Anterior: <?= $money($progreso['anterior']) ?></small></article>
 <article><span>Crecimiento de ingresos</span><strong><?= $progreso['cambio'] === null ? 'Sin base' : sprintf('%+.1f%%', $progreso['cambio']) ?></strong><small><?= $progreso['cambio'] === null ? 'El período anterior no tuvo ingresos.' : 'Frente al período anterior de igual duración.' ?></small></article>
 <article><span>Ventas realizadas</span><strong><?= $progreso['cantidad'] ?></strong><small>Anterior: <?= $progreso['cantidad_anterior'] ?></small></article>
 <article><span>Ticket promedio</span><strong><?= $money($progreso['ticket']) ?></strong><small>Ingreso promedio por venta.</small></article>
 </div>
-<p class="op-note">Los ingresos no representan utilidad neta: no incluyen el descuento de compras, gastos ni reembolsos.</p>
+<p class="op-note">La comparación muestra ventas brutas registradas en cada período. Los reembolsos se descuentan en la fecha en que se realizan, en el resumen operativo de abajo.</p>
 </section>
+<?php if(isset($data['finanzas'])):$f=$data['finanzas']; ?>
+<section class="op-panel"><h3>Resultado operativo del período</h3><div class="op-metrics op-metrics-four"><article><span>Reembolsos</span><strong><?= $money($f['reembolsos']) ?></strong></article><article><span>Ventas netas de reembolsos</span><strong><?= $money($f['neto']) ?></strong></article><article><span>Gastos registrados</span><strong><?= $money($f['gastos']) ?></strong></article><article><span>Resultado operativo estimado</span><strong><?= $f['resultado']===null?'Incompleto':$money($f['resultado']) ?></strong></article></div><p class="op-note">Costo de mercadería vendida, descontando el costo reintegrado por devoluciones: <?= $money($f['costo']) ?>. <?= $f['pendientes'] ?> líneas sin costo histórico documentado. El resultado resta costos y gastos registrados; no incluye impuestos ni gastos aún no registrados. Las compras se reconocen como costo al vender, sin descontarlas dos veces.</p><a href="index.php?c=Gestion&amp;a=finanzas">Revisar o registrar gastos →</a></section>
+<?php endif; ?>
 <section class="op-panel"><h3>Evolución diaria de ingresos</h3><p class="op-note">Cada par compara un día del período elegido con el día equivalente del período anterior. Incluye días sin ventas. Pasa el cursor, toca una columna o usa Tab para ver el detalle.</p>
 <div class="op-legend"><span><i></i> Período elegido</span><span><i class="previous"></i> Período anterior</span></div>
 <div class="op-chart-scroll" tabindex="0" aria-label="Gráfico de ingresos diarios; desplázate horizontalmente para ver todos los días">

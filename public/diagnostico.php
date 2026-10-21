@@ -1,4 +1,4 @@
-<?php
+<?php if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 require_once '..    /config/database.php';
 
 $db = new Database();
@@ -39,11 +39,11 @@ echo "<h3>Prueba de verificación con admin123:</h3>";
 if (!empty($usuarios)) {
     foreach ($usuarios as $u) {
         echo "<strong>Usuario:</strong> {$u['email']}<br>";
-        
+
         // ¿El hash es válido?
         $info = password_get_info($u['password']);
         echo "Algoritmo del hash: " . ($info['algoName'] ?? 'desconocido') . "<br>";
-        
+
         if ($info['algoName'] === 'unknown') {
             echo "⚠️ <span style='color:red;'>La contraseña NO está hasheada (está en texto plano o formato inválido)</span><br>";
         } else {

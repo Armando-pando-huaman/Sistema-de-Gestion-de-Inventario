@@ -48,9 +48,12 @@
 
   function save(value) {
     if (!running || !value) return;
-    input.value = String(value);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
+    const handled = !input.dispatchEvent(new CustomEvent('fv:scan', { bubbles: true, cancelable: true, detail: { value: String(value) } }));
+    if (!handled) {
+      input.value = String(value);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
     if (navigator.vibrate) navigator.vibrate(80);
     close();
     input.focus();
@@ -206,7 +209,7 @@
       if ('BarcodeDetector' in window) {
         try {
           const supported = await BarcodeDetector.getSupportedFormats();
-          formats = ['qr_code', 'ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'itf']
+          formats = ['qr_code', 'data_matrix', 'ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'itf']
             .filter(format => supported.includes(format));
         } catch (_) {}
       }

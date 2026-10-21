@@ -21,6 +21,7 @@
 <div class="card shadow-sm">
     <div class="card-body">
         <form method="POST" class="row g-3" style="max-width: 700px;">
+<input type="hidden" name="csrf" value="<?= htmlspecialchars(Seguridad::token(),ENT_QUOTES,'UTF-8') ?>">
             <div class="col-md-6">
                 <label class="form-label">Nombre Completo *</label>
                 <input type="text" name="nombre" class="form-control" 

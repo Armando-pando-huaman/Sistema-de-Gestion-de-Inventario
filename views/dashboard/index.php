@@ -319,14 +319,14 @@ foreach ($movimientosVista as $movimiento) {
         </div>
 
         <div class="fv-care-shortcuts-grid">
-            <a href="index.php?c=Producto&a=crear"
+            <?php if($esAdminVista): ?><a href="index.php?c=Producto&a=crear"
                class="fv-care-shortcut fv-care-shortcut--product">
                 <i class="bi bi-plus-circle"></i>
                 <span>Nuevo producto</span>
                 <i class="bi bi-arrow-up-right"></i>
             </a>
 
-            <a href="index.php?c=Venta&a=index"
+            <?php endif; ?><a href="index.php?c=Venta&a=index"
                class="fv-care-shortcut fv-care-shortcut--sale">
                 <i class="bi bi-cart-plus"></i>
                 <span>Nueva venta</span>

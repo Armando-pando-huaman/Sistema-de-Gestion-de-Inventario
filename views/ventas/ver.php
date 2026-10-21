@@ -57,13 +57,13 @@ html[data-fv-mode] body.fv-app main #fv-ticket :is(h3,td,p,strong,.fv-ticket-tot
  <hr>
  <p><strong>Venta:</strong> #<?= (int)$venta['id'] ?><br>
  <strong>Fecha:</strong> <?= $esc($fecha) ?><br>
- <strong>Cliente:</strong> <?= $esc($venta['cliente']) ?><br>
+ <strong>Estado:</strong> <?= $esc($venta['estado']) ?><br><strong>Pago:</strong> <?= $esc($venta['metodo_pago']) ?><br><strong>Cliente:</strong> <?= $esc($venta['cliente']) ?><br>
  <?php if (!empty($venta['numero_documento'])): ?><strong>Documento:</strong> <?= $esc($venta['tipo_documento']) ?> <?= $esc($venta['numero_documento']) ?><br><?php endif; ?>
  <strong>Cajero:</strong> <?= $esc($venta['usuario'] ?? '—') ?></p>
  <hr>
  <table><tbody>
  <?php foreach ($detalle as $d): ?>
-  <tr><td><?= $esc($d['producto']) ?><br><small><?= (int)$d['cantidad'] ?> <?= $esc($d['presentacion'] ?? 'unidad') ?> × S/ <?= number_format((float)$d['precio_unitario'], 2) ?></small></td><td class="right">S/ <?= number_format((float)$d['subtotal'], 2) ?></td></tr>
+  <tr><td><?= $esc($d['producto']) ?><br><small><?= (int)$d['cantidad'] ?> <?= $esc($d['presentacion_nombre'] ?? $d['presentacion'] ?? 'unidad') ?> × S/ <?= number_format((float)$d['precio_unitario'], 2) ?></small></td><td class="right">S/ <?= number_format((float)$d['subtotal'], 2) ?></td></tr>
  <?php endforeach; ?>
  </tbody></table>
  <div class="fv-ticket-total"><span>TOTAL</span><span>S/ <?= number_format((float)$venta['total'], 2) ?></span></div>
@@ -75,6 +75,15 @@ html[data-fv-mode] body.fv-app main #fv-ticket :is(h3,td,p,strong,.fv-ticket-tot
  </div>
  <img class="fv-ticket-edge" src="img/ticket-edge.svg" width="440" height="12" alt="" aria-hidden="true">
 </div>
+<?php foreach(['success','error'] as $key):if(!empty($_SESSION[$key])): ?><div class="fv-ticket-actions alert alert-<?= $key==='error'?'danger':'success' ?>"><?= $esc($_SESSION[$key]) ?></div><?php unset($_SESSION[$key]);endif;endforeach; ?>
+<?php if($fvIsAdmin&&!in_array($venta['estado'],['anulada','devuelta'],true)): ?>
+<details class="fv-ticket-actions card p-3 my-3"><summary>Anular o devolver esta venta</summary><p class="small">Registra las unidades mínimas que devuelve el cliente. El reembolso se registra en tu caja abierta y conserva la venta original.</p>
+<form method="post" action="index.php?c=Venta&amp;a=devolver"><input type="hidden" name="csrf" value="<?= $esc(Seguridad::token()) ?>"><input type="hidden" name="id" value="<?= (int)$venta['id'] ?>">
+<?php foreach($detalle as $d):$pendientes=(int)($d['cantidad_unidades']??$d['cantidad']*$d['factor_unidades'])-(int)$d['devuelto_unidades']; ?><label class="form-label d-block"><?= $esc($d['producto']) ?> · <?= $pendientes ?> unidades pendientes<input type="number" class="form-control" name="cantidades[<?= (int)$d['id'] ?>]" value="0" min="0" max="<?= $pendientes ?>"></label><?php endforeach; ?>
+<label class="form-label d-block">Motivo<input class="form-control" name="motivo" required maxlength="255"></label><label class="form-label d-block">Medio de reembolso<select class="form-select" name="metodo_pago"><?php foreach(Caja::metodos() as $k=>$label): ?><option value="<?= $k ?>"><?= $label ?></option><?php endforeach; ?></select></label>
+<label class="form-check my-3"><input type="checkbox" class="form-check-input" name="reintegrar" value="1" checked><span class="form-check-label">Reintegrar productos utilizables al stock. Desmarca si están dañados o no deben revenderse.</span></label>
+<button class="btn btn-primary" type="submit">Devolución parcial seleccionada</button><button class="btn btn-outline-danger" formaction="index.php?c=Venta&amp;a=anular" type="submit" onclick="return confirm('¿Reembolsar todas las unidades pendientes y anular la venta?')">Anular y reembolsar lo pendiente</button></form></details>
+<?php endif; ?>
 <div class="fv-ticket-actions text-center mb-3">
  <small id="fv-ticket-estado" class="text-muted" role="status" aria-live="polite">Pulsa Compartir ticket para descargar la imagen PNG. Luego podrás abrir WhatsApp del cliente.</small>
 </div>

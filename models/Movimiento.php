@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__.'/Stock.php';
 class Movimiento {
     private $conn;
     private $table = "movimientos";
@@ -17,47 +18,25 @@ class Movimiento {
         return $this->conn->query($query)->fetchAll();
     }
 
-    public function registrar($producto_id, $tipo, $cantidad, $motivo, $usuario_id) {
-        $producto_id = filter_var($producto_id, FILTER_VALIDATE_INT);
-        $cantidad = filter_var($cantidad, FILTER_VALIDATE_INT);
-        if (!$producto_id || !$cantidad || $cantidad < 1 || $cantidad > 1000000 || !isset(self::motivos()[$tipo]) || !in_array($motivo, self::motivos()[$tipo], true)) {
-            throw new RuntimeException('Revisa el producto, tipo, cantidad y motivo del movimiento.');
-        }
-        try {
-        $this->conn->beginTransaction();
-        $lock = $this->conn->prepare('SELECT stock FROM productos WHERE id = ? FOR UPDATE');
-        $lock->execute([$producto_id]);
-        $stock = $lock->fetchColumn();
-        if ($stock === false) throw new RuntimeException('El producto no existe.');
-        if ($tipo === 'salida' && $cantidad > (int)$stock) throw new RuntimeException('Stock insuficiente para registrar la salida.');
-        // 1. Registrar movimiento
-        $query = "INSERT INTO " . $this->table . " (producto_id, tipo, cantidad, motivo, usuario_id) 
-                  VALUES (:producto_id, :tipo, :cantidad, :motivo, :usuario_id)";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute([
-            ':producto_id' => $producto_id,
-            ':tipo' => $tipo,
-            ':cantidad' => $cantidad,
-            ':motivo' => $motivo,
-            ':usuario_id' => $usuario_id
-        ]);
-
-        // 2. Actualizar stock
-        $operador = ($tipo === 'entrada') ? '+' : '-';
-        $update = "UPDATE productos SET stock = stock $operador :cantidad WHERE id = :id";
-        $stmt2 = $this->conn->prepare($update);
-        $stmt2->execute([':cantidad' => $cantidad, ':id' => $producto_id]);
-        $this->conn->commit();
-        return true;
-        } catch (Throwable $e) {
-            if ($this->conn->inTransaction()) $this->conn->rollBack();
-            throw $e;
-        }
+    public function registrar($producto_id, $tipo, $cantidad, $motivo, $usuario_id, $meta=[]) {
+        $id=Operacion::entero($producto_id);$cantidad=Operacion::entero($cantidad);
+        if(!isset(self::motivos()[$tipo])||!in_array($motivo,self::motivos()[$tipo],true))throw new RuntimeException('Motivo no válido. Las compras y devoluciones se registran desde su documento.');
+        return Operacion::transaccion($this->conn,function()use($id,$tipo,$cantidad,$motivo,$usuario_id,$meta){
+            $p=Stock::producto($this->conn,$id);if(!$p['activo'])throw new RuntimeException('Producto inactivo.');
+            if($tipo==='entrada'){
+                $lote=Stock::entrada($this->conn,$id,$cantidad,Operacion::texto($meta['lote']??'',80),Operacion::fecha($meta['vencimiento']??''),null,true);
+                Stock::movimiento($this->conn,$id,$tipo,$cantidad,$motivo,(int)$usuario_id,null,$lote);
+            }else{
+                $lote=Operacion::entero($meta['lote_id']??null);
+                $filas=Stock::salida($this->conn,$id,$cantidad,$lote,$motivo==='Vencimiento');
+                foreach($filas as $fila)Stock::movimiento($this->conn,$id,$tipo,$fila['cantidad'],$motivo,(int)$usuario_id,null,$fila['lote_id']);
+            }
+            Operacion::audit($this->conn,'registrar','movimientos',null,['producto'=>$id,'tipo'=>$tipo,'cantidad'=>$cantidad,'motivo'=>$motivo],(int)$usuario_id);return true;
+        });
     }
-
     public static function motivos() {
         return [
-            'entrada' => ['Compra / reposición', 'Devolución de cliente', 'Ajuste de entrada', 'Otra entrada'],
+            'entrada' => ['Ajuste de entrada', 'Otra entrada'],
             'salida' => ['Vencimiento', 'Daño / merma', 'Devolución al proveedor', 'Uso interno', 'Ajuste de salida', 'Otra salida']
         ];
     }

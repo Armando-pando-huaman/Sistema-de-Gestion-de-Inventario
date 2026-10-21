@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__.'/Operacion.php';
 class Categoria {
     private $conn;
     public function __construct() {
@@ -19,16 +20,22 @@ class Categoria {
         return (int)$stmt->fetchColumn() > 0;
     }
     public function crear($nombre) {
+        return Operacion::transaccion($this->conn,function()use($nombre){
         $stmt = $this->conn->prepare('INSERT INTO categorias (nombre) VALUES (:nombre)');
-        return $stmt->execute([':nombre' => $nombre]);
+        $ok=$stmt->execute([':nombre' => $nombre]);Operacion::audit($this->conn,'crear','categorias',(int)$this->conn->lastInsertId(),['nombre'=>$nombre]);return $ok;
+        });
     }
     public function actualizar($id, $nombre) {
+        return Operacion::transaccion($this->conn,function()use($id,$nombre){
         $stmt = $this->conn->prepare('UPDATE categorias SET nombre = :nombre WHERE id = :id');
-        return $stmt->execute([':nombre' => $nombre, ':id' => $id]);
+        $antes=$this->getById($id);$ok=$stmt->execute([':nombre' => $nombre, ':id' => $id]);Operacion::audit($this->conn,'editar','categorias',(int)$id,['antes'=>$antes,'nombre'=>$nombre]);return $ok;
+        });
     }
     public function eliminar($id) {
+        return Operacion::transaccion($this->conn,function()use($id){
         $stmt = $this->conn->prepare('DELETE FROM categorias WHERE id = :id AND NOT EXISTS (SELECT 1 FROM productos WHERE categoria_id = :id_check)');
         $stmt->execute([':id' => $id, ':id_check' => $id]);
-        return $stmt->rowCount() > 0;
+        $ok=$stmt->rowCount()>0;if($ok)Operacion::audit($this->conn,'eliminar','categorias',(int)$id);return $ok;
+        });
     }
 }

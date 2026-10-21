@@ -30,6 +30,7 @@ class ReporteController {
         
         $data = [
             'progreso' => $model->progreso($dias),
+            'finanzas' => $model->finanzas($dias),
             'ventasHoy' => $model->ventasHoy(),
             'comparativa' => $model->comparativaMensual(),
             'ventasPorDia' => $model->ventasPorDia($dias),
@@ -54,8 +55,10 @@ class ReporteController {
         
         $data = [
             'progreso' => $model->progreso($dias),
+            'finanzas' => $model->finanzas($dias),
             'ventasPorDia' => $model->ventasPorDia($dias),
             'ventasPorMes' => $model->ventasPorMes(),
+            'distribucionProductos' => $model->distribucionProductos($dias),
             'ventasPorCategoria' => $model->ventasPorCategoria($dias),
             'ventasPorUsuario' => $model->ventasPorUsuario($dias),
             'ventasPorHora' => $model->ventasPorHora($dias),
@@ -70,6 +73,7 @@ class ReporteController {
      * Reporte de productos
      */
     public function productos() {
+        $accionLotes='productos';$ordenLotes=($_GET['orden_lotes']??'')==='recientes'?'recientes':'vencimiento';
         $this->checkAuth();
         
         $model = new Reporte();
@@ -79,7 +83,7 @@ class ReporteController {
         $data = [
             'productosTop' => $model->productosMasVendidos(20, $dias),
             'productosBajos' => $model->productosMenosVendidos(10),
-            'porVencer' => $model->productosPorVencer(90),
+            'lotes' => $model->lotesInventario($ordenLotes),
             'dias' => $dias
         ];
         
@@ -90,13 +94,14 @@ class ReporteController {
      * Reporte de inventario
      */
     public function inventario() {
+        $accionLotes='inventario';$ordenLotes=($_GET['orden_lotes']??'')==='recientes'?'recientes':'vencimiento';
         $this->checkAuth();
         
         $model = new Reporte();
         
         $data = [
             'estado' => $model->estadoInventario(),
-            'porVencer' => $model->productosPorVencer(90),
+            'lotes' => $model->lotesInventario($ordenLotes),
             'productosBajos' => $model->productosMenosVendidos(20)
         ];
         

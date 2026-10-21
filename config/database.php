@@ -1,10 +1,6 @@
 <?php
+date_default_timezone_set('America/Lima');
 class Database {
-   //private $host = "sql100.infinityfree.com";
-   // private $db_name = "if0_40658765_Sistema_de_Gestion_de_Inventario";
-   // private $username = "if0_40658765";
-   //  private $password = "gZGM9LZ9Cy9hR3K"; // ⚠️ Reemplaza con tu contraseña real
-   // public $conn;
 
 
     private $host = "localhost";
@@ -12,6 +8,12 @@ class Database {
     private $username = "root";
     private $password = ""; // ⚠️ Reemplaza con tu contraseña real
     public $conn;
+    public function __construct() {
+        $this->host = getenv('DB_HOST') ?: $this->host;
+        $this->db_name = getenv('DB_NAME') ?: $this->db_name;
+        $this->username = getenv('DB_USER') ?: $this->username;
+        if (getenv('DB_PASSWORD') !== false) $this->password = getenv('DB_PASSWORD');
+    }
 
     public function getConnection() {
         $this->conn = null;
@@ -23,6 +25,7 @@ class Database {
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->conn->exec("SET time_zone='-05:00'");
         } catch(PDOException $e) {
             error_log('Error de conexión a la base de datos: ' . $e->getMessage());
             if (!headers_sent()) {

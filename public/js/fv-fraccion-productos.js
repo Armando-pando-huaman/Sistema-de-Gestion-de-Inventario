@@ -8,7 +8,8 @@ function refresh(){const on=checkbox.checked;fields.hidden=!on;
  const b=Number(form.elements['blisters_por_caja'].value)||0,u=Number(form.elements['unidades_por_blister'].value)||0;
  document.getElementById('fv-frac-total').textContent=on?String(b*u):'—';
  if(label)label.textContent=isEdit?(on?'Stock (unidades) *':'Stock (productos) *'):on?'Stock (cajas) *':'Stock (productos) *';
- if(hint)hint.textContent=isEdit?'Al editar, el stock se introduce en unidades mínimas. No cambies factores sin conciliar existencias.':on?'Ingresa cajas completas: el sistema las convierte a unidades. El stock mínimo se expresa en unidades.':'Cada producto completo equivale a 1 unidad de inventario.';
+ if(hint)hint.textContent=isEdit?'El stock se consulta aquí; se modifica desde Movimientos o Compras. Los vencimientos se gestionan por lote.':on?'Ingresa cajas completas: el sistema las convierte a unidades. El stock mínimo se expresa en unidades.':'Cada producto completo equivale a 1 unidad de inventario.';
+ if(form.hasAttribute('data-initial-stock-units')){if(label)label.textContent='Cantidad en unidades mínimas *';if(hint)hint.textContent=on?'Las existencias iniciales se ingresan en unidades mínimas. Multiplica las cajas por las unidades por caja.':'Puedes agregar existencias iniciales en la sección opcional.';}
  const price=form.elements['precio_venta'];if(price){price.closest('.col-6, .col-md-3, div').hidden=on;price.disabled=on;}
 }
 checkbox.addEventListener('change',refresh);for(const x of fields.querySelectorAll('input'))x.addEventListener('input',refresh);refresh();

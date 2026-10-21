@@ -1,3 +1,7 @@
+.fv-product-stock-links {display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+.fv-product-stock-links a {display:inline-flex;align-items:center;gap:5px;padding:6px 8px;min-height:32px;border:1px solid var(--care-border);border-radius:8px;background:var(--care-soft);color:var(--care-readable,var(--care-dark));text-decoration:none;font-size:11px;font-weight:650;}
+.fv-product-stock-links a:hover {border-color:var(--care-primary);}
+.fv-product-stock-links a:focus-visible {outline:2px solid var(--care-primary);outline-offset:2px;}
 /* Crear y editar: aprovechar el ancho disponible en escritorio. */
 @media screen and (min-width: 992px) {
     body.fv-app .fv-product-editor { max-width: 1600px; width: 100%; }
@@ -9,6 +13,7 @@
     .fv-product-editor .fv-product-form > [class*="col-"] { grid-column: span 12; width: auto; min-width: 0; padding: 0; margin: 0; }
     .fv-product-editor .fv-product-form > .fv-field-code { grid-column: span 3; }
     .fv-product-editor .fv-product-form > .fv-field-name { grid-column: span 4; }
+    .fv-product-editor .fv-product-form > .col-sm-4 { grid-column: span 4; }
     .fv-product-editor .fv-product-form > .fv-field-description { grid-column: span 5; }
     body.fv-app main .fv-product-editor .fv-field-description textarea { height: 40px; min-height: 40px; }
     .fv-product-editor .fv-product-form > .fv-field-half,
@@ -91,6 +96,7 @@
         grid-column: span 6; width: auto; max-width: 100%; padding: 0; margin: 0;
     }
     .fv-products .fv-product-form > .fv-field-half,
+    .fv-products .fv-product-form > .col-sm-4,
     .fv-products .fv-product-form > .fv-field-code,
     .fv-products .fv-product-form > .fv-field-name,
     .fv-products .fv-product-form > .fv-field-stock,

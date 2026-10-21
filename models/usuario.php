@@ -1,81 +1,25 @@
 <?php
+require_once __DIR__.'/Operacion.php';
 class Usuario {
-    private $conn;
-    private $table = "usuarios";
-
-    public function __construct() {
-        $db = new Database();
-        $this->conn = $db->getConnection();
-    }
-
-    public function login($email, $password) {
-        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE email = :email LIMIT 1");
-        $stmt->execute([':email' => $email]);
-        $user = $stmt->fetch();
-        if ($user && password_verify($password, $user['password'])) {
-            return $user;
-        }
-        return false;
-    }
-
-    public function getAll() {
-        return $this->conn->query("SELECT id, nombre, email, rol, created_at FROM " . $this->table . " ORDER BY id DESC")->fetchAll();
-    }
-
-    public function getById($id) {
-        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table . " WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch();
-    }
-
-    /**
-     * Verifica si un email ya existe (opcionalmente excluye un ID)
-     */
-    public function existeEmail($email, $excluirId = null) {
-        if ($excluirId) {
-            $stmt = $this->conn->prepare("SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email AND id != :id");
-            $stmt->execute([':email' => $email, ':id' => $excluirId]);
-        } else {
-            $stmt = $this->conn->prepare("SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email");
-            $stmt->execute([':email' => $email]);
-        }
-        return $stmt->fetchColumn() > 0;
-    }
-
-    public function crear($nombre, $email, $password, $rol) {
-        $stmt = $this->conn->prepare("INSERT INTO " . $this->table . " (nombre, email, password, rol) VALUES (:nombre, :email, :password, :rol)");
-        return $stmt->execute([
-            ':nombre' => $nombre,
-            ':email' => $email,
-            ':password' => password_hash($password, PASSWORD_BCRYPT),
-            ':rol' => $rol
-        ]);
-    }
-
-    public function actualizar($id, $nombre, $email, $rol, $password = null) {
-        if ($password) {
-            $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET nombre=:nombre, email=:email, rol=:rol, password=:password WHERE id=:id");
-            return $stmt->execute([
-                ':nombre' => $nombre,
-                ':email' => $email,
-                ':rol' => $rol,
-                ':password' => password_hash($password, PASSWORD_BCRYPT),
-                ':id' => $id
-            ]);
-        } else {
-            $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET nombre=:nombre, email=:email, rol=:rol WHERE id=:id");
-            return $stmt->execute([
-                ':nombre' => $nombre,
-                ':email' => $email,
-                ':rol' => $rol,
-                ':id' => $id
-            ]);
-        }
-    }
-
-    public function eliminar($id) {
-        $stmt = $this->conn->prepare("DELETE FROM " . $this->table . " WHERE id = :id");
-        return $stmt->execute([':id' => $id]);
-    }
+ private PDO $conn;
+ public function __construct(){$this->conn=(new Database())->getConnection();}
+ public function login($email,$password){$s=$this->conn->prepare('SELECT * FROM usuarios WHERE email=? AND activo=1 LIMIT 1');$s->execute([$email]);$u=$s->fetch();return $u&&password_verify($password,$u['password'])?$u:false;}
+ public function getAll(){return $this->conn->query('SELECT id,nombre,email,rol,created_at FROM usuarios WHERE activo=1 ORDER BY id DESC')->fetchAll();}
+ public function getById($id){$s=$this->conn->prepare('SELECT * FROM usuarios WHERE id=?');$s->execute([$id]);return $s->fetch();}
+ public function existeEmail($email,$excluirId=null){$s=$this->conn->prepare('SELECT COUNT(*) FROM usuarios WHERE email=? AND id<>?');$s->execute([$email,$excluirId??0]);return $s->fetchColumn()>0;}
+ public function crear($nombre,$email,$password,$rol){return Operacion::transaccion($this->conn,function()use($nombre,$email,$password,$rol){
+  $this->conn->prepare('INSERT INTO usuarios(nombre,email,password,rol) VALUES(?,?,?,?)')->execute([$nombre,$email,password_hash($password,PASSWORD_DEFAULT),$rol]);Operacion::audit($this->conn,'crear','usuarios',(int)$this->conn->lastInsertId(),['nombre'=>$nombre,'email'=>$email,'rol'=>$rol]);return true;
+ });}
+ public function actualizar($id,$nombre,$email,$rol,$password=null){return Operacion::transaccion($this->conn,function()use($id,$nombre,$email,$rol,$password){
+  $admins=$this->conn->query("SELECT id FROM usuarios WHERE rol='admin' AND activo=1 ORDER BY id FOR UPDATE")->fetchAll(PDO::FETCH_COLUMN);$antes=$this->getById($id);
+  if($antes['rol']==='admin'&&$rol!=='admin'&&count($admins)<2)throw new RuntimeException('Debe quedar al menos un administrador activo.');
+  $sql='UPDATE usuarios SET nombre=?,email=?,rol=?';$args=[$nombre,$email,$rol];if($password){$sql.=',password=?';$args[]=password_hash($password,PASSWORD_DEFAULT);}$args[]=$id;
+  $this->conn->prepare($sql.' WHERE id=?')->execute($args);unset($antes['password']);Operacion::audit($this->conn,'editar','usuarios',(int)$id,['antes'=>$antes,'despues'=>['nombre'=>$nombre,'email'=>$email,'rol'=>$rol],'cambio_password'=>(bool)$password]);return true;
+ });}
+ public function eliminar($id){return Operacion::transaccion($this->conn,function()use($id){
+  $admins=$this->conn->query("SELECT id FROM usuarios WHERE rol='admin' AND activo=1 ORDER BY id FOR UPDATE")->fetchAll(PDO::FETCH_COLUMN);
+  if((int)$id===(int)($_SESSION['user_id']??0))throw new RuntimeException('No puedes desactivar tu propio usuario.');
+  if(in_array((string)$id,array_map('strval',$admins),true)&&count($admins)<2)throw new RuntimeException('Debe quedar un administrador activo.');
+  $this->conn->prepare('UPDATE usuarios SET activo=0 WHERE id=?')->execute([$id]);Operacion::audit($this->conn,'desactivar','usuarios',(int)$id);return true;
+ });}
 }
-?>

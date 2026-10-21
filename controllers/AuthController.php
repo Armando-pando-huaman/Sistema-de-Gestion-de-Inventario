@@ -1,5 +1,5 @@
 <?php
-require_once '../models/Usuario.php';
+require_once '../models/usuario.php';
 
 class AuthController {
     public function login() {
@@ -20,6 +20,7 @@ class AuthController {
                 $user = $usuarioModel->login($email, $password);
 
                 if ($user) {
+                    session_regenerate_id(true);
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_nombre'] = $user['nombre'];
                     $_SESSION['user_rol'] = $user['rol'];

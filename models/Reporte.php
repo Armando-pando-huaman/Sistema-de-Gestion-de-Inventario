@@ -54,6 +54,20 @@ class Reporte {
             'movimientos' => $s->fetchAll(PDO::FETCH_ASSOC)];
     }
 
+    public function finanzas(int $dias=30): array {
+        $dias=max(1,min(365,$dias));
+        $hoy=new DateTimeImmutable($this->conn->query('SELECT CURDATE()')->fetchColumn());
+        $args=[$hoy->modify('-'.($dias-1).' days')->format('Y-m-d'),$hoy->modify('+1 day')->format('Y-m-d')];
+        $s=$this->conn->prepare('SELECT COALESCE(SUM(total),0) FROM ventas WHERE fecha>=? AND fecha<?');$s->execute($args);$bruto=(float)$s->fetchColumn();
+        $s=$this->conn->prepare('SELECT COALESCE(SUM(total),0) FROM devoluciones WHERE fecha>=? AND fecha<?');$s->execute($args);$reembolsos=(float)$s->fetchColumn();
+        $s=$this->conn->prepare('SELECT COALESCE(SUM(d.costo_total),0) AS costo,COALESCE(SUM(d.costo_total IS NULL),0) AS pendientes FROM detalle_venta d JOIN ventas v ON v.id=d.venta_id WHERE v.fecha>=? AND v.fecha<?');$s->execute($args);$costos=$s->fetch();
+        $s=$this->conn->prepare('SELECT COALESCE(SUM(d.costo_reintegrado),0) AS costo,COALESCE(SUM(d.costo_reintegrado IS NULL),0) AS pendientes FROM devolucion_detalles d JOIN devoluciones v ON v.id=d.devolucion_id WHERE v.fecha>=? AND v.fecha<?');$s->execute($args);$retornos=$s->fetch();
+        $s=$this->conn->prepare('SELECT COALESCE(SUM(importe),0) FROM gastos WHERE fecha>=? AND fecha<?');$s->execute($args);$gastos=(float)$s->fetchColumn();
+        $pendientes=(int)$costos['pendientes']+(int)$retornos['pendientes'];
+        $costo=(float)$costos['costo']-(float)$retornos['costo'];
+        return ['bruto'=>$bruto,'reembolsos'=>$reembolsos,'neto'=>$bruto-$reembolsos,'costo'=>$costo,'gastos'=>$gastos,'pendientes'=>$pendientes,'resultado'=>$pendientes?null:($bruto-$reembolsos-$costo-$gastos)];
+    }
+
     /**
      * VENTAS POR DÍA (últimos N días)
      */
@@ -94,14 +108,25 @@ class Reporte {
     /**
      * PRODUCTOS MÁS VENDIDOS
      */
+    public function distribucionProductos(int $dias=30): array {
+        $s=$this->conn->prepare("SELECT d.producto_id,COALESCE(p.nombre,d.producto_nombre,'Producto retirado') AS nombre,
+            SUM(COALESCE(d.cantidad_unidades,d.cantidad*COALESCE(d.factor_unidades,1))-d.devuelto_unidades) AS unidades,
+            SUM(d.subtotal-d.reembolsado) AS ingresos
+            FROM detalle_venta d JOIN ventas v ON v.id=d.venta_id LEFT JOIN productos p ON p.id=d.producto_id
+            WHERE v.fecha>=DATE_SUB(CURDATE(),INTERVAL :dias DAY) AND v.fecha<DATE_ADD(CURDATE(),INTERVAL 1 DAY)
+            GROUP BY d.producto_id,COALESCE(p.nombre,d.producto_nombre,'Producto retirado')
+            HAVING unidades>0 ORDER BY unidades DESC,nombre ASC");
+        $s->bindValue(':dias',max(0,min(365,$dias)-1),PDO::PARAM_INT);$s->execute();return $s->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function productosMasVendidos($limite = 10, $dias = null) {
         $sql = "
             SELECT 
                 p.id,
                 p.nombre,
                 c.nombre AS categoria,
-                SUM(COALESCE(d.cantidad_unidades, d.cantidad)) AS total_vendido,
-                SUM(d.subtotal) AS total_ingresos,
+                SUM(COALESCE(d.cantidad_unidades, d.cantidad)-d.devuelto_unidades) AS total_vendido,
+                SUM(d.subtotal-d.reembolsado) AS total_ingresos,
                 COUNT(DISTINCT d.venta_id) AS num_ventas
             FROM detalle_venta d
             INNER JOIN productos p ON d.producto_id = p.id
@@ -137,7 +162,7 @@ class Reporte {
                 p.nombre,
                 p.stock,
                 c.nombre AS categoria,
-                COALESCE(SUM(COALESCE(d.cantidad_unidades, d.cantidad)), 0) AS total_vendido
+                COALESCE(SUM(COALESCE(d.cantidad_unidades, d.cantidad)-d.devuelto_unidades), 0) AS total_vendido
             FROM productos p
             LEFT JOIN detalle_venta d ON p.id = d.producto_id
             LEFT JOIN categorias c ON p.categoria_id = c.id
@@ -157,10 +182,10 @@ class Reporte {
         $stmt = $this->conn->prepare("
             SELECT 
                 COALESCE(c.nombre, 'Sin categoría') AS categoria,
-                SUM(COALESCE(d.cantidad_unidades, d.cantidad)) AS total_unidades,
-                SUM(d.subtotal) AS total_ingresos
+                SUM(COALESCE(d.cantidad_unidades, d.cantidad*COALESCE(d.factor_unidades,1))-d.devuelto_unidades) AS total_unidades,
+                SUM(d.subtotal-d.reembolsado) AS total_ingresos
             FROM detalle_venta d
-            INNER JOIN productos p ON d.producto_id = p.id
+            LEFT JOIN productos p ON d.producto_id = p.id
             LEFT JOIN categorias c ON p.categoria_id = c.id
             INNER JOIN ventas v ON d.venta_id = v.id
             WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY) AND v.fecha < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
@@ -201,30 +226,45 @@ class Reporte {
             SELECT 
                 COUNT(*) AS total_productos,
                 COALESCE(SUM(stock), 0) AS total_unidades,
-                COALESCE(SUM(stock * precio_compra), 0) AS valor_compra,
-                COALESCE(SUM(stock * precio_venta), 0) AS valor_venta,
+                COALESCE(SUM(stock * precio_compra / GREATEST(unidades_por_caja,1)), 0) AS valor_compra,
+                COALESCE(SUM(stock * precio_venta / GREATEST(unidades_por_caja,1)), 0) AS valor_venta,
                 SUM(CASE WHEN stock <= stock_minimo THEN 1 ELSE 0 END) AS stock_bajo,
                 SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) AS agotados
             FROM productos
         ");
-        return $stmt->fetch();
+        $estado=$stmt->fetch();
+        $costos=$this->conn->query('SELECT COALESCE(SUM(stock*costo_unidad),0) AS valor,COALESCE(SUM(CASE WHEN costo_unidad IS NULL THEN stock ELSE 0 END),0) AS sin_costo FROM lotes WHERE stock>0')->fetch();
+        $estado['valor_compra']=$costos['valor'];$estado['unidades_sin_costo']=$costos['sin_costo'];
+        return $estado;
     }
 
     /**
      * PRODUCTOS POR VENCER
      */
+    public function lotesInventario(string $orden = 'vencimiento'): array {
+        $ordenSql=$orden==='recientes'?'l.creado DESC,l.id DESC':'l.vencimiento IS NULL,l.vencimiento ASC,l.creado DESC,l.id DESC';
+        return $this->conn->query("SELECT l.id AS lote_id,l.codigo AS lote,p.nombre,c.nombre AS categoria,
+            l.stock,l.vencimiento AS fecha_vencimiento,l.creado AS fecha_ingreso,l.por_verificar,
+            DATEDIFF(l.vencimiento,CURDATE()) AS dias_restantes,
+            (SELECT MAX(co.fecha) FROM compra_detalles cd JOIN compras co ON co.id=cd.compra_id WHERE cd.lote_id=l.id) AS fecha_compra
+            FROM lotes l JOIN productos p ON p.id=l.producto_id
+            LEFT JOIN categorias c ON c.id=p.categoria_id
+            WHERE l.stock>0 ORDER BY $ordenSql")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function productosPorVencer($dias = 90) {
         $stmt = $this->conn->prepare("
             SELECT 
-                p.*,
+                p.*, l.codigo AS lote,l.stock AS stock,l.vencimiento AS fecha_vencimiento,
                 c.nombre AS categoria,
-                DATEDIFF(p.fecha_vencimiento, CURDATE()) AS dias_restantes
+                DATEDIFF(l.vencimiento, CURDATE()) AS dias_restantes
             FROM productos p
+            JOIN lotes l ON l.producto_id=p.id
             LEFT JOIN categorias c ON p.categoria_id = c.id
-            WHERE p.fecha_vencimiento IS NOT NULL 
-                AND p.fecha_vencimiento <= DATE_ADD(CURDATE(), INTERVAL :dias DAY)
-                AND p.stock > 0
-            ORDER BY p.fecha_vencimiento ASC
+            WHERE l.vencimiento IS NOT NULL
+                AND l.vencimiento <= DATE_ADD(CURDATE(), INTERVAL :dias DAY)
+                AND l.stock > 0
+            ORDER BY l.vencimiento ASC
         ");
         $stmt->bindValue(':dias', (int)$dias, PDO::PARAM_INT);
         $stmt->execute();
