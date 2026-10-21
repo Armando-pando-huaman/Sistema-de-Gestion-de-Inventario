@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="64" viewBox="0 0 280 64" role="img" aria-label="FarmaVidaHC">
+  <rect x="4" y="8" width="48" height="48" rx="15" fill="#087f61"/>
+  <path d="M28 20v24M16 32h24" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <text x="64" y="40" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#173d35">Farma<tspan fill="#087f61">Vida</tspan>HC</text>
+</svg>

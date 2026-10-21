@@ -4,7 +4,16 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <script>try{document.documentElement.dataset.fvPalette=localStorage.getItem('fv-palette')||'mint';document.documentElement.dataset.fvLayout=localStorage.getItem('fv-layout')||'vertical'}catch(e){document.documentElement.dataset.fvPalette='mint';document.documentElement.dataset.fvLayout='vertical'}</script>
-<link rel="stylesheet" href="css/style.css?v=20261016b"></head>
+<script>
+(() => {
+ let mode = 'light';
+ try { mode = localStorage.getItem('fv-mode') === 'dark' ? 'dark' : 'light'; } catch (_) {}
+ document.documentElement.dataset.fvMode = mode;
+ document.documentElement.dataset.bsTheme = mode;
+})();
+</script>
+<link rel="stylesheet" href="css/style.css?v=20261016b">
+<link rel="stylesheet" href="css/fv-theme-mode.css?v=3"></head>
 <body class="fv-theme fv-app">
 <?php
 $fvController = strtolower((string)($_GET['c'] ?? 'Dashboard'));
@@ -42,7 +51,7 @@ if ($fvIsAdmin) { $fvMenu[]=['Reporte','index','bi-bar-chart','Reportes'];$fvMen
  <button type="button" class="palette-option" data-fv-palette="<?= $key ?>" aria-pressed="false"><span class="palette-swatches"><i style="background:<?= $c1 ?>"></i><i style="background:<?= $c2 ?>"></i><i style="background:<?= $c3 ?>"></i></span><span><strong><?= $label ?></strong><small><?= $desc ?></small></span><i class="bi bi-check-lg fv-option-check"></i></button>
  <?php endforeach; ?></div></div>
  <div class="fv-top-dropdown"><button type="button" class="fv-top-control" data-fv-toggle="layout" aria-expanded="false"><i class="bi bi-layout-sidebar"></i><span>Menú</span><i class="bi bi-chevron-down"></i></button><div class="fv-top-popover fv-layout-popover" data-fv-popover="layout"><div class="palette-menu-title">Posición del menú</div><button type="button" class="fv-layout-option" data-fv-layout="horizontal"><i class="bi bi-layout-text-window"></i> Horizontal <i class="bi bi-check-lg fv-option-check"></i></button><button type="button" class="fv-layout-option" data-fv-layout="vertical"><i class="bi bi-layout-sidebar-inset"></i> Vertical <i class="bi bi-check-lg fv-option-check"></i></button><small>En móviles se usa el menú desplegable.</small></div></div>
- <div class="fv-top-dropdown fv-user-dropdown"><button type="button" class="fv-top-avatar" data-fv-toggle="user" aria-expanded="false" aria-label="Abrir menú de usuario" title="Mi cuenta"><i class="bi bi-person-fill"></i></button><div class="fv-top-popover fv-user-popover"><div class="fv-user-info"><strong><?= $fvEsc($_SESSION['user_nombre'] ?? 'Usuario') ?></strong><small><?= $fvIsAdmin ? 'Administrador' : 'Personal' ?></small></div><hr><a href="index.php?c=Auth&a=logout" class="fv-user-logout"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></div></div>
+ <div class="fv-top-dropdown fv-user-dropdown"><button type="button" class="fv-top-avatar" data-fv-toggle="user" aria-expanded="false" aria-label="Abrir menú de usuario" title="Mi cuenta"><i class="bi bi-person-fill"></i></button><div class="fv-top-popover fv-user-popover"><div class="fv-user-info"><strong><?= $fvEsc($_SESSION['user_nombre'] ?? 'Usuario') ?></strong><small><?= $fvIsAdmin ? 'Administrador' : 'Personal' ?></small></div><hr><div class="fv-mode-picker" role="group" aria-label="Modo de apariencia"><button type="button" data-fv-mode="light" aria-pressed="true"><i class="bi bi-sun" aria-hidden="true"></i> Día</button><button type="button" data-fv-mode="dark" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i> Noche</button></div><hr><a href="index.php?c=Auth&a=logout" class="fv-user-logout"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></div></div>
  </div>
 </header>
 <main class="container-fluid fv-content-area">

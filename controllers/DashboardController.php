@@ -17,6 +17,7 @@ class DashboardController {
         $totalMovimientos = $movimientoModel->contar();
         $productosBajos = $productoModel->stockBajo();
         $ultimosMovimientos = $movimientoModel->getAll();
+        $movimientosPorDia = $movimientoModel->resumenPorDia(date('Y-m-d', strtotime('-6 days')), date('Y-m-d', strtotime('+1 day')));
 
         // Productos próximos a vencer (30 días)
         $porVencer = 0;

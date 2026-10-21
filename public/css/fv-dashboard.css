@@ -1,0 +1,30 @@
+/* Accesos sincronizados con la paleta seleccionada. */
+body.fv-app .fv-dashboard-care .fv-care-shortcut { background: linear-gradient(115deg, var(--care-dark), var(--care-primary)) !important; color: #fff !important; border-color: var(--care-primary) !important; box-shadow: 0 3px 8px rgba(var(--care-rgb), .18); }
+body.fv-app .fv-dashboard-care .fv-care-shortcut i { color: inherit !important; }
+body.fv-app .fv-dashboard-care .fv-care-shortcut:hover { filter: brightness(1.12); }
+.fv-dashboard-care .fv-care-shortcut:focus-visible { outline: 3px solid var(--care-dark); outline-offset: 3px; }
+
+/* Detalles accesibles con ratón, teclado y toque, incluso en días sin actividad. */
+body.fv-app .fv-dashboard-care .fv-care-chart-column { position: relative; min-width: 0; padding: 0; border: 0; background: transparent; font: inherit; cursor: pointer; }
+body.fv-app .fv-dashboard-care .fv-care-chart-bar { flex-shrink: 0; max-height: calc(100% - 20px); }
+.fv-dashboard-care .fv-chart-tooltip { display: none; position: absolute; bottom: 45%; left: 50%; transform: translateX(-50%); z-index: 5; width: 150px; padding: 10px 12px; border-radius: 9px; background: #172b36; color: white; box-shadow: 0 5px 18px #17203330; text-align: left; font-size: 12px; line-height: 1.6; pointer-events: none; }
+.fv-dashboard-care .fv-chart-tooltip > * { display: block; }
+.fv-dashboard-care .fv-care-chart-column:hover .fv-chart-tooltip,
+.fv-dashboard-care .fv-care-chart-column:focus .fv-chart-tooltip { display: block; }
+.fv-dashboard-care .fv-care-chart-column:first-child .fv-chart-tooltip { left: 0; transform: none; }
+.fv-dashboard-care .fv-care-chart-column:last-child .fv-chart-tooltip { left: auto; right: 0; transform: none; }
+.fv-dashboard-care .fv-care-chart-column:focus-visible { outline: 2px solid var(--care-primary); outline-offset: 3px; border-radius: 6px; }
+
+@media (max-width: 767.98px) {
+    body.fv-app .fv-dashboard-care { display: flex; flex-direction: column; }
+    .fv-dashboard-care > .fv-care-greeting { order: 0; }
+    body.fv-app .fv-dashboard-care > .fv-care-shortcuts { order: 1; margin: 0 0 16px; }
+    .fv-dashboard-care > .fv-care-stats { order: 2; }
+    .fv-dashboard-care > .fv-care-main-grid { order: 3; }
+    .fv-dashboard-care > .fv-care-inventory { order: 4; }
+    .fv-dashboard-care .fv-care-shortcuts-heading p { display: none; }
+    body.fv-app .fv-dashboard-care .fv-care-shortcut { min-height: 48px; gap: 6px; padding: 10px 8px; }
+    .fv-dashboard-care .fv-care-shortcut span { min-width: 0; overflow-wrap: anywhere; }
+    .fv-dashboard-care .fv-care-shortcut i:last-child { display: none; }
+    body.fv-app .fv-dashboard-care .fv-care-chart-bars { gap: 8px; }
+}

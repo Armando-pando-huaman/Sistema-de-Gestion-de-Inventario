@@ -134,6 +134,28 @@ const read=(k,d)=>{try{return localStorage.getItem(k)||d}catch(e){return d}};
 const save=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
 const paletteSet=new Set(['mint','blue','lavender','coral']);
 const layoutSet=new Set(['horizontal','vertical']);
+function applyMode(value) {
+ const mode=value==='dark'?'dark':'light';
+ root.dataset.fvMode=mode;
+ root.dataset.bsTheme=mode;
+ save('fv-mode',mode);
+ document.querySelectorAll('button[data-fv-mode]').forEach(button=>{
+  button.setAttribute('aria-pressed',String(button.dataset.fvMode===mode));
+ });
+ if(window.Chart && window.Chart.instances) {
+  const color=mode==='dark'?'#b0bec9':'#60727c';
+  const grid=mode==='dark'?'#3a4a59':'#e3ebe9';
+  Object.values(window.Chart.instances).forEach(chart=>{
+   chart.options.color=color;
+   if(chart.options.plugins?.legend?.labels)chart.options.plugins.legend.labels.color=color;
+   Object.values(chart.options.scales||{}).forEach(scale=>{
+    if(scale.ticks)scale.ticks.color=color;
+    if(scale.grid)scale.grid.color=grid;
+   });
+   chart.update('none');
+  });
+ }
+}
 function applyPalette(v){if(!paletteSet.has(v))v='mint';root.dataset.fvPalette=v;document.body.dataset.fvPalette=v;save('fv-palette',v);document.querySelectorAll('button[data-fv-palette]').forEach(b=>{const yes=b.dataset.fvPalette===v;b.classList.toggle('selected',yes);b.setAttribute('aria-pressed',String(yes));});}
 function applyLayout(v){if(!layoutSet.has(v))v='vertical';root.dataset.fvLayout=v;document.body.classList.toggle('fv-layout-vertical',v==='vertical');document.body.classList.toggle('fv-layout-horizontal',v==='horizontal');save('fv-layout',v);document.querySelectorAll('button[data-fv-layout]').forEach(b=>{const yes=b.dataset.fvLayout===v;b.classList.toggle('selected',yes);b.setAttribute('aria-pressed',String(yes));});document.body.classList.remove('fv-mobile-open');syncSingleBar();}
 /* Un solo menú real: mueve los controles, sin clonar enlaces ni eventos. */
@@ -148,6 +170,9 @@ function syncSingleBar(){
 }
 function closePopovers(){document.querySelectorAll('.fv-top-dropdown.open').forEach(el=>{el.classList.remove('open');el.querySelector('[data-fv-toggle]')?.setAttribute('aria-expanded','false')});}
 document.addEventListener('DOMContentLoaded',()=>{window.addEventListener('resize',syncSingleBar);applyPalette(read('fv-palette','mint'));applyLayout(read('fv-layout','vertical'));
+applyMode(read('fv-mode','light'));
+document.querySelectorAll('button[data-fv-mode]').forEach(button=>button.addEventListener('click',()=>applyMode(button.dataset.fvMode)));
+window.addEventListener('storage',event=>{if(event.key==='fv-mode')applyMode(event.newValue)});
 document.querySelectorAll('button[data-fv-palette]').forEach(b=>b.addEventListener('click',()=>{applyPalette(b.dataset.fvPalette);closePopovers()}));
 document.querySelectorAll('button[data-fv-layout]').forEach(b=>b.addEventListener('click',()=>{applyLayout(b.dataset.fvLayout);closePopovers()}));
 document.querySelectorAll('[data-fv-toggle]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const el=b.closest('.fv-top-dropdown');const next=!el.classList.contains('open');closePopovers();el.classList.toggle('open',next);b.setAttribute('aria-expanded',String(next))}));

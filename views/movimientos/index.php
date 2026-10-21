@@ -1,68 +1,33 @@
-<?php require_once '../views/layouts/header.php'; ?>
-
-<h2>🔄 Movimientos de Inventario</h2>
-
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">Registrar Movimiento</div>
-            <div class="card-body">
-                <form method="POST">
-                    <div class="mb-2">
-                        <label class="form-label">Producto</label>
-                        <select name="producto_id" class="form-select" required>
-                            <option value="">-- Seleccione --</option>
-                            <?php foreach ($productos as $p): ?>
-                                <option value="<?= $p['id'] ?>"><?= htmlspecialchars($p['nombre']) ?> (Stock: <?= $p['stock'] ?>)</option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Tipo</label>
-                        <select name="tipo" class="form-select" required>
-                            <option value="entrada">Entrada (+)</option>
-                            <option value="salida">Salida (-)</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Cantidad</label>
-                        <input type="number" name="cantidad" class="form-control" min="1" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Motivo</label>
-                        <input type="text" name="motivo" class="form-control" placeholder="Ej: Venta, Compra, Ajuste">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Registrar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-8">
-        <div class="table-responsive">
-            <table class="table table-sm table-hover">
-                <thead class="table-dark">
-                    <tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Motivo</th><th>Usuario</th></tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($movimientos as $m): ?>
-                    <tr>
-                        <td><?= $m['fecha'] ?></td>
-                        <td><?= htmlspecialchars($m['producto'] ?? '-') ?></td>
-                        <td>
-                            <span class="badge bg-<?= $m['tipo'] === 'entrada' ? 'success' : 'danger' ?>">
-                                <?= ucfirst($m['tipo']) ?>
-                            </span>
-                        </td>
-                        <td><?= $m['cantidad'] ?></td>
-                        <td><?= htmlspecialchars($m['motivo'] ?? '-') ?></td>
-                        <td><?= htmlspecialchars($m['usuario'] ?? '-') ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
+<?php require_once '../views/layouts/header.php'; $esc = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); ?>
+<link rel="stylesheet" href="css/fv-operaciones.css?v=1">
+<div class="fv-operations">
+<header class="op-heading"><div><h2>Movimientos de inventario</h2><p>Entradas, ventas automáticas y otras salidas de stock.</p></div><a class="btn btn-primary" href="index.php?c=Venta&a=index">Registrar venta</a></header>
+<?php if ($error): ?><div class="alert alert-danger" role="alert"><?= $esc($error) ?></div><?php endif; ?>
+<?php if (!empty($_SESSION['mov_success'])): ?><div class="alert alert-success" role="status"><?= $esc($_SESSION['mov_success']) ?></div><?php unset($_SESSION['mov_success']); endif; ?>
+<div class="op-layout">
+<section class="op-panel"><h3>Registrar movimiento</h3><p class="op-note">Las ventas descuentan stock automáticamente desde Ventas. Aquí registra otros motivos.</p>
+<form method="post" class="op-form">
+<input type="hidden" name="csrf" value="<?= $esc($_SESSION['mov_csrf']) ?>">
+<div class="op-full"><label for="mov-product">Producto</label><select id="mov-product" name="producto_id" class="form-select" required><option value="">Seleccionar producto</option><?php foreach ($productos as $p): ?><option value="<?= (int)$p['id'] ?>" <?= (string)($_POST['producto_id'] ?? '') === (string)$p['id'] ? 'selected' : '' ?>><?= $esc($p['nombre']) ?> · Stock: <?= (int)$p['stock'] ?><?= !empty($p['es_fraccionable']) ? ' unidades mínimas' : '' ?></option><?php endforeach; ?></select></div>
+<div><label for="mov-type">Tipo</label><select id="mov-type" name="tipo" class="form-select" required><?php foreach (['entrada' => 'Entrada (+)', 'salida' => 'Salida (-)'] as $key => $name): ?><option value="<?= $key ?>" <?= ($_POST['tipo'] ?? '') === $key ? 'selected' : '' ?>><?= $name ?></option><?php endforeach; ?></select></div>
+<div><label for="mov-qty">Cantidad en unidades</label><input id="mov-qty" name="cantidad" type="number" min="1" max="1000000" step="1" class="form-control" value="<?= $esc($_POST['cantidad'] ?? '') ?>" required></div>
+<div class="op-full"><label for="mov-reason">Motivo</label><select id="mov-reason" name="motivo" class="form-select" required><?php foreach ($motivos as $tipo => $opciones): foreach ($opciones as $motivo): ?><option data-type="<?= $tipo ?>" value="<?= $esc($motivo) ?>" <?= ($_POST['motivo'] ?? '') === $motivo ? 'selected' : '' ?>><?= $esc($motivo) ?></option><?php endforeach; endforeach; ?></select></div>
+<p class="op-note op-full">Para productos fraccionables, registra unidades mínimas: una caja de 100 unidades equivale a una cantidad de 100. Una devolución registra stock; el reembolso se gestiona por separado.</p>
+<button class="btn btn-primary op-full" type="submit">Guardar movimiento</button>
+</form></section>
+<section class="op-panel"><h3>Historial y filtros</h3>
+<form method="get" class="op-filters"><input type="hidden" name="c" value="Movimiento"><input type="hidden" name="a" value="index">
+<div><label for="filter-from">Desde</label><input id="filter-from" type="date" name="desde" class="form-control" value="<?= $esc($filtros['desde']) ?>"></div><div><label for="filter-to">Hasta</label><input id="filter-to" type="date" name="hasta" class="form-control" value="<?= $esc($filtros['hasta']) ?>"></div>
+<div><label for="filter-class">Clase</label><select id="filter-class" name="clase" class="form-select"><?php foreach (['' => 'Todos', 'entrada' => 'Entradas', 'venta' => 'Ventas', 'otra_salida' => 'Otras salidas'] as $key => $name): ?><option value="<?= $key ?>" <?= $filtros['clase'] === $key ? 'selected' : '' ?>><?= $name ?></option><?php endforeach; ?></select></div>
+<div><label for="filter-product">Producto</label><select id="filter-product" name="producto_id" class="form-select"><option value="">Todos</option><?php foreach ($productos as $p): ?><option value="<?= (int)$p['id'] ?>" <?= (string)$filtros['producto_id'] === (string)$p['id'] ? 'selected' : '' ?>><?= $esc($p['nombre']) ?></option><?php endforeach; ?></select></div>
+<button class="btn btn-primary" type="submit">Filtrar</button><a href="index.php?c=Movimiento&a=index" class="btn btn-outline-secondary">Limpiar</a></form>
+<div class="op-metrics"><?php foreach (['entradas' => 'Entradas', 'ventas' => 'Salidas por venta', 'otras' => 'Otras salidas'] as $key => $label): ?><article><span><?= $label ?></span><strong><?= (int)$historial['resumen'][$key] ?></strong><small>registros filtrados</small></article><?php endforeach; ?></div>
+<div class="op-table-wrap"><table class="table"><thead><tr><th>Fecha</th><th>Producto</th><th>Clase</th><th>Unidades</th><th>Motivo</th><th>Usuario</th></tr></thead><tbody>
+<?php foreach ($historial['filas'] as $m): $venta = $m['tipo'] === 'salida' && $m['motivo'] === 'Venta'; ?><tr><td><?= $esc($m['fecha']) ?></td><td><?= $esc($m['producto'] ?? 'Producto eliminado') ?></td><td><span class="op-tag"><?= $m['tipo'] === 'entrada' ? 'Entrada' : ($venta ? 'Venta' : 'Otra salida') ?></span></td><td><?= $m['tipo'] === 'entrada' ? '+' : '−' ?><?= (int)$m['cantidad'] ?></td><td><?= $esc($m['motivo'] ?? 'Sin motivo') ?></td><td><?= $esc($m['usuario'] ?? '—') ?></td></tr><?php endforeach; ?>
+<?php if (!$historial['filas']): ?><tr><td colspan="6">No hay movimientos con estos filtros.</td></tr><?php endif; ?></tbody></table></div>
+<nav class="op-pagination" aria-label="Páginas de movimientos"><span><?= (int)$historial['resumen']['total'] ?> registros · Página <?= $historial['pagina'] ?> de <?= $historial['paginas'] ?></span><?php foreach ([-1 => 'Anterior', 1 => 'Siguiente'] as $step => $label): $page = $historial['pagina'] + $step; if ($page >= 1 && $page <= $historial['paginas']): ?><a class="btn btn-outline-primary" href="index.php?<?= $esc(http_build_query(array_merge($filtros, ['c'=>'Movimiento','a'=>'index','pagina'=>$page]))) ?>"><?= $label ?></a><?php endif; endforeach; ?></nav>
+</section></div></div>
+<script>
+(() => { const type=document.getElementById('mov-type'), reason=document.getElementById('mov-reason'); function refresh(){ for(const option of reason.options){option.hidden=option.disabled=option.dataset.type!==type.value;} if(!reason.selectedOptions.length || reason.selectedOptions[0].disabled) reason.value=[...reason.options].find(o=>!o.disabled).value; } type.addEventListener('change',refresh); refresh(); })();
+</script>
 <?php require_once '../views/layouts/footer.php'; ?>

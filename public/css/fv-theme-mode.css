@@ -1,0 +1,116 @@
+/* Preferencia de apariencia independiente de la paleta de color. */
+/* La paleta y el modo se resuelven en html. Las reglas antiguas de body
+   deben heredar esos valores, sin volver a introducir colores diurnos. */
+html body.fv-app {
+ --care-primary:inherit;
+ --care-primary-2:inherit;
+ --care-dark:inherit;
+ --care-rgb:inherit;
+ --care-soft:inherit;
+ --care-ink:inherit;
+ --care-border:inherit;
+ --care-shadow:inherit;
+}
+.fv-mode-picker { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.fv-mode-picker button { display:flex; align-items:center; justify-content:center; gap:7px; min-height:40px; padding:8px; border:1px solid var(--care-border); border-radius:9px; background:transparent; color:inherit; font:inherit; font-size:12px; cursor:pointer; }
+.fv-mode-picker button[aria-pressed="true"] { background:var(--care-soft); border-color:var(--care-primary); color:var(--care-primary); font-weight:700; }
+.fv-mode-picker button:focus-visible { outline:2px solid var(--care-primary); outline-offset:2px; }
+html[data-fv-mode="light"] { color-scheme:light; }
+html[data-fv-mode="dark"] {
+ color-scheme:dark;
+ /* Menta nocturna por defecto. Cada paleta define toda su escala. */
+ --night-bg:#0c1b17;
+ --night-surface:#142a23;
+ --night-raised:#1e3a30;
+ --night-border:#35594a;
+ --night-text:#e1f1e9;
+ --night-muted:#afcbbd;
+ --night-primary:#247c65;
+ --night-primary-2:#72c9a8;
+ --night-dark:#155443;
+ --night-rgb:36,124,101;
+ --care-primary:var(--night-primary);
+ --care-primary-2:var(--night-primary-2);
+ --care-dark:var(--night-dark);
+ --care-rgb:var(--night-rgb);
+ --care-readable:color-mix(in srgb,var(--care-primary-2) 70%,#fff);
+ --care-ink:var(--night-text);
+ --care-border:var(--night-border);
+ --care-soft:var(--night-raised);
+ --care-shadow:0 4px 18px #0002;
+ --bs-body-bg:var(--night-bg);
+ --bs-body-color:var(--night-text);
+ --bs-secondary-color:var(--night-muted);
+ --bs-border-color:var(--night-border);
+}
+html[data-fv-mode="dark"][data-fv-palette="blue"] {
+ --night-bg:#0e1928;
+ --night-surface:#17283c;
+ --night-raised:#213a54;
+ --night-border:#395b7a;
+ --night-text:#e0edf9;
+ --night-muted:#adc4dc;
+ --night-primary:#356ca5;
+ --night-primary-2:#83b9e8;
+ --night-dark:#244b77;
+ --night-rgb:53,108,165;
+}
+html[data-fv-mode="dark"][data-fv-palette="lavender"] {
+ --night-bg:#1b1428;
+ --night-surface:#2a203b;
+ --night-raised:#3a2e50;
+ --night-border:#5d4c77;
+ --night-text:#eee5fa;
+ --night-muted:#c5b5da;
+ --night-primary:#7861aa;
+ --night-primary-2:#bfa5e7;
+ --night-dark:#514074;
+ --night-rgb:120,97,170;
+}
+html[data-fv-mode="dark"][data-fv-palette="coral"] {
+ --night-bg:#251715;
+ --night-surface:#382421;
+ --night-raised:#4c322d;
+ --night-border:#785049;
+ --night-text:#f8e8e1;
+ --night-muted:#d8b8ad;
+ --night-primary:#a85449;
+ --night-primary-2:#eba697;
+ --night-dark:#763a32;
+ --night-rgb:168,84,73;
+}
+html[data-fv-mode="dark"] body.fv-app { background:var(--night-bg) !important; color:var(--night-text) !important; --fv-ink:var(--night-text); --fv-accent-soft:var(--care-soft) !important; }
+html[data-fv-mode="dark"] .fv-products { --fv-ink:var(--night-text); --fv-muted:var(--night-muted); --fv-border:var(--night-border); }
+html[data-fv-mode="dark"] body.fv-app :is(.fv-sidebar,.fv-topbar,.fv-top-popover,.fv-top-control,.fv-scan-dialog),
+html[data-fv-mode="dark"] body.fv-app main :is(.card,.fv-panel,.fv-care-panel,.fv-care-stat,.fv-pos-card,.op-panel,.fv-editor-card) { background:var(--night-surface) !important; border-color:var(--night-border) !important; color:var(--night-text) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.card-header,.fv-panel-top,.fv-care-panel-header) { background:var(--night-raised) !important; border-color:var(--night-border) !important; color:var(--night-text) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(h1,h2,h3,h4,h5,h6,.form-label,.fv-section-title,.fv-product-name,.fv-care-stat-value,.fv-care-stat-label,.fv-care-chart-summary strong,.fv-care-activity-details strong,.fv-care-product-cell strong) { color:var(--night-text) !important; }
+html[data-fv-mode="dark"] body.fv-app main .fv-page-head :is(h1,h2,h3,p) { color:#fff !important; }
+html[data-fv-mode="dark"] body.fv-app main .fv-dashboard-care .fv-care-panel-header h3 { color:var(--night-text) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.text-muted,.op-note,.fv-care-chart-summary,.fv-category-hint,.fv-fraction-note,.fv-care-greeting p,.fv-care-date,.fv-care-stat-content small,.fv-care-panel-header p,.fv-care-shortcuts-heading p,.fv-pos-head p,.fv-pos-product small) { color:var(--night-muted) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.form-control,.form-select,textarea.form-control) { background:var(--night-bg) !important; color:var(--night-text) !important; border-color:var(--night-border) !important; }
+html[data-fv-mode="dark"] body.fv-app main input::placeholder,
+html[data-fv-mode="dark"] body.fv-app main textarea::placeholder { color:var(--night-muted); opacity:1; }
+html[data-fv-mode="dark"] body.fv-app main :is(.form-control,.form-select):disabled { background:var(--night-raised) !important; color:var(--night-muted) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.table,.fv-care-table) { --bs-table-bg:var(--night-surface); --bs-table-color:var(--night-text); --bs-table-border-color:var(--night-border); --bs-table-hover-bg:var(--night-raised); --bs-table-hover-color:var(--night-text); color:var(--night-text) !important; background:var(--night-surface) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.table,.fv-care-table) :is(th,td) { background:var(--night-surface) !important; color:var(--night-text) !important; border-color:var(--night-border) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.table,.fv-care-table) thead th { background:var(--night-raised) !important; color:var(--night-muted) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.table,.fv-care-table) tbody tr:hover td { background:var(--night-raised) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.op-metrics article,.fv-product-title,.fv-category,.fv-care-product-icon,.fv-care-stat-icon) { background:var(--care-soft) !important; color:var(--night-text) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.op-metrics strong,.op-metrics span,.op-metrics small,.op-tag,.fv-category,.fv-care-chart-tag,.fv-section-title i,.fv-category-add-btn,.fv-scan-btn) { color:var(--night-text) !important; }
+html[data-fv-mode="dark"] body.fv-app :is(.fv-side-link,.fv-side-profile,.fv-user-info strong,.fv-user-info small,.fv-breadcrumb strong,.fv-side-logo,.fv-side-logo strong,.fv-side-workspace strong,.fv-layout-option,.palette-option,.fv-user-logout) { color:var(--night-text); }
+html[data-fv-mode="dark"] body.fv-app :is(.fv-side-link.active,.fv-side-link:hover,.fv-side-workspace,.fv-side-help,.fv-side-profile,.fv-top-avatar,.fv-mode-picker button[aria-pressed="true"],.fv-layout-option:hover,.palette-option:hover) { background:var(--care-soft); color:var(--night-text); border-color:var(--night-border); }
+html[data-fv-mode="dark"] body.fv-app .fv-layout-option { background:transparent; }
+html[data-fv-mode="dark"] body.fv-app :is(.fv-top-control,.fv-top-icon,.fv-close-side,.fv-workspace-icon,.fv-side-logo strong span,.palette-menu-title) { color:var(--care-readable); }
+html[data-fv-mode="dark"] body.fv-app .fv-top-popover :is(.palette-option.selected,.fv-layout-option.selected) { background:var(--care-soft); color:var(--night-text); }
+html[data-fv-mode="dark"] body.fv-app main :is(.fv-cancel,.btn-outline-secondary) { background:var(--night-raised); color:var(--night-text); border-color:var(--night-border); }
+html[data-fv-mode="dark"] body.fv-app main :is(.btn-outline-primary,.btn-outline-success,.btn-outline-warning,.op-panel>a,summary) { color:var(--night-text); }
+html[data-fv-mode="dark"] body.fv-app main :is(.fv-pos-product,.fv-form-actions,.fv-care-activity-item,.fv-care-chart-bars,.op-chart-pair,.fv-care-search) { border-color:var(--night-border); }
+html[data-fv-mode="dark"] body.fv-app .fv-scan-dialog>p,
+html[data-fv-mode="dark"] body.fv-app footer { color:var(--night-muted) !important; }
+html[data-fv-mode="dark"] body.fv-app main .fv-product-list td[data-label]::before { color:var(--night-muted); }
+html[data-fv-mode="dark"] body.fv-app main .bg-light { background:var(--night-raised) !important; color:var(--night-text) !important; }
+/* Mantener fondos claros al imprimir documentos. */
+@media print {
+ html[data-fv-mode="dark"], html[data-fv-mode="dark"][data-fv-palette] { color-scheme:light; --night-bg:#fff; --night-surface:#fff; --night-raised:#f3f3f3; --night-border:#ccc; --night-text:#111; --night-muted:#444; --care-ink:#111; --care-soft:#f3f3f3; }
+}

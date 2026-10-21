@@ -8,7 +8,7 @@ foreach ($detalle as $d) {
     $texto .= $d['producto'] . ' - ' . $d['cantidad'] . ' ' . ($d['presentacion'] ?? 'unidad') . ' x S/ ' . number_format((float)$d['precio_unitario'], 2) . ' = S/ ' . number_format((float)$d['subtotal'], 2) . "\n";
 }
 $texto .= 'TOTAL: S/ ' . number_format((float)$venta['total'], 2) . "\n";
-$texto .= $esBoleta ? 'Boleta electrónica pendiente de emisión/validación SUNAT.' : 'Ticket interno sin validez tributaria.';
+$texto .= $esBoleta ? 'Boleta electrónica pendiente de emisión/validación SUNAT.' : 'Gracias por su compra';
 $telefono = preg_replace('/\D+/', '', (string)($venta['telefono'] ?? ''));
 if (strlen($telefono) === 9) $telefono = '51' . $telefono;
 $waUrl = $telefono ? 'https://wa.me/' . $telefono : ''; // El destinatario puede editarse en la vista
@@ -22,7 +22,13 @@ $waUrl = $telefono ? 'https://wa.me/' . $telefono : ''; // El destinatario puede
  .fv-ticket-actions {display:none!important}
  @page {size:80mm auto;margin:2mm}
 }
-.fv-ticket {width:min(100%,440px);margin:1.5rem auto;padding:1.6rem;border:1px dashed #9ca3af;border-radius:12px;background:white;color:#111}
+.fv-ticket {width:min(100%,440px);margin:1.5rem auto;padding:0;border:0;border-radius:0;background:transparent;color:#111;filter:drop-shadow(0 5px 8px #17203318)}
+.fv-ticket-paper {padding:1.6rem;background:#fff;color:#111}
+.fv-ticket-logo {display:block;width:min(100%,260px);height:auto;margin:0 auto 12px}
+.fv-ticket-edge {display:block;width:100%;height:12px}
+html[data-fv-mode] body.fv-app main #fv-ticket .fv-ticket-paper,
+html[data-fv-mode] body.fv-app main #fv-ticket :is(h3,td,p,strong,.fv-ticket-total) {color:#111!important}
+@media print {.fv-ticket {filter:none}.fv-ticket-paper {padding:0}}
 .fv-ticket h3 {text-align:center;font-size:1.25rem}
 .fv-ticket table {width:100%;font-size:.85rem}
 .fv-ticket td {padding:5px 2px;vertical-align:top}
@@ -45,7 +51,8 @@ $waUrl = $telefono ? 'https://wa.me/' . $telefono : ''; // El destinatario puede
  </details>
 </div>
 <div id="fv-ticket" class="fv-ticket">
- <h3>FarmaVidaHC</h3>
+ <div class="fv-ticket-paper">
+ <img class="fv-ticket-logo" src="img/farmavida-logo.svg" width="280" height="64" alt="FarmaVidaHC">
  <p class="text-center small">Comprobante <?= $esBoleta ? 'solicitado: boleta electrónica' : 'interno de venta' ?></p>
  <hr>
  <p><strong>Venta:</strong> #<?= (int)$venta['id'] ?><br>
@@ -63,10 +70,10 @@ $waUrl = $telefono ? 'https://wa.me/' . $telefono : ''; // El destinatario puede
  <hr>
  <?php if ($esBoleta): ?>
  <p class="small"><strong>Estado SUNAT:</strong> <?= $esc($venta['estado_sunat'] ?? 'pendiente') ?><br><strong>ATENCIÓN:</strong> Este documento es solo una constancia interna. No es una boleta electrónica válida hasta completar emisión, firma y aceptación según el procedimiento tributario aplicable.</p>
- <?php else: ?>
- <p class="small text-center">Ticket interno. No es comprobante de pago tributario.</p>
  <?php endif; ?>
  <p class="text-center small">Gracias por su compra</p>
+ </div>
+ <img class="fv-ticket-edge" src="img/ticket-edge.svg" width="440" height="12" alt="" aria-hidden="true">
 </div>
 <div class="fv-ticket-actions text-center mb-3">
  <small id="fv-ticket-estado" class="text-muted" role="status" aria-live="polite">Pulsa Compartir ticket para descargar la imagen PNG. Luego podrás abrir WhatsApp del cliente.</small>
@@ -116,7 +123,7 @@ $waUrl = $telefono ? 'https://wa.me/' . $telefono : ''; // El destinatario puede
    if (typeof html2canvas !== 'function') throw new Error('No se cargó la biblioteca de imagen. Verifica Internet.');
    if (document.fonts?.ready) await document.fonts.ready;
    const canvas = await html2canvas(ticket, {
-     backgroundColor: '#ffffff', scale: 2, useCORS: true,
+     backgroundColor: null, scale: 2, useCORS: true,
      scrollX: 0, scrollY: -window.scrollY,
      onclone: doc => {
        const el = doc.getElementById('fv-ticket');

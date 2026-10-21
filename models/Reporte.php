@@ -22,6 +22,38 @@ class Reporte {
         return $stmt->fetch();
     }
 
+    public function progreso($dias = 30) {
+        $dias = max(1, min(365, (int)$dias));
+        $hoy = new DateTimeImmutable($this->conn->query('SELECT CURDATE()')->fetchColumn());
+        $inicio = $hoy->modify('-' . ($dias - 1) . ' days');
+        $anterior = $inicio->modify("-$dias days");
+        $fin = $hoy->modify('+1 day');
+        $s = $this->conn->prepare('SELECT DATE(fecha) AS dia, COUNT(*) AS cantidad, SUM(total) AS total FROM ventas WHERE fecha >= ? AND fecha < ? GROUP BY DATE(fecha) ORDER BY dia');
+        $s->execute([$anterior->format('Y-m-d'), $fin->format('Y-m-d')]);
+        $porDia = [];
+        foreach ($s->fetchAll(PDO::FETCH_ASSOC) as $fila) $porDia[$fila['dia']] = $fila;
+        $serie = []; $actualTotal = 0; $anteriorTotal = 0; $actualCantidad = 0; $anteriorCantidad = 0;
+        for ($i = 0; $i < $dias; $i++) {
+            $fecha = $inicio->modify("+$i days")->format('Y-m-d');
+            $fechaAnterior = $anterior->modify("+$i days")->format('Y-m-d');
+            $total = (float)($porDia[$fecha]['total'] ?? 0);
+            $previo = (float)($porDia[$fechaAnterior]['total'] ?? 0);
+            $cantidad = (int)($porDia[$fecha]['cantidad'] ?? 0);
+            $actualTotal += $total; $anteriorTotal += $previo;
+            $actualCantidad += $cantidad; $anteriorCantidad += (int)($porDia[$fechaAnterior]['cantidad'] ?? 0);
+            $serie[] = ['dia' => $fecha, 'anterior_dia' => $fechaAnterior, 'total' => $total, 'anterior' => $previo, 'cantidad' => $cantidad];
+        }
+        $s = $this->conn->prepare("SELECT CASE WHEN tipo='entrada' THEN 'entrada' WHEN motivo='Venta' THEN 'venta' ELSE 'otra_salida' END AS clase, COUNT(*) AS registros, SUM(cantidad) AS unidades FROM movimientos WHERE fecha >= ? AND fecha < ? GROUP BY clase");
+        $s->execute([$inicio->format('Y-m-d'), $fin->format('Y-m-d')]);
+        return ['serie' => $serie, 'total' => $actualTotal, 'anterior' => $anteriorTotal,
+            'cantidad' => $actualCantidad, 'cantidad_anterior' => $anteriorCantidad,
+            'ticket' => $actualCantidad ? $actualTotal / $actualCantidad : 0,
+            'cambio' => $anteriorTotal > 0 ? ($actualTotal - $anteriorTotal) * 100 / $anteriorTotal : null,
+            'inicio' => $inicio->format('Y-m-d'), 'fin' => $hoy->format('Y-m-d'),
+            'anterior_inicio' => $anterior->format('Y-m-d'), 'anterior_fin' => $inicio->modify('-1 day')->format('Y-m-d'),
+            'movimientos' => $s->fetchAll(PDO::FETCH_ASSOC)];
+    }
+
     /**
      * VENTAS POR DÍA (últimos N días)
      */
@@ -32,11 +64,11 @@ class Reporte {
                 COUNT(*) AS cantidad,
                 COALESCE(SUM(total), 0) AS total
             FROM ventas 
-            WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY)
+            WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY) AND fecha < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
             GROUP BY DATE(fecha)
             ORDER BY dia ASC
         ");
-        $stmt->bindValue(':dias', (int)$dias, PDO::PARAM_INT);
+        $stmt->bindValue(':dias', max(0, (int)$dias - 1), PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -68,7 +100,7 @@ class Reporte {
                 p.id,
                 p.nombre,
                 c.nombre AS categoria,
-                SUM(d.cantidad) AS total_vendido,
+                SUM(COALESCE(d.cantidad_unidades, d.cantidad)) AS total_vendido,
                 SUM(d.subtotal) AS total_ingresos,
                 COUNT(DISTINCT d.venta_id) AS num_ventas
             FROM detalle_venta d
@@ -80,7 +112,7 @@ class Reporte {
             $sql .= " WHERE d.id IN (
                 SELECT dv.id FROM detalle_venta dv 
                 INNER JOIN ventas v ON dv.venta_id = v.id 
-                WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY)
+                WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY) AND v.fecha < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
             )";
         }
         
@@ -88,7 +120,7 @@ class Reporte {
         
         $stmt = $this->conn->prepare($sql);
         if ($dias) {
-            $stmt->bindValue(':dias', (int)$dias, PDO::PARAM_INT);
+            $stmt->bindValue(':dias', max(0, (int)$dias - 1), PDO::PARAM_INT);
         }
         $stmt->bindValue(':limite', (int)$limite, PDO::PARAM_INT);
         $stmt->execute();
@@ -105,7 +137,7 @@ class Reporte {
                 p.nombre,
                 p.stock,
                 c.nombre AS categoria,
-                COALESCE(SUM(d.cantidad), 0) AS total_vendido
+                COALESCE(SUM(COALESCE(d.cantidad_unidades, d.cantidad)), 0) AS total_vendido
             FROM productos p
             LEFT JOIN detalle_venta d ON p.id = d.producto_id
             LEFT JOIN categorias c ON p.categoria_id = c.id
@@ -125,17 +157,17 @@ class Reporte {
         $stmt = $this->conn->prepare("
             SELECT 
                 COALESCE(c.nombre, 'Sin categoría') AS categoria,
-                SUM(d.cantidad) AS total_unidades,
+                SUM(COALESCE(d.cantidad_unidades, d.cantidad)) AS total_unidades,
                 SUM(d.subtotal) AS total_ingresos
             FROM detalle_venta d
             INNER JOIN productos p ON d.producto_id = p.id
             LEFT JOIN categorias c ON p.categoria_id = c.id
             INNER JOIN ventas v ON d.venta_id = v.id
-            WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY)
+            WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY) AND v.fecha < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
             GROUP BY c.nombre
             ORDER BY total_ingresos DESC
         ");
-        $stmt->bindValue(':dias', (int)$dias, PDO::PARAM_INT);
+        $stmt->bindValue(':dias', max(0, (int)$dias - 1), PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -152,11 +184,11 @@ class Reporte {
                 COALESCE(SUM(v.total), 0) AS total
             FROM ventas v
             INNER JOIN usuarios u ON v.usuario_id = u.id
-            WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY)
+            WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY) AND v.fecha < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
             GROUP BY u.id
             ORDER BY total DESC
         ");
-        $stmt->bindValue(':dias', (int)$dias, PDO::PARAM_INT);
+        $stmt->bindValue(':dias', max(0, (int)$dias - 1), PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -209,11 +241,11 @@ class Reporte {
                 COUNT(*) AS cantidad,
                 COALESCE(SUM(total), 0) AS total
             FROM ventas
-            WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY)
+            WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL :dias DAY) AND fecha < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
             GROUP BY HOUR(fecha)
             ORDER BY hora ASC
         ");
-        $stmt->bindValue(':dias', (int)$dias, PDO::PARAM_INT);
+        $stmt->bindValue(':dias', max(0, (int)$dias - 1), PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }

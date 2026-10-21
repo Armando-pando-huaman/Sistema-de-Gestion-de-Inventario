@@ -41,6 +41,7 @@ foreach ($movimientosVista as $movimiento) {
 }
 ?>
 
+<link rel="stylesheet" href="css/fv-dashboard.css?v=2">
 <div class="fv-dashboard fv-dashboard-care">
     <!-- BIENVENIDA -->
     <section class="fv-care-greeting">
@@ -149,12 +150,25 @@ foreach ($movimientosVista as $movimiento) {
           <header class="fv-care-panel-header"><div><h3>Movimientos de inventario</h3><p>Actividad registrada durante los últimos 7 días</p></div><span class="fv-care-chart-tag">Esta semana</span></header>
           <?php
             $fvWeekCounts=array_fill(0,7,0);
+            $fvDates=[];
+            $fvDayDetails=[];
+            foreach (($movimientosPorDia ?? []) as $fvRow) { $fvDayDetails[$fvRow['dia']]=$fvRow; }
             for($fvI=0;$fvI<7;$fvI++){$fvDates[$fvI]=date('Y-m-d',strtotime('-'.(6-$fvI).' days'));}
-            foreach($movimientosVista as $fvM){$fvDay=substr((string)($fvM['fecha']??''),0,10);$fvIndex=array_search($fvDay,$fvDates,true);if($fvIndex!==false)$fvWeekCounts[$fvIndex]++;}
+            foreach($fvDates as $fvI=>$fvDay){$fvWeekCounts[$fvI]=(int)($fvDayDetails[$fvDay]['total']??0);}
             $fvMax=max(1,max($fvWeekCounts));
           ?>
-          <div class="fv-care-chart-body"><div class="fv-care-chart-summary"><strong><?= array_sum($fvWeekCounts) ?></strong><span>movimientos recientes con fecha en los últimos 7 días</span></div><div class="fv-care-chart-bars">
-          <?php foreach($fvWeekCounts as $fvI=>$fvCount): ?><div class="fv-care-chart-column"><span class="fv-care-chart-bar" style="height:<?= max(4,round(100*$fvCount/$fvMax)) ?>%" title="<?= $fvCount ?> movimientos"></span><small><?= ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][(int)date('w',strtotime($fvDates[$fvI]))] ?></small></div><?php endforeach; ?>
+          <div class="fv-care-chart-body"><div class="fv-care-chart-summary"><strong><?= array_sum($fvWeekCounts) ?></strong><span>movimientos en los últimos 7 días. Pasa el cursor o toca una barra para ver el detalle.</span></div><div class="fv-care-chart-bars">
+          <?php foreach($fvWeekCounts as $fvI=>$fvCount):
+              $fvDateLabel=date('d/m/Y',strtotime($fvDates[$fvI]));
+              $fvEntries=(int)($fvDayDetails[$fvDates[$fvI]]['entradas']??0);
+              $fvExits=(int)($fvDayDetails[$fvDates[$fvI]]['salidas']??0);
+          ?>
+            <button type="button" class="fv-care-chart-column" aria-label="<?= $fvDateLabel ?>: <?= $fvCount ?> movimientos, <?= $fvEntries ?> entradas y <?= $fvExits ?> salidas" aria-describedby="fv-day-<?= $fvI ?>">
+                <span class="fv-care-chart-bar" style="height:<?= max(4,round(100*$fvCount/$fvMax)) ?>%" aria-hidden="true"></span>
+                <small><?= ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][(int)date('w',strtotime($fvDates[$fvI]))] ?></small>
+                <span class="fv-chart-tooltip" id="fv-day-<?= $fvI ?>" role="tooltip"><strong><?= $fvDateLabel ?></strong><span><?= $fvCount ?> movimientos</span><span>Entradas: <?= $fvEntries ?></span><span>Salidas: <?= $fvExits ?></span></span>
+            </button>
+          <?php endforeach; ?>
           </div></div>
         </article>
         <!-- ACTIVIDAD RECIENTE -->

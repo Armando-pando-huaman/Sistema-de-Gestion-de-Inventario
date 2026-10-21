@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="12" viewBox="0 0 440 12" preserveAspectRatio="none">
+  <defs><pattern id="teeth" width="20" height="12" patternUnits="userSpaceOnUse"><path d="M0 0h20L10 12Z" fill="#fff"/></pattern></defs>
+  <path fill="url(#teeth)" d="M0 0h440v12H0z"/>
+</svg>

@@ -1,4 +1,7 @@
 <?php require_once '../views/layouts/header.php'; ?>
+<link rel="stylesheet" href="css/fv-operaciones.css?v=1">
+<div class="fv-operations">
+<form method="get" class="op-panel op-period"><input type="hidden" name="c" value="Reporte"><input type="hidden" name="a" value="ventas"><label for="ventas-days">Período</label><select id="ventas-days" name="dias" class="form-select"><?php foreach ([7,15,30,60,90,365] as $n): ?><option value="<?= $n ?>" <?= $dias === $n ? 'selected' : '' ?>>Últimos <?= $n ?> días</option><?php endforeach; ?></select><button class="btn btn-primary">Actualizar</button></form>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><i class="bi bi-cart-check"></i> Reporte de Ventas</h2>
@@ -12,38 +15,13 @@
     </div>
 </div>
 
-<!-- Comparativa mensual -->
-<div class="row g-3 mb-4">
-    <div class="col-md-6">
-        <div class="card stat-card bg-primary">
-            <h6>Total Este Mes</h6>
-            <h2>S/ <?= number_format($data['comparativa']['mes_actual'] ?? 0, 2) ?></h2>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card stat-card bg-secondary">
-            <h6>Total Mes Anterior</h6>
-            <h2>S/ <?= number_format($data['comparativa']['mes_anterior'] ?? 0, 2) ?></h2>
-        </div>
-    </div>
-</div>
-
-<!-- Gráfico ventas por día -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-primary text-white">
-        <i class="bi bi-calendar-week"></i> Ventas diarias (últimos <?= $dias ?> días)
-    </div>
-    <div class="card-body">
-        <canvas id="graficoVentasDia" height="70"></canvas>
-    </div>
-</div>
-
+<?php require '../views/reportes/progreso.php'; ?>
 <!-- Gráfico ventas por hora -->
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-info text-white">
         <i class="bi bi-clock"></i> Horas con más ventas
     </div>
-    <div class="card-body">
+    <div class="card-body op-hour-chart">
         <canvas id="graficoVentasHora" height="70"></canvas>
     </div>
 </div>
@@ -140,50 +118,35 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-const ventasDia = <?= json_encode($data['ventasPorDia']) ?>;
 const ventasHora = <?= json_encode($data['ventasPorHora']) ?>;
-
-// Gráfico ventas por día
-if (document.getElementById('graficoVentasDia') && ventasDia.length > 0) {
-    new Chart(document.getElementById('graficoVentasDia'), {
-        type: 'bar',
-        data: {
-            labels: ventasDia.map(v => v.dia),
-            datasets: [{
-                label: 'Ventas (S/)',
-                data: ventasDia.map(v => parseFloat(v.total)),
-                backgroundColor: '#0d6efd'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
-        }
-    });
-}
-
 // Gráfico ventas por hora
 if (document.getElementById('graficoVentasHora') && ventasHora.length > 0) {
-    new Chart(document.getElementById('graficoVentasHora'), {
+    const hourlyChart = new Chart(document.getElementById('graficoVentasHora'), {
         type: 'line',
         data: {
             labels: ventasHora.map(v => v.hora + ':00'),
             datasets: [{
                 label: 'Ventas',
                 data: ventasHora.map(v => v.cantidad),
-                borderColor: '#0dcaf0',
-                backgroundColor: 'rgba(13, 202, 240, 0.2)',
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--care-primary').trim(),
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--care-soft').trim(),
                 fill: true,
                 tension: 0.4
             }]
         },
         options: {
-            responsive: true,
+            responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } }
         }
     });
+    new MutationObserver(() => {
+        const colors = getComputedStyle(document.documentElement);
+        hourlyChart.data.datasets[0].borderColor = colors.getPropertyValue('--care-primary').trim();
+        hourlyChart.data.datasets[0].backgroundColor = colors.getPropertyValue('--care-soft').trim();
+        hourlyChart.update();
+    }).observe(document.documentElement, {attributes: true, attributeFilter: ['data-fv-palette']});
 }
 </script>
 
+</div>
 <?php require_once '../views/layouts/footer.php'; ?>

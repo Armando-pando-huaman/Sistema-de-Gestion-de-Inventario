@@ -29,6 +29,7 @@ class ReporteController {
         if (!in_array($dias, [7, 15, 30, 60, 90, 365])) $dias = 30;
         
         $data = [
+            'progreso' => $model->progreso($dias),
             'ventasHoy' => $model->ventasHoy(),
             'comparativa' => $model->comparativaMensual(),
             'ventasPorDia' => $model->ventasPorDia($dias),
@@ -49,8 +50,10 @@ class ReporteController {
         
         $model = new Reporte();
         $dias = isset($_GET['dias']) ? (int)$_GET['dias'] : 30;
+        if (!in_array($dias, [7, 15, 30, 60, 90, 365])) $dias = 30;
         
         $data = [
+            'progreso' => $model->progreso($dias),
             'ventasPorDia' => $model->ventasPorDia($dias),
             'ventasPorMes' => $model->ventasPorMes(),
             'ventasPorCategoria' => $model->ventasPorCategoria($dias),
@@ -71,6 +74,7 @@ class ReporteController {
         
         $model = new Reporte();
         $dias = isset($_GET['dias']) ? (int)$_GET['dias'] : 30;
+        if (!in_array($dias, [7, 15, 30, 60, 90, 365])) $dias = 30;
         
         $data = [
             'productosTop' => $model->productosMasVendidos(20, $dias),
