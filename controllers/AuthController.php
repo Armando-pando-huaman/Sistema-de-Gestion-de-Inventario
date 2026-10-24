@@ -1,5 +1,7 @@
 <?php
 require_once '../models/usuario.php';
+require_once '../models/Botica.php';
+require_once '../config/Imagen.php';
 
 class AuthController {
     public function login() {
@@ -25,6 +27,7 @@ class AuthController {
                     $_SESSION['user_nombre'] = $user['nombre'];
                     $_SESSION['user_rol'] = $user['rol'];
                     $_SESSION['user_email'] = $user['email'];
+                    $_SESSION['user_foto'] = $user['foto'] ?? null;
                     header("Location: index.php?c=Dashboard&a=index");
                     exit;
                 } else {
@@ -32,7 +35,31 @@ class AuthController {
                 }
             }
         }
+        $registroDisponible=(new Botica())->permiteRegistro();
         require_once '../views/auth/login.php';
+    }
+
+    public function registro(): void {
+        if (isset($_SESSION['user_id'])) { header('Location: index.php?c=Cuenta&a=perfil'); exit; }
+        $modelo=new Botica(); $botica=$modelo->actual();
+        if (!$modelo->permiteRegistro()) { http_response_code(403); require '../views/auth/registro-cerrado.php'; return; }
+        $error=null;
+        if ($_SERVER['REQUEST_METHOD']==='POST') {
+            $foto=null; $logo=null;
+            try {
+                $foto=Imagen::guardar($_FILES['foto'] ?? [],'perfil');
+                if (!$botica) $logo=Imagen::guardar($_FILES['logo'] ?? [],'logo');
+                $modelo->registrar($_POST,$foto,$logo);
+                $_SESSION['registro_exito']='Cuenta creada. Ya puedes iniciar sesion.';
+                header('Location: index.php?c=Auth&a=login'); exit;
+            } catch (Throwable $e) {
+                Imagen::eliminar($foto); Imagen::eliminar($logo); error_log($e->getMessage());
+                $error=$e instanceof RuntimeException && !($e instanceof PDOException) ? $e->getMessage() : 'No se pudo registrar la cuenta. Verifica el correo e intenta nuevamente.';
+                $botica=$modelo->actual();
+                if (!$modelo->permiteRegistro()) { http_response_code(403); require '../views/auth/registro-cerrado.php'; return; }
+            }
+        }
+        require '../views/auth/registro.php';
     }
 
     public function logout() {

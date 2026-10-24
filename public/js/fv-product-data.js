@@ -56,8 +56,6 @@
   const identity=info.codigo_barras||raw;
   if(lastIdentity!==null&&lastIdentity!==identity){for(const [name,value] of automatic){const field=form.elements[name];if(field&&field.value===value)field.value='';}automatic.clear();}
   lastIdentity=identity;
-  const initial=document.getElementById('fv-initial-stock');
-  if(initial&&(info.lote||info.fecha_vencimiento)&&!initial.checked){initial.checked=true;initial.dispatchEvent(new Event('change',{bubbles:true}));}
   const loaded=[];
   for(const [field,label] of [['nombre','nombre'],['descripcion','descripción'],['fecha_vencimiento','vencimiento'],['lote_inicial','lote']])if(fill(field,field==='lote_inicial'?info.lote:info[field]))loaded.push(label);
   code.value=info.codigo_barras;code.setCustomValidity('');

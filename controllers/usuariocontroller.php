@@ -24,6 +24,7 @@ class UsuarioController {
      */
     public function index() {
         $this->checkAdmin();
+        $registroHabilitado=!empty((new Botica())->actual()['registro_habilitado']);
         
         $model = new Usuario();
         $usuarios = $model->getAll();
@@ -36,6 +37,11 @@ class UsuarioController {
      */
     public function crear() {
         $this->checkAdmin();
+        if (empty((new Botica())->actual()['registro_habilitado'])) {
+            http_response_code(403);
+            echo 'El registro de usuarios esta deshabilitado. Puedes configurarlo en Mi botica.';
+            return;
+        }
         
         $errores = [];
         
@@ -43,7 +49,7 @@ class UsuarioController {
             $nombre = trim($_POST['nombre'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
-            $rol = $_POST['rol'] ?? 'vendedor';
+            $rol = 'vendedor';
 
             // Validaciones
             if (empty($nombre)) $errores[] = "El nombre es obligatorio.";

@@ -200,7 +200,7 @@
     running = true;
     const activeGeneration = ++generation;
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
-      say('Para usar la cámara abre FarmaVidaHC mediante HTTPS o http://localhost. Una IP local con HTTP normalmente no funciona.');
+      say('Para usar la cámara abre el sistema mediante HTTPS o http://localhost. Una IP local con HTTP normalmente no funciona.');
       return;
     }
     try {

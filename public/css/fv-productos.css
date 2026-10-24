@@ -168,3 +168,13 @@
     .fv-product-catalog .fv-product-list tbody td.fv-product-actions[data-label] { gap: 3px; }
     body.fv-app main .fv-product-catalog .fv-product-actions .fv-icon-btn { width: 26px; height: 32px; font-size: 13px; }
 }
+
+/* Precio, stock inicial, costo, lote y umbral en una fila propia. */
+.fv-products .fv-product-form > .fv-initial-pricing { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; grid-column:1 / -1; }
+.fv-products .fv-initial-pricing > div { width:100%; min-width:0; padding:0; }
+.fv-products .fv-initial-pricing .form-label { display:block; }
+@media(min-width:992px){
+    .fv-products .fv-product-form > .fv-initial-pricing { grid-template-columns:repeat(5,minmax(0,1fr)); align-items:start; }
+    .fv-products .fv-initial-pricing .form-label { min-height:40px; }
+}
+@media(max-width:399.98px){.fv-products .fv-product-form > .fv-initial-pricing {grid-template-columns:minmax(0,1fr);}}

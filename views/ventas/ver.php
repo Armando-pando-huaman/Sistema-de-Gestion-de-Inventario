@@ -3,7 +3,7 @@ require_once '../views/layouts/header.php';
 $esc = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 $fecha = date('d/m/Y H:i', strtotime($venta['fecha']));
 $esBoleta = ($venta['tipo_comprobante'] ?? 'ticket') === 'boleta';
-$texto = "FarmaVidaHC - RESUMEN DE COMPRA\nVenta #{$venta['id']} - {$fecha}\n";
+$texto = $fvNombreBotica . " - RESUMEN DE COMPRA\nVenta #{$venta['id']} - {$fecha}\n";
 foreach ($detalle as $d) {
     $texto .= $d['producto'] . ' - ' . $d['cantidad'] . ' ' . ($d['presentacion'] ?? 'unidad') . ' x S/ ' . number_format((float)$d['precio_unitario'], 2) . ' = S/ ' . number_format((float)$d['subtotal'], 2) . "\n";
 }
@@ -24,7 +24,8 @@ $waUrl = $telefono ? 'https://wa.me/' . $telefono : ''; // El destinatario puede
 }
 .fv-ticket {width:min(100%,440px);margin:1.5rem auto;padding:0;border:0;border-radius:0;background:transparent;color:#111;filter:drop-shadow(0 5px 8px #17203318)}
 .fv-ticket-paper {padding:1.6rem;background:#fff;color:#111}
-.fv-ticket-logo {display:block;width:min(100%,260px);height:auto;margin:0 auto 12px}
+.fv-ticket-logo {display:block;max-width:180px;width:auto;max-height:90px;height:auto;margin:0 auto 12px;object-fit:contain}
+.fv-ticket-company {text-align:center;font-size:1.4rem;font-weight:800;overflow-wrap:anywhere;margin:0 0 12px}
 .fv-ticket-edge {display:block;width:100%;height:12px}
 html[data-fv-mode] body.fv-app main #fv-ticket .fv-ticket-paper,
 html[data-fv-mode] body.fv-app main #fv-ticket :is(h3,td,p,strong,.fv-ticket-total) {color:#111!important}
@@ -52,7 +53,8 @@ html[data-fv-mode] body.fv-app main #fv-ticket :is(h3,td,p,strong,.fv-ticket-tot
 </div>
 <div id="fv-ticket" class="fv-ticket">
  <div class="fv-ticket-paper">
- <img class="fv-ticket-logo" src="img/farmavida-logo.svg" width="280" height="64" alt="FarmaVidaHC">
+ <?php if (!empty($fvBotica['logo'])): ?><img class="fv-ticket-logo" src="<?= $esc($fvBotica['logo']) ?>" alt="Logo de <?= $esc($fvNombreBotica) ?>"><?php endif; ?>
+ <h3 class="fv-ticket-company"><?= $esc($fvNombreBotica) ?></h3>
  <p class="text-center small">Comprobante <?= $esBoleta ? 'solicitado: boleta electrónica' : 'interno de venta' ?></p>
  <hr>
  <p><strong>Venta:</strong> #<?= (int)$venta['id'] ?><br>
@@ -98,8 +100,8 @@ html[data-fv-mode] body.fv-app main #fv-ticket :is(h3,td,p,strong,.fv-ticket-tot
  const contactOptions = document.getElementById('fv-contacto-opciones');
  const phoneDisplay = document.getElementById('fv-numero-visible');
  const status = document.getElementById('fv-ticket-estado');
- const filename = <?= json_encode('FarmaVidaHC_Ticket_' . (int)$venta['id'] . '.png') ?>;
- const message = 'Ticket de compra FarmaVidaHC';
+ const filename = <?= json_encode(trim(preg_replace('/[^\p{L}\p{N}_-]+/u', '_', $fvNombreBotica), '_') . '_Ticket_' . (int)$venta['id'] . '.png', JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+ const message = <?= json_encode('Ticket de compra '.$fvNombreBotica, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
  let readyPhone = null;
  let busy = false;
  const setStatus = text => { status.textContent = text; };
@@ -175,7 +177,7 @@ html[data-fv-mode] body.fv-app main #fv-ticket :is(h3,td,p,strong,.fv-ticket-tot
      share.classList.add('btn-primary');
      setStatus('Se solicitó la descarga de ' + filename + '. Comprueba que esté en Descargas y pulsa «Abrir WhatsApp del cliente». El mensaje estará preparado: «' + message + '». Adjunta la imagen manualmente.');
    } catch (error) {
-     console.error('FarmaVidaHC: no se pudo generar el ticket', error);
+     console.error('No se pudo generar el ticket', error);
      reset();
      setStatus('No se pudo generar la imagen: ' + error.message);
    } finally {

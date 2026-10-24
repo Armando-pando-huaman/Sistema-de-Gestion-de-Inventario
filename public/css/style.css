@@ -988,7 +988,7 @@ body:not(.login-body) main .fv-products .fv-category,body:not(.login-body) main 
  body.fv-layout-vertical .fv-navbar .fv-display-settings {order:3;margin:0;display:grid;grid-template-columns:1fr 1fr;}
  body.fv-layout-vertical .fv-navbar .fv-setting-btn {justify-content:center;font-size:.74rem;padding:9px 6px;}
  body.fv-layout-vertical .fv-navbar .fv-settings-dropdown {position:fixed!important;left:230px!important;top:16px!important;right:auto!important;transform:none!important;box-shadow:0 12px 30px rgba(0,0,0,.12);}
- body.fv-layout-vertical main.container-fluid {margin-left:224px;width:calc(100% - 224px)!important;max-width:none;padding:18px 22px!important;margin-top:0!important;}
+ body.fv-layout-vertical main.container-fluid {/* margin-left:224px; */ /* width:calc(100% - 224px)!important; */max-width:none;padding:18px 22px!important;margin-top:0!important;}
  body.fv-layout-vertical .fv-dashboard-care {max-width:none;}
 }
 @media(max-width:991.98px) {
@@ -1118,7 +1118,7 @@ body[data-fv-palette] .fv-dashboard-care .fv-care-shortcut i {color:#fff!importa
  body.fv-layout-vertical .fv-navbar>.container-fluid {flex-direction:column!important;align-items:stretch!important;}
  body.fv-layout-vertical .fv-navbar .navbar-collapse {display:flex!important;flex-direction:column!important;align-items:stretch!important;}
  body.fv-layout-vertical .fv-navbar .navbar-nav {flex-direction:column!important;align-items:stretch!important;}
- body.fv-layout-vertical main.container-fluid {margin-left:2% !important;width:calc(100% - 236px)!important;}
+ body.fv-layout-vertical main.container-fluid { margin-left:2% !important;  width:calc(100% - 36px)!important; }
 }
 /* En pantallas menores a 1200px, navegación colapsable por accesibilidad. */
 @media(max-width:1199.98px) {body.fv-layout-vertical .fv-navbar {position:relative!important;inset:auto!important;width:100%!important;overflow:visible!important;}body.fv-layout-vertical main.container-fluid {margin-left:0!important;width:100%!important;} .fv-navbar .navbar-collapse:not(.show):not(.collapsing) {display:none!important;} .fv-navbar .navbar-collapse.show {display:block!important;} }

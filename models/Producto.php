@@ -8,10 +8,11 @@ class Producto {
   $where=' WHERE p.activo=?';$args=[$inactivos?0:1];
   if($busqueda!==''){$where.=' AND (p.nombre LIKE ? OR p.codigo_barras LIKE ?)';$args[]='%'.$busqueda.'%';$args[]='%'.$busqueda.'%';}
   $s=$this->conn->prepare('SELECT COUNT(*) FROM productos p'.$where);$s->execute($args);$total=(int)$s->fetchColumn();$paginas=max(1,(int)ceil($total/30));$pagina=max(1,min($pagina,$paginas));$offset=($pagina-1)*30;
-  $s=$this->conn->prepare('SELECT p.*,c.nombre AS categoria,(SELECT MIN(l.vencimiento) FROM lotes l WHERE l.producto_id=p.id AND l.stock>0) AS fecha_vencimiento FROM productos p LEFT JOIN categorias c ON c.id=p.categoria_id'.$where." ORDER BY p.nombre,p.id LIMIT 30 OFFSET $offset");$s->execute($args);
+  $s=$this->conn->prepare('SELECT p.*,c.nombre AS categoria,CASE WHEN EXISTS(SELECT 1 FROM lotes l WHERE l.producto_id=p.id) THEN (SELECT MIN(l.vencimiento) FROM lotes l WHERE l.producto_id=p.id AND l.stock>0) ELSE p.fecha_vencimiento END AS fecha_vencimiento FROM productos p LEFT JOIN categorias c ON c.id=p.categoria_id'.$where." ORDER BY p.nombre,p.id LIMIT 30 OFFSET $offset");$s->execute($args);
   return ['filas'=>$s->fetchAll(),'total'=>$total,'pagina'=>$pagina,'paginas'=>$paginas];
  }
  public function getById($id){$s=$this->conn->prepare('SELECT * FROM productos WHERE id=?');$s->execute([$id]);return $s->fetch();}
+ public function lotesConStock(int $id): array {$s=$this->conn->prepare('SELECT id,codigo,vencimiento,stock FROM lotes WHERE producto_id=? AND stock>0 ORDER BY id');$s->execute([$id]);return $s->fetchAll();}
  public function porCodigo(string $codigo){
   $codigos=[$codigo];
   if(preg_match('/^\d{8,14}$/',$codigo)){
@@ -40,6 +41,22 @@ class Producto {
   $id=(int)$d['id'];$antes=Stock::producto($this->conn,$id);
   if((int)$antes['stock']!==(int)$d['stock'])throw new RuntimeException('El stock cambió o intentas modificarlo directamente. Usa Movimientos y recarga la ficha.');
   if((int)$antes['stock']>0&&((int)$antes['unidades_por_caja']!==(int)$d['unidades_por_caja']||(int)$antes['unidades_por_blister']!==(int)$d['unidades_por_blister']||(int)$antes['es_fraccionable']!==(int)$d['es_fraccionable']))throw new RuntimeException('No puedes cambiar equivalencias con existencias.');
+  $s=$this->conn->prepare('SELECT id,vencimiento FROM lotes WHERE producto_id=? AND stock>0 ORDER BY id FOR UPDATE');$s->execute([$id]);$lotes=$s->fetchAll();
+  $fechas=$d['vencimientos_lotes']??null;unset($d['vencimientos_lotes']);
+  if($fechas!==null){
+   if(!is_array($fechas))throw new RuntimeException('Fechas de lotes invalidas.');
+   $ids=array_map('intval',array_keys($fechas));sort($ids);$actuales=array_map('intval',array_column($lotes,'id'));sort($actuales);
+   if($ids!==$actuales)throw new RuntimeException('Los lotes cambiaron. Recarga el producto antes de corregir sus vencimientos.');
+  }elseif(count($lotes)>1){throw new RuntimeException('Este producto tiene varios lotes. Revisa la fecha de cada lote.');}
+  foreach($lotes as $lote){
+   $fecha=Operacion::fecha($fechas!==null?($fechas[$lote['id']]??''):($d['fecha_vencimiento']??null));
+   if($fecha!==$lote['vencimiento']){
+    $this->conn->prepare('UPDATE lotes SET vencimiento=? WHERE id=? AND producto_id=?')->execute([$fecha,$lote['id'],$id]);
+    Operacion::audit($this->conn,'corregir_vencimiento','lotes',(int)$lote['id'],['antes'=>$lote['vencimiento'],'despues'=>$fecha,'producto_id'=>$id]);
+   }
+  }
+  if($lotes){$s=$this->conn->prepare('SELECT MIN(vencimiento) FROM lotes WHERE producto_id=? AND stock>0');$s->execute([$id]);$d['fecha_vencimiento']=$s->fetchColumn()?:null;}
+  else $d['fecha_vencimiento']=Operacion::fecha($d['fecha_vencimiento']??null);
   unset($d['id'],$d['stock']);$cols=array_keys($d);$sets=implode(',',array_map(fn($c)=>"`$c`=?",$cols));$this->conn->prepare("UPDATE productos SET $sets WHERE id=?")->execute([...array_values($d),$id]);
   Operacion::audit($this->conn,'editar','productos',$id,['antes'=>$antes,'despues'=>$d]);return true;
  });}

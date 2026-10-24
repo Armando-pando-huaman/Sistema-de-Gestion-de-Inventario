@@ -8,7 +8,7 @@ class Seguridad {
             foreach(['csrf_global','fv_venta_csrf','fv_categoria_csrf','mov_csrf'] as $key) if(is_string($token)&&isset($_SESSION[$key])&&hash_equals($_SESSION[$key],$token))$valido=true;
             if(!$valido){http_response_code(403);exit('Formulario vencido. Recarga la página.');}
         }
-        if($controlador==='Auth' && $accion==='login')return;
+        if($controlador==='Auth' && in_array($accion,['login','registro'],true))return;
         if(!isset($_SESSION['user_id'])){header('Location: index.php?c=Auth&a=login');exit;}
         $db=(new Database())->getConnection();$s=$db->prepare('SELECT activo,rol FROM usuarios WHERE id=?');$s->execute([$_SESSION['user_id']]);$usuario=$s->fetch();
         if(!$usuario || !$usuario['activo']){session_unset();header('Location: index.php?c=Auth&a=login');exit;}
@@ -19,6 +19,7 @@ class Seguridad {
             || ($controlador==='Movimiento'&&$post);
         if($controlador==='Gestion' && in_array($accion,['caja','operarCaja'],true))$admin=false;
         if($controlador==='Venta' && in_array($accion,['devolver','anular'],true))$admin=true;
+        if($controlador==='Cuenta' && $accion==='negocio')$admin=true;
         if($admin&&$usuario['rol']!=='admin'){http_response_code(403);exit('Esta operación requiere un administrador.');}
         if(in_array($accion,['eliminar','guardar','devolver','anular','operar','operarCaja','logout'],true)&&!$post){http_response_code(405);header('Allow: POST');exit('Esta acción requiere un formulario POST.');}
     }

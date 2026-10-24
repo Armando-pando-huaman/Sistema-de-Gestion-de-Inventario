@@ -38,10 +38,7 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label">Rol *</label>
-                <select name="rol" class="form-select" required>
-                    <option value="vendedor" <?= ($_POST['rol'] ?? '') == 'vendedor' ? 'selected' : '' ?>>Vendedor</option>
-                    <option value="admin" <?= ($_POST['rol'] ?? '') == 'admin' ? 'selected' : '' ?>>Administrador</option>
-                </select>
+                <input class="form-control" value="Vendedor" readonly aria-label="Rol del nuevo usuario">
             </div>
             <div class="col-12 mt-3">
                 <button type="submit" class="btn btn-success">

@@ -1,6 +1,10 @@
+<?php
+require __DIR__.'/identidad.php';
+$fvRegistroHabilitado=!empty($fvBotica['registro_habilitado']);
+?>
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FarmaVidaHC | Gestión farmacéutica</title>
+<title><?= $fvEsc($fvNombreBotica) ?> | Gestión farmacéutica</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <script>try{document.documentElement.dataset.fvPalette=localStorage.getItem('fv-palette')||'mint';document.documentElement.dataset.fvLayout=localStorage.getItem('fv-layout')||'vertical'}catch(e){document.documentElement.dataset.fvPalette='mint';document.documentElement.dataset.fvLayout='vertical'}</script>
@@ -13,7 +17,7 @@
 })();
 </script>
 <link rel="stylesheet" href="css/style.css?v=20261020-nav">
-<link rel="stylesheet" href="css/fv-theme-mode.css?v=3"></head>
+<link rel="stylesheet" href="css/fv-theme-mode.css?v=3"><link rel="stylesheet" href="css/fv-cuenta.css?v=2"></head>
 <body class="fv-theme fv-app">
 <?php
 $fvController = strtolower((string)($_GET['c'] ?? 'Dashboard'));
@@ -32,8 +36,15 @@ if ($fvIsAdmin) { $fvMenu[]=['Gestion','lotes','bi-boxes','Lotes'];$fvMenu[]=['G
 ?>
 <div class="fv-shell">
 <aside class="fv-sidebar" id="fv-sidebar" aria-label="Navegación lateral">
- <div class="fv-side-brand"><a href="index.php?c=Dashboard&a=index" class="fv-side-logo"><span class="fv-logo-mark">+</span><span><strong>Farma<span>Vida</span>HC</strong><small>Gestión inteligente</small></span></a><button type="button" class="fv-close-side" id="fv-close-side" aria-label="Cerrar menú"><i class="bi bi-x-lg"></i></button></div>
- <div class="fv-side-workspace"><span class="fv-workspace-icon"><i class="bi bi-hospital"></i></span><span><strong>Botica Central</strong><small>Panel de administración</small></span><i class="bi bi-chevron-down ms-auto"></i></div>
+ <div class="fv-side-brand">
+  <a href="index.php?c=Dashboard&amp;a=index" class="fv-side-logo">
+   <span class="fv-logo-mark<?= !empty($fvBotica['logo'])?' fv-logo-mark--image':'' ?>">
+    <?php if (!empty($fvBotica['logo'])): ?><img src="<?= $fvEsc($fvBotica['logo']) ?>" alt="Logo de <?= $fvEsc($fvBotica['nombre']) ?>"><?php else: ?>+<?php endif; ?>
+   </span>
+   <span class="fv-side-brand-copy"><strong><?= $fvEsc($fvBotica['nombre'] ?? 'Mi botica') ?></strong><small>Gestión inteligente</small></span>
+  </a>
+  <button type="button" class="fv-close-side" id="fv-close-side" aria-label="Cerrar menú"><i class="bi bi-x-lg"></i></button>
+ </div>
  <div class="fv-side-caption">MENÚ PRINCIPAL</div>
  <nav class="fv-side-nav">
  <?php foreach ($fvMenu as [$controller,$action,$icon,$label]): $active = strtolower($controller)===$fvController && (!in_array($fvController,['venta','gestion'],true) || $action===$fvAction); ?>
@@ -41,7 +52,7 @@ if ($fvIsAdmin) { $fvMenu[]=['Gestion','lotes','bi-boxes','Lotes'];$fvMenu[]=['G
  <a class="fv-side-link <?= $active?'active':'' ?>" href="index.php?c=<?= $fvEsc($controller) ?>&a=<?= $fvEsc($action) ?>" <?= $active?'aria-current="page"':'' ?>><i class="bi <?= $fvEsc($icon) ?>"></i><span><?= $fvEsc($label) ?></span></a>
  <?php endforeach; ?>
  </nav>
- <div class="fv-side-bottom"><div class="fv-side-help"><i class="bi bi-question-circle"></i><strong>¿Necesitas ayuda?</strong><small>Consulta al administrador de tu botica.</small></div><div class="fv-side-profile"><span class="fv-avatar"><?= $fvEsc(strtoupper(substr((string)($_SESSION['user_nombre']??'U'),0,1))) ?></span><span><strong><?= $fvEsc($_SESSION['user_nombre']??'Usuario') ?></strong><small><?= $fvIsAdmin?'Administrador':'Personal' ?></small></span><form method="post" action="index.php?c=Auth&amp;a=logout" style="display:inline"><input type="hidden" name="csrf" value="<?= $fvEsc(Seguridad::token()) ?>"><button type="submit" title="Cerrar sesión" aria-label="Cerrar sesión" style="border:0;background:transparent;color:inherit"><i class="bi bi-box-arrow-right"></i></button></form></div></div>
+ <div class="fv-side-bottom"><div class="fv-side-help"><i class="bi bi-question-circle"></i><strong>¿Necesitas ayuda?</strong><small>Consulta al administrador de tu botica.</small></div><div class="fv-side-profile"><span class="fv-avatar"><?php if (!empty($_SESSION['user_foto'])): ?><img class="fv-user-photo" src="<?= $fvEsc($_SESSION['user_foto']) ?>" alt="Tu foto"><?php else: ?><?= $fvEsc(strtoupper(mb_substr((string)($_SESSION['user_nombre']??'U'),0,1))) ?><?php endif; ?></span><span><strong><?= $fvEsc($_SESSION['user_nombre']??'Usuario') ?></strong><small><?= $fvIsAdmin?'Administrador':'Personal' ?></small></span><form method="post" action="index.php?c=Auth&amp;a=logout" style="display:inline"><input type="hidden" name="csrf" value="<?= $fvEsc(Seguridad::token()) ?>"><button type="submit" title="Cerrar sesión" aria-label="Cerrar sesión" style="border:0;background:transparent;color:inherit"><i class="bi bi-box-arrow-right"></i></button></form></div></div>
 </aside>
 <div class="fv-side-overlay" id="fv-side-overlay"></div>
 <div class="fv-app-main">
@@ -53,7 +64,7 @@ if ($fvIsAdmin) { $fvMenu[]=['Gestion','lotes','bi-boxes','Lotes'];$fvMenu[]=['G
  <button type="button" class="palette-option" data-fv-palette="<?= $key ?>" aria-pressed="false"><span class="palette-swatches"><i style="background:<?= $c1 ?>"></i><i style="background:<?= $c2 ?>"></i><i style="background:<?= $c3 ?>"></i></span><span><strong><?= $label ?></strong><small><?= $desc ?></small></span><i class="bi bi-check-lg fv-option-check"></i></button>
  <?php endforeach; ?></div></div>
  <div class="fv-top-dropdown"><button type="button" class="fv-top-control" data-fv-toggle="layout" aria-expanded="false"><i class="bi bi-layout-sidebar"></i><span>Menú</span><i class="bi bi-chevron-down"></i></button><div class="fv-top-popover fv-layout-popover" data-fv-popover="layout"><div class="palette-menu-title">Posición del menú</div><button type="button" class="fv-layout-option" data-fv-layout="horizontal"><i class="bi bi-layout-text-window"></i> Horizontal <i class="bi bi-check-lg fv-option-check"></i></button><button type="button" class="fv-layout-option" data-fv-layout="vertical"><i class="bi bi-layout-sidebar-inset"></i> Vertical <i class="bi bi-check-lg fv-option-check"></i></button><small>En móviles se usa el menú desplegable.</small></div></div>
- <div class="fv-top-dropdown fv-user-dropdown"><button type="button" class="fv-top-avatar" data-fv-toggle="user" aria-expanded="false" aria-label="Abrir menú de usuario" title="Mi cuenta"><i class="bi bi-person-fill"></i></button><div class="fv-top-popover fv-user-popover"><div class="fv-user-info"><strong><?= $fvEsc($_SESSION['user_nombre'] ?? 'Usuario') ?></strong><small><?= $fvIsAdmin ? 'Administrador' : 'Personal' ?></small></div><hr><div class="fv-mode-picker" role="group" aria-label="Modo de apariencia"><button type="button" data-fv-mode="light" aria-pressed="true"><i class="bi bi-sun" aria-hidden="true"></i> Día</button><button type="button" data-fv-mode="dark" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i> Noche</button></div><hr><form method="post" action="index.php?c=Auth&amp;a=logout" style="display:inline"><input type="hidden" name="csrf" value="<?= $fvEsc(Seguridad::token()) ?>"><button type="submit" class="fv-user-logout" style="border:0;background:transparent;color:inherit"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button></form></div></div>
+ <div class="fv-top-dropdown fv-user-dropdown"><button type="button" class="fv-top-avatar" data-fv-toggle="user" aria-expanded="false" aria-label="Abrir menú de usuario" title="Mi cuenta"><?php if (!empty($_SESSION['user_foto'])): ?><img class="fv-user-photo" src="<?= $fvEsc($_SESSION['user_foto']) ?>" alt="Tu foto de perfil"><?php else: ?><i class="bi bi-person-fill"></i><?php endif; ?></button><div class="fv-top-popover fv-user-popover"><div class="fv-user-info"><strong><?= $fvEsc($_SESSION['user_nombre'] ?? 'Usuario') ?></strong><small><?= $fvIsAdmin ? 'Administrador' : 'Personal' ?></small></div><hr><a href="index.php?c=Cuenta&amp;a=perfil" class="fv-layout-option"><i class="bi bi-person-circle"></i> Mi perfil</a><?php if ($fvIsAdmin): ?><a href="index.php?c=Cuenta&amp;a=negocio" class="fv-layout-option"><i class="bi bi-shop"></i> Mi botica</a><?php endif; ?><hr><div class="fv-mode-picker" role="group" aria-label="Modo de apariencia"><button type="button" data-fv-mode="light" aria-pressed="true"><i class="bi bi-sun" aria-hidden="true"></i> Día</button><button type="button" data-fv-mode="dark" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i> Noche</button></div><hr><form method="post" action="index.php?c=Auth&amp;a=logout" style="display:inline"><input type="hidden" name="csrf" value="<?= $fvEsc(Seguridad::token()) ?>"><button type="submit" class="fv-user-logout" style="border:0;background:transparent;color:inherit"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button></form></div></div>
  </div>
 </header>
 <main class="container-fluid fv-content-area">

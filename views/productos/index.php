@@ -3,7 +3,7 @@
 <div class="fv-products fv-product-catalog">
 <section class="fv-page-head">
     <div>
-        <span class="fv-eyebrow">FarmaVidaHC · Inventario farmacéutico</span>
+        <span class="fv-eyebrow"><?= $fvEsc($fvNombreBotica) ?> · Inventario farmacéutico</span>
         <h2><i class="bi bi-capsule-pill me-2"></i> Productos</h2>
         <p>Consulta y administra los productos de tu botica.</p>
     </div>
@@ -25,7 +25,7 @@
                         <td class="fv-product-secondary"><span class="fv-code"><?= htmlspecialchars($p['codigo_barras'] ?? '-') ?></span></td>
                         <td class="fv-product-title"><span class="fv-product-name"><?= htmlspecialchars($p['nombre']) ?></span>
                             <?php if($fvIsAdmin): ?><div class="fv-product-stock-links">
-                            <?php if($p['activo']): ?><a href="index.php?c=Producto&amp;a=existencias&amp;id=<?= (int)$p['id'] ?>"><i class="bi bi-plus-circle" aria-hidden="true"></i> Agregar existencias</a><?php endif; ?>
+                            <?php if($p['activo']): ?><a href="index.php?c=Movimiento&amp;a=index&amp;producto_id=<?= (int)$p['id'] ?>"><i class="bi bi-plus-circle" aria-hidden="true"></i> Registrar movimiento</a><?php endif; ?>
                             <a href="index.php?c=Gestion&amp;a=lotes&amp;producto_id=<?= (int)$p['id'] ?>"><i class="bi bi-boxes" aria-hidden="true"></i> Ver lotes</a></div><?php endif; ?>
                         </td>
                         <td class="fv-product-secondary"><span class="fv-category"><?= htmlspecialchars($p['categoria'] ?? '-') ?></span></td>

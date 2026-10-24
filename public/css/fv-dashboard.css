@@ -1,5 +1,5 @@
 /* Accesos sincronizados con la paleta seleccionada. */
-body.fv-app .fv-dashboard-care .fv-care-shortcut { background: linear-gradient(115deg, var(--care-dark), var(--care-primary)) !important; color: #fff !important; border-color: var(--care-primary) !important; box-shadow: 0 3px 8px rgba(var(--care-rgb), .18); }
+body.fv-app .fv-dashboard-care .fv-care-shortcut { background: linear-gradient(115deg, var(--shortcut-dark), var(--shortcut-color)) !important; color: #fff !important; border-color: var(--shortcut-color) !important; box-shadow: 0 3px 8px #17203320; }
 body.fv-app .fv-dashboard-care .fv-care-shortcut i { color: inherit !important; }
 body.fv-app .fv-dashboard-care .fv-care-shortcut:hover { filter: brightness(1.12); }
 .fv-dashboard-care .fv-care-shortcut:focus-visible { outline: 3px solid var(--care-dark); outline-offset: 3px; }
@@ -25,6 +25,104 @@ body.fv-app .fv-dashboard-care .fv-care-chart-bar { flex-shrink: 0; max-height: 
     .fv-dashboard-care .fv-care-shortcuts-heading p { display: none; }
     body.fv-app .fv-dashboard-care .fv-care-shortcut { min-height: 48px; gap: 6px; padding: 10px 8px; }
     .fv-dashboard-care .fv-care-shortcut span { min-width: 0; overflow-wrap: anywhere; }
-    .fv-dashboard-care .fv-care-shortcut i:last-child { display: none; }
+    .fv-dashboard-care .fv-care-shortcut > i:last-child { display: none; }
     body.fv-app .fv-dashboard-care .fv-care-chart-bars { gap: 8px; }
+}
+
+/* Colores por accion y columna lateral de accesos. */
+.fv-dashboard-care .fv-care-shortcut--sale { --shortcut-dark: var(--care-dark); --shortcut-color: var(--care-primary); order: 0; }
+.fv-dashboard-care .fv-care-shortcut--product { --shortcut-dark: var(--care-primary); --shortcut-color: var(--care-dark); order: 1; }
+.fv-dashboard-care .fv-care-shortcut--movement { --shortcut-dark: var(--care-dark); --shortcut-color: var(--care-primary); order: 2; }
+.fv-dashboard-care .fv-care-shortcut--cash { --shortcut-dark: var(--care-primary); --shortcut-color: var(--care-dark); order: 3; }
+body.fv-app .fv-dashboard-care .fv-care-shortcuts-grid { grid-template-columns: minmax(0, 1fr); }
+body.fv-app .fv-dashboard-care .fv-care-shortcut { min-height: 60px; }
+@media (min-width: 768px) {
+    body.fv-app .fv-dashboard-care { display: grid; grid-template-columns: minmax(0, 1fr) 230px; column-gap: 20px; align-items: start; }
+    .fv-dashboard-care > .fv-care-greeting { grid-column: 1 / -1; grid-row: 1; }
+    .fv-dashboard-care > .fv-care-stats { grid-column: 1; grid-row: 2; }
+    .fv-dashboard-care > .fv-care-main-grid { grid-column: 1; grid-row: 3; min-width: 0; }
+    .fv-dashboard-care > .fv-care-inventory { grid-column: 1; grid-row: 4; }
+    body.fv-app .fv-dashboard-care > .fv-care-shortcuts { grid-column: 2; grid-row: 2 / 5; margin-top: 0; }
+}
+@media (min-width: 768px) and (max-width: 1400px) {
+    body.fv-app .fv-dashboard-care .fv-care-main-grid { grid-template-columns: minmax(0, 1fr) !important; }
+    body.fv-app .fv-dashboard-care .fv-care-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* Panel de operaciones frecuentes. */
+body.fv-app .fv-dashboard-care > .fv-care-shortcuts {
+    width: 250px;
+    padding: 20px 16px 14px;
+    border: 1px solid var(--care-border);
+    border-top: 4px solid var(--care-primary);
+    border-radius: 20px;
+    background: linear-gradient(155deg, var(--care-soft), transparent 65%), #fff;
+    box-shadow: 0 12px 32px #173d4820, 0 2px 6px #173d4808;
+}
+.fv-dashboard-care .fv-shortcuts-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; margin-bottom: 12px; border-radius: 20px; background: var(--care-soft); color: var(--care-dark); font-size: 10px; font-weight: 700; }
+.fv-dashboard-care .fv-care-shortcuts-heading h3 { font-size: 17px; font-weight: 800; }
+.fv-dashboard-care .fv-care-shortcuts-heading p { line-height: 1.6; margin: 7px 0 18px; }
+body.fv-app .fv-dashboard-care .fv-care-shortcuts-grid { gap: 14px; }
+body.fv-app .fv-dashboard-care .fv-care-shortcut {
+    position: relative; isolation: isolate; min-height: 88px; padding: 14px 11px; gap: 10px;
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 7px 12px -5px var(--shortcut-dark), inset 0 1px 0 #ffffff35;
+    transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+}
+.fv-dashboard-care .fv-care-shortcut::before { content: ''; position: absolute; z-index: -1; inset: 0; background: linear-gradient(110deg, transparent 25%, #ffffff26 50%, transparent 75%); transform: translateX(-130%); transition: transform .6s ease; }
+body.fv-app .fv-dashboard-care .fv-care-shortcut:is(:hover, :focus-visible) { transform: translateY(-3px); filter: brightness(1.06); box-shadow: 0 14px 20px -10px var(--shortcut-dark), inset 0 1px 0 #ffffff55; }
+.fv-dashboard-care .fv-care-shortcut:is(:hover, :focus-visible)::before { transform: translateX(130%); }
+body.fv-app .fv-dashboard-care .fv-care-shortcut:active { transform: translateY(0) scale(.98); }
+.fv-dashboard-care .fv-shortcut-icon { position: relative; display: grid; place-items: center; flex: 0 0 42px; width: 42px; height: 46px; border-radius: 12px; background: #ffffff20; border: 1px solid #ffffff28; }
+body.fv-app .fv-dashboard-care .fv-shortcut-icon > i { margin: 0; display: block; font-size: 23px; }
+.fv-shortcut-icon lord-icon { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.fv-shortcut-icon.is-ready lord-icon { opacity: 1; }
+.fv-shortcut-icon.is-ready > i { visibility: hidden; }
+.fv-dashboard-care .fv-shortcut-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.fv-dashboard-care .fv-shortcut-copy strong { font-size: 12px; line-height: 1.3; }
+.fv-dashboard-care .fv-shortcut-copy small { color: #ffffffdf; font-size: 10px; line-height: 1.4; font-weight: 400; }
+body.fv-app .fv-dashboard-care .fv-shortcut-arrow { font-size: 12px; opacity: .8; margin-left: auto; transition: transform .22s ease; }
+.fv-dashboard-care .fv-care-shortcut:hover .fv-shortcut-arrow { transform: translate(2px, -2px); }
+.fv-dashboard-care .fv-shortcuts-footer { display: flex; align-items: center; justify-content: center; gap: 6px; border-top: 1px solid var(--care-border); margin-top: 20px; padding-top: 14px; font-size: 10px; color: var(--care-primary); }
+html[data-fv-mode="dark"] body.fv-app .fv-dashboard-care > .fv-care-shortcuts { background: linear-gradient(155deg, #1f3540, #172630); border-color: #354b57; }
+html[data-fv-mode="dark"] .fv-dashboard-care .fv-care-shortcuts-heading h3 { color: #e5edf3; }
+@media (prefers-reduced-motion: reduce) {
+    body.fv-app .fv-dashboard-care .fv-care-shortcut,
+    .fv-dashboard-care .fv-care-shortcut::before,
+    body.fv-app .fv-dashboard-care .fv-shortcut-arrow { transition: none; }
+    body.fv-app .fv-dashboard-care .fv-care-shortcut:is(:hover, :focus-visible),
+    body.fv-app .fv-dashboard-care .fv-care-shortcut:active,
+    .fv-dashboard-care .fv-care-shortcut:hover .fv-shortcut-arrow { transform: none; }
+    .fv-shortcut-icon lord-icon { display: none; }
+    .fv-shortcut-icon.is-ready > i { visibility: visible; }
+}
+
+/* Movimiento suave de respaldo cuando el icono animado no carga. */
+@media (prefers-reduced-motion: no-preference) {
+    .fv-dashboard-care .fv-shortcut-icon:not(.is-ready) > i { animation: fv-shortcut-float 3s ease-in-out infinite; }
+    .fv-dashboard-care .fv-care-shortcut--product .fv-shortcut-icon > i { animation-delay: -.7s; }
+    .fv-dashboard-care .fv-care-shortcut--movement .fv-shortcut-icon > i { animation-name: fv-shortcut-slide; animation-delay: -1.4s; }
+    .fv-dashboard-care .fv-care-shortcut--cash .fv-shortcut-icon > i { animation-delay: -2.1s; }
+}
+@keyframes fv-shortcut-float {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-3px) rotate(-5deg); }
+}
+@keyframes fv-shortcut-slide {
+    0%, 100% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+}
+/* Accesos en dos columnas para pantallas moviles. */
+@media (max-width: 767.98px) {
+    body.fv-app .fv-dashboard-care > .fv-care-shortcuts { width: 100%; padding: 18px 14px 14px; }
+    .fv-dashboard-care .fv-care-shortcuts-heading { text-align: center; }
+    body.fv-app .fv-dashboard-care .fv-care-shortcuts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    body.fv-app .fv-dashboard-care .fv-care-shortcut {
+        flex-direction: column; justify-content: center; align-items: center;
+        min-height: 148px; padding: 16px 10px; gap: 10px; text-align: center;
+    }
+    .fv-dashboard-care .fv-shortcut-icon { flex: 0 0 48px; width: 48px; height: 48px; }
+    .fv-dashboard-care .fv-shortcut-copy { align-items: center; width: 100%; gap: 5px; }
+    .fv-dashboard-care .fv-shortcut-copy strong { font-size: 13px; }
+    .fv-dashboard-care .fv-shortcut-copy small { font-size: 10px; line-height: 1.5; }
+    body.fv-app .fv-dashboard-care .fv-care-shortcut > .fv-shortcut-arrow { display: none; }
 }

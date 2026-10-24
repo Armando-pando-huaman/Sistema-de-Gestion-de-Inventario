@@ -2,9 +2,9 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2><i class="bi bi-people"></i> Gestión de Usuarios</h2>
-    <a href="index.php?c=Usuario&a=crear" class="btn btn-primary">
+    <?php if ($registroHabilitado): ?><a href="index.php?c=Usuario&a=crear" class="btn btn-primary">
         <i class="bi bi-person-plus"></i> Nuevo Usuario
-    </a>
+    </a><?php endif; ?>
 </div>
 
 <?php if (isset($_SESSION['success'])): ?>

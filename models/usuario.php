@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__.'/Operacion.php';
+require_once __DIR__.'/Botica.php';
 class Usuario {
  private PDO $conn;
  public function __construct(){$this->conn=(new Database())->getConnection();}
@@ -7,9 +8,7 @@ class Usuario {
  public function getAll(){return $this->conn->query('SELECT id,nombre,email,rol,created_at FROM usuarios WHERE activo=1 ORDER BY id DESC')->fetchAll();}
  public function getById($id){$s=$this->conn->prepare('SELECT * FROM usuarios WHERE id=?');$s->execute([$id]);return $s->fetch();}
  public function existeEmail($email,$excluirId=null){$s=$this->conn->prepare('SELECT COUNT(*) FROM usuarios WHERE email=? AND id<>?');$s->execute([$email,$excluirId??0]);return $s->fetchColumn()>0;}
- public function crear($nombre,$email,$password,$rol){return Operacion::transaccion($this->conn,function()use($nombre,$email,$password,$rol){
-  $this->conn->prepare('INSERT INTO usuarios(nombre,email,password,rol) VALUES(?,?,?,?)')->execute([$nombre,$email,password_hash($password,PASSWORD_DEFAULT),$rol]);Operacion::audit($this->conn,'crear','usuarios',(int)$this->conn->lastInsertId(),['nombre'=>$nombre,'email'=>$email,'rol'=>$rol]);return true;
- });}
+ public function crear($nombre,$email,$password,$rol='vendedor'){return (new Botica($this->conn))->crearVendedor($nombre,$email,$password);}
  public function actualizar($id,$nombre,$email,$rol,$password=null){return Operacion::transaccion($this->conn,function()use($id,$nombre,$email,$rol,$password){
   $admins=$this->conn->query("SELECT id FROM usuarios WHERE rol='admin' AND activo=1 ORDER BY id FOR UPDATE")->fetchAll(PDO::FETCH_COLUMN);$antes=$this->getById($id);
   if($antes['rol']==='admin'&&$rol!=='admin'&&count($admins)<2)throw new RuntimeException('Debe quedar al menos un administrador activo.');

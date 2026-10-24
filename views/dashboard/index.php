@@ -18,16 +18,18 @@ $esAdminVista = ($_SESSION['user_rol'] ?? '') === 'admin';
 $nombreCorto = trim(explode(' ', trim($nombreOriginal))[0] ?? '');
 $nombreCorto = htmlspecialchars($nombreCorto ?: 'Usuario', ENT_QUOTES, 'UTF-8');
 
-$horaActual = (int) date('G');
-$saludo = $horaActual < 12 ? 'Buenos días' : ($horaActual < 19 ? 'Buenas tardes' : 'Buenas noches');
+$ahoraPeru = new DateTimeImmutable('now', new DateTimeZone('America/Lima'));
+$horaActual = (int) $ahoraPeru->format('G');
+$saludo = ($horaActual >= 5 && $horaActual < 12) ? 'Buenos días'
+    : (($horaActual >= 12 && $horaActual < 18) ? 'Buenas tardes' : 'Buenas noches');
 
 $diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 $meses = [1 => 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
           'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
-$fechaTexto = ucfirst($diasSemana[(int) date('w')]) . ', ' .
-              date('j') . ' de ' . $meses[(int) date('n')] .
-              ' de ' . date('Y');
+$fechaTexto = ucfirst($diasSemana[(int) $ahoraPeru->format('w')]) . ', ' .
+              $ahoraPeru->format('j') . ' de ' . $meses[(int) $ahoraPeru->format('n')] .
+              ' de ' . $ahoraPeru->format('Y');
 
 $totalAlertas = count($stockBajoVista) + $porVencerVista;
 
@@ -41,7 +43,7 @@ foreach ($movimientosVista as $movimiento) {
 }
 ?>
 
-<link rel="stylesheet" href="css/fv-dashboard.css?v=2">
+<link rel="stylesheet" href="css/fv-dashboard.css?v=6">
 <div class="fv-dashboard fv-dashboard-care">
     <!-- BIENVENIDA -->
     <section class="fv-care-greeting">
@@ -312,52 +314,50 @@ foreach ($movimientosVista as $movimiento) {
     </section>
 
     <!-- ACCESOS RÁPIDOS -->
-    <section class="fv-care-shortcuts">
+    <section class="fv-care-shortcuts" aria-labelledby="fv-shortcuts-title">
         <div class="fv-care-shortcuts-heading">
-            <h3>Accesos rápidos</h3>
-            <p>Operaciones frecuentes de tu botica</p>
+            <span class="fv-shortcuts-badge"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> A un clic</span>
+            <h3 id="fv-shortcuts-title">Accesos r&#225;pidos</h3>
+            <p>Todo lo que necesitas para atender mejor.</p>
         </div>
-
         <div class="fv-care-shortcuts-grid">
-            <?php if($esAdminVista): ?><a href="index.php?c=Producto&a=crear"
-               class="fv-care-shortcut fv-care-shortcut--product">
-                <i class="bi bi-plus-circle"></i>
-                <span>Nuevo producto</span>
-                <i class="bi bi-arrow-up-right"></i>
-            </a>
-
-            <?php endif; ?><a href="index.php?c=Venta&a=index"
-               class="fv-care-shortcut fv-care-shortcut--sale">
-                <i class="bi bi-cart-plus"></i>
-                <span>Nueva venta</span>
-                <i class="bi bi-arrow-up-right"></i>
-            </a>
-
-            <a href="index.php?c=Movimiento&a=index"
-               class="fv-care-shortcut fv-care-shortcut--movement">
-                <i class="bi bi-arrow-left-right"></i>
-                <span>Movimientos</span>
-                <i class="bi bi-arrow-up-right"></i>
-            </a>
-
-            <?php if ($esAdminVista): ?>
-                <a href="index.php?c=Usuario&a=crear"
-                   class="fv-care-shortcut fv-care-shortcut--user">
-                    <i class="bi bi-person-plus"></i>
-                    <span>Nuevo usuario</span>
-                    <i class="bi bi-arrow-up-right"></i>
+            <?php
+            $accesosVista = [
+                ['sale', 'Venta', 'index', 'bi-cart-plus', 'cllunfud', 'Nueva venta', 'Atiende a tus clientes'],
+            ];
+            if ($esAdminVista) {
+                $accesosVista[] = ['product', 'Producto', 'crear', 'bi-plus-circle', 'wloilxuq', 'Nuevo producto', 'Ampl&#237;a tu cat&#225;logo'];
+            }
+            $accesosVista[] = ['movement', 'Movimiento', 'index', 'bi-arrow-left-right', 'gqdnbnwt', 'Movimientos', 'Controla entradas y salidas'];
+            $accesosVista[] = ['cash', 'Gestion', 'caja', 'bi-wallet2', 'qhviklyi', 'Mi caja', 'Revisa tu dinero del d&#237;a'];
+            foreach ($accesosVista as [$estilo, $controlador, $accion, $icono, $animacion, $titulo, $detalle]):
+            ?>
+                <a href="index.php?c=<?= $controlador ?>&amp;a=<?= $accion ?>"
+                   class="fv-care-shortcut fv-care-shortcut--<?= $estilo ?>" id="fv-shortcut-<?= $estilo ?>">
+                    <span class="fv-shortcut-icon" aria-hidden="true">
+                        <i class="bi <?= $icono ?>"></i>
+                        <lord-icon src="https://cdn.lordicon.com/<?= $animacion ?>.json"
+                                   trigger="loop" delay="2400" target="#fv-shortcut-<?= $estilo ?>"
+                                   colors="primary:#ffffff,secondary:#ffffff"></lord-icon>
+                    </span>
+                    <span class="fv-shortcut-copy"><strong><?= $titulo ?></strong><small><?= $detalle ?></small></span>
+                    <i class="bi bi-arrow-up-right fv-shortcut-arrow" aria-hidden="true"></i>
                 </a>
-            <?php else: ?>
-                <a href="index.php?c=Producto&a=index"
-                   class="fv-care-shortcut fv-care-shortcut--inventory">
-                    <i class="bi bi-box-seam"></i>
-                    <span>Ver inventario</span>
-                    <i class="bi bi-arrow-up-right"></i>
-                </a>
-            <?php endif; ?>
+            <?php endforeach; ?>
         </div>
+        <div class="fv-shortcuts-footer"><i class="bi bi-shield-check" aria-hidden="true"></i> Tu botica, siempre al d&#237;a</div>
     </section>
 
 </div>
 
+<script>
+document.querySelectorAll('.fv-shortcut-icon lord-icon').forEach(function (icon) {
+    icon.addEventListener('ready', function () {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            icon.parentElement.classList.add('is-ready');
+        }
+    });
+});
+</script>
+<script src="https://cdn.lordicon.com/lordicon.js" async></script>
 <?php require_once '../views/layouts/footer.php'; ?>

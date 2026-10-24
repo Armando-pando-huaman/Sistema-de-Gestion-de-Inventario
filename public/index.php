@@ -4,7 +4,7 @@ session_start();
 require_once __DIR__.'/../config/database.php';
 require_once __DIR__.'/../config/Seguridad.php';
 $routes=[
- 'Auth'=>['login','logout'], 'Dashboard'=>['index'], 'Producto'=>['index','crear','editar','eliminar','consultarCodigo','existencias'],
+ 'Auth'=>['login','logout','registro'], 'Cuenta'=>['perfil','negocio'], 'Dashboard'=>['index'], 'Producto'=>['index','crear','editar','eliminar','consultarCodigo'],
  'Categoria'=>['index','guardar','eliminar'], 'Movimiento'=>['index'], 'Venta'=>['index','ver','historial','devolver','anular'],
  'Usuario'=>['index','crear','editar','eliminar'], 'Reporte'=>['index','ventas','productos','inventario'],
  'Gestion'=>['index','compras','lotes','auditoria','caja','operar','operarCaja','finanzas']

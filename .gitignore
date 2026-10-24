@@ -1,4 +1,5 @@
 /vendor
 .DS_Store
 *.log
+/public/uploads/identidad/*.webp
 /config/database.php

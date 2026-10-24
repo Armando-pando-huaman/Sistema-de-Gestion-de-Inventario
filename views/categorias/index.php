@@ -1,7 +1,7 @@
 <?php require_once '../views/layouts/header.php';
 $esc = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); ?>
 <div class="fv-products fv-categories-page">
-  <section class="fv-page-head"><div><span class="fv-eyebrow">FarmaVidaHC · Inventario</span><h2><i class="bi bi-tags me-2"></i> Categorías</h2><p>Organiza y administra las categorías de tus productos.</p></div><a class="fv-btn-light" href="index.php?c=Producto&a=index"><i class="bi bi-arrow-left"></i> Volver a productos</a></section>
+  <section class="fv-page-head"><div><span class="fv-eyebrow"><?= $fvEsc($fvNombreBotica) ?> · Inventario</span><h2><i class="bi bi-tags me-2"></i> Categorías</h2><p>Organiza y administra las categorías de tus productos.</p></div><a class="fv-btn-light" href="index.php?c=Producto&a=index"><i class="bi bi-arrow-left"></i> Volver a productos</a></section>
   <?php if ($mensaje): ?><div class="alert alert-<?= $esc($mensaje[0]) ?>" role="alert"><?= $esc($mensaje[1]) ?></div><?php endif; ?>
   <div class="fv-categories-grid">
     <?php if($fvIsAdmin): ?><section class="fv-panel fv-category-form-panel"><div class="fv-panel-top"><h5><i class="bi bi-plus-circle me-2"></i><span id="fv-category-form-title">Nueva categoría</span></h5></div>
