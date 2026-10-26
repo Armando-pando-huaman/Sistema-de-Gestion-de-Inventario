@@ -3,7 +3,7 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crear cuenta | <?= $fvEsc($fvNombreBotica) ?></title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/fv-cuenta.css?v=1"></head>
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/fv-cuenta.css"></head>
 <body class="fv-theme"><main class="fv-signup-shell"><section class="card fv-account-card">
 <div class="card-body p-4 p-md-5"><a href="index.php?c=Auth&amp;a=login">← Iniciar sesión</a>
 <h1 class="h3 mt-4">Tu cuenta de botica</h1><p class="text-muted">Primero tus datos, después tu botica.</p>
@@ -34,4 +34,4 @@
 <?php endif; ?>
 <button type="button" id="registro-atras" class="btn btn-outline-secondary" hidden>Volver</button>
 <button type="submit" class="btn btn-primary"><?= $botica?'Crear cuenta de vendedor':'Crear mi botica y mi cuenta' ?></button>
-</fieldset></form></div></section></main><script src="js/fv-cuenta.js?v=1"></script></body></html>
+</fieldset></form></div></section></main><script src="js/fv-cuenta.js"></script></body></html>

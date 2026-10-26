@@ -81,6 +81,17 @@ class Movimiento {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function resumenPorHora($inicio, $fin) {
+        $stmt = $this->conn->prepare("SELECT DATE_FORMAT(fecha, '%Y-%m-%d %H:00:00') AS momento,
+            COUNT(*) AS total,
+            SUM(CASE WHEN tipo = 'entrada' THEN 1 ELSE 0 END) AS entradas,
+            SUM(CASE WHEN tipo = 'salida' THEN 1 ELSE 0 END) AS salidas
+            FROM movimientos WHERE fecha >= ? AND fecha < ?
+            GROUP BY DATE(fecha), HOUR(fecha) ORDER BY momento");
+        $stmt->execute([$inicio, $fin]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function contar() {
         return $this->conn->query("SELECT COUNT(*) FROM " . $this->table)->fetchColumn();
     }

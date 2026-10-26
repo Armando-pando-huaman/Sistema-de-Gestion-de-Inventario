@@ -1,6 +1,7 @@
 <?php
 require_once '../models/Producto.php';
 require_once '../models/Movimiento.php';
+require_once '../models/Venta.php';
 
 class DashboardController {
     public function index() {
@@ -11,13 +12,18 @@ class DashboardController {
 
         $productoModel = new Producto();
         $movimientoModel = new Movimiento();
+        $ventaModel = new Venta();
 
         // Estadísticas básicas
         $totalProductos = $productoModel->contar();
         $totalMovimientos = $movimientoModel->contar();
         $productosBajos = $productoModel->stockBajo();
         $ultimosMovimientos = $movimientoModel->getAll();
-        $movimientosPorDia = $movimientoModel->resumenPorDia(date('Y-m-d', strtotime('-6 days')), date('Y-m-d', strtotime('+1 day')));
+        $inicioGrafica = date('Y-m-d H:00:00', strtotime('-23 hours'));
+        $finGrafica = date('Y-m-d H:00:00', strtotime('+1 hour'));
+        $movimientosPorHora = $movimientoModel->resumenPorHora($inicioGrafica, $finGrafica);
+        $totalVendidoHoy = (float) $ventaModel->totalVendidoHoy();
+        $ventasHoy = (int) $ventaModel->ventasHoy();
 
         // Productos próximos a vencer (30 días)
         $porVencer = 0;

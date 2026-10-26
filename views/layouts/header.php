@@ -16,8 +16,8 @@ $fvRegistroHabilitado=!empty($fvBotica['registro_habilitado']);
  document.documentElement.dataset.bsTheme = mode;
 })();
 </script>
-<link rel="stylesheet" href="css/style.css?v=20261020-nav">
-<link rel="stylesheet" href="css/fv-theme-mode.css?v=3"><link rel="stylesheet" href="css/fv-cuenta.css?v=2"></head>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/fv-theme-mode.css"><link rel="stylesheet" href="css/fv-cuenta.css"><link rel="stylesheet" href="css/fv-useanimations.css"></head>
 <body class="fv-theme fv-app">
 <?php
 $fvController = strtolower((string)($_GET['c'] ?? 'Dashboard'));

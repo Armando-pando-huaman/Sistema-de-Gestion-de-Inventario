@@ -1,5 +1,5 @@
 <?php require_once '../views/layouts/header.php'; ?>
-<link rel="stylesheet" href="css/fv-productos.css?v=10">
+<link rel="stylesheet" href="css/fv-productos.css">
 <div class="fv-products fv-product-editor">
 <?php if (!empty($error)): ?><div class="alert alert-danger"><?= htmlspecialchars($error,ENT_QUOTES,'UTF-8') ?></div><?php endif; ?>
 <section class="fv-page-head">
@@ -84,7 +84,7 @@
  </div>
 </div>
 <div class="col-12"><small id="fv-stock-hint" class="text-muted" hidden></small></div>
-<script src="js/fv-fraccion-productos.js?v=7" defer></script>
+<script src="js/fv-fraccion-productos.js" defer></script>
 
 <div class="col-12 mt-4"><h5 class="fv-section-title"><i class="bi bi-box-arrow-in-down"></i> Proveedor del ingreso (opcional)</h5></div>
 <div class="col-12"><label class="form-check"><input class="form-check-input" type="checkbox" id="fv-initial-stock" name="incluir_existencias" value="1" <?= ($_POST['incluir_existencias']??'')==='1'?'checked':'' ?>><span class="form-check-label">Vincular el ingreso a un proveedor</span></label><p class="fv-note">El stock inicial se ingresa arriba. Activa esta opción para asociar el ingreso a un proveedor. Si ya existe, se asigna una referencia interna automáticamente.</p></div>
@@ -121,6 +121,6 @@
   <button type="button" class="fv-cancel" data-fv-scan-close>Cerrar cámara</button>
  </div>
 </div>
-<script src="js/fv-existencias-iniciales.js?v=4"></script><script src="js/fv-product-data.js?v=4"></script>
-<script src="js/fv-product-scan.js?v=2"></script>
+<script src="js/fv-existencias-iniciales.js"></script><script src="js/fv-product-data.js"></script>
+<script src="js/fv-product-scan.js"></script>
 <?php require_once '../views/layouts/footer.php'; ?>

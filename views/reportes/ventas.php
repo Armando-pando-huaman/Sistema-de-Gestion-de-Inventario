@@ -1,5 +1,5 @@
 <?php require_once '../views/layouts/header.php'; ?>
-<link rel="stylesheet" href="css/fv-operaciones.css?v=3">
+<link rel="stylesheet" href="css/fv-operaciones.css">
 <div class="fv-operations">
 <form method="get" class="op-panel op-period"><input type="hidden" name="c" value="Reporte"><input type="hidden" name="a" value="ventas"><label for="ventas-days">Período</label><select id="ventas-days" name="dias" class="form-select"><?php foreach ([7,15,30,60,90,365] as $n): ?><option value="<?= $n ?>" <?= $dias === $n ? 'selected' : '' ?>>Últimos <?= $n ?> días</option><?php endforeach; ?></select><button class="btn btn-primary">Actualizar</button></form>
 
@@ -137,7 +137,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script type="application/json" id="fv-product-sales-data"><?= json_encode(['porciones'=>$porciones,'total'=>$unidadesTotal],JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_THROW_ON_ERROR) ?></script>
-<script src="js/fv-reporte-productos.js?v=1"></script>
+<script src="js/fv-reporte-productos.js"></script>
 <script>
 const ventasHora = <?= json_encode($data['ventasPorHora']) ?>;
 // Gráfico ventas por hora

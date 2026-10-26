@@ -1,5 +1,5 @@
 <?php require_once '../views/layouts/header.php'; $esc = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); ?>
-<link rel="stylesheet" href="css/fv-operaciones.css?v=1">
+<link rel="stylesheet" href="css/fv-operaciones.css">
 <div class="fv-operations">
 <header class="op-heading"><div><h2>Reportes del negocio</h2><p>Revisa tus ingresos, productos y movimientos de inventario.</p></div><nav class="op-links" aria-label="Reportes"><a class="btn btn-outline-primary" href="index.php?c=Reporte&a=ventas&dias=<?= $dias ?>">Ventas</a><a class="btn btn-outline-primary" href="index.php?c=Reporte&a=productos&dias=<?= $dias ?>">Productos</a><a class="btn btn-outline-primary" href="index.php?c=Reporte&a=inventario">Inventario</a></nav></header>
 <form method="get" class="op-panel op-period"><input type="hidden" name="c" value="Reporte"><input type="hidden" name="a" value="index"><label for="report-days">Período a analizar</label><select id="report-days" name="dias" class="form-select"><?php foreach ([7,15,30,60,90,365] as $n): ?><option value="<?= $n ?>" <?= $dias === $n ? 'selected' : '' ?>>Últimos <?= $n ?> días</option><?php endforeach; ?></select><button class="btn btn-primary">Actualizar</button></form>

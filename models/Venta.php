@@ -71,5 +71,6 @@ class Venta {
     public function getDetalle($id) { $q=$this->conn->prepare('SELECT d.*,COALESCE(d.producto_nombre,p.nombre) AS producto FROM detalle_venta d LEFT JOIN productos p ON d.producto_id=p.id WHERE d.venta_id=?');$q->execute([$id]);return $q->fetchAll(PDO::FETCH_ASSOC); }
     public function contar() {return $this->conn->query('SELECT COUNT(*) FROM ventas')->fetchColumn();}
     public function totalVendido() {return $this->conn->query('SELECT COALESCE(SUM(total),0) FROM ventas')->fetchColumn();}
+    public function totalVendidoHoy() {return $this->conn->query('SELECT COALESCE(SUM(total),0) FROM ventas WHERE fecha>=CURDATE() AND fecha<DATE_ADD(CURDATE(),INTERVAL 1 DAY)')->fetchColumn();}
     public function ventasHoy() {return $this->conn->query('SELECT COUNT(*) FROM ventas WHERE DATE(fecha)=CURDATE()')->fetchColumn();}
 }

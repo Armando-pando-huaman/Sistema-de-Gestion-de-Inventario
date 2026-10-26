@@ -18,17 +18,17 @@ html body.fv-app {
 html[data-fv-mode="light"] { color-scheme:light; }
 html[data-fv-mode="dark"] {
  color-scheme:dark;
- /* Menta nocturna por defecto. Cada paleta define toda su escala. */
- --night-bg:#0c1b17;
- --night-surface:#142a23;
- --night-raised:#1e3a30;
- --night-border:#35594a;
- --night-text:#e1f1e9;
- --night-muted:#afcbbd;
- --night-primary:#247c65;
- --night-primary-2:#72c9a8;
- --night-dark:#155443;
- --night-rgb:36,124,101;
+ /* Base grafito neutra con acentos suaves para reducir la fatiga visual. */
+ --night-bg:#0f1720;
+ --night-surface:#18232e;
+ --night-raised:#22313e;
+ --night-border:#344655;
+ --night-text:#edf3f5;
+ --night-muted:#a6b5be;
+ --night-primary:#43a98b;
+ --night-primary-2:#7dd4b7;
+ --night-dark:#287a65;
+ --night-rgb:67,169,139;
  --care-primary:var(--night-primary);
  --care-primary-2:var(--night-primary-2);
  --care-dark:var(--night-dark);
@@ -37,49 +37,33 @@ html[data-fv-mode="dark"] {
  --care-ink:var(--night-text);
  --care-border:var(--night-border);
  --care-soft:var(--night-raised);
- --care-shadow:0 4px 18px #0002;
+ --care-shadow:0 10px 28px rgba(0,0,0,.2);
  --bs-body-bg:var(--night-bg);
  --bs-body-color:var(--night-text);
  --bs-secondary-color:var(--night-muted);
  --bs-border-color:var(--night-border);
 }
 html[data-fv-mode="dark"][data-fv-palette="blue"] {
- --night-bg:#0e1928;
- --night-surface:#17283c;
- --night-raised:#213a54;
- --night-border:#395b7a;
- --night-text:#e0edf9;
- --night-muted:#adc4dc;
- --night-primary:#356ca5;
- --night-primary-2:#83b9e8;
- --night-dark:#244b77;
- --night-rgb:53,108,165;
+ --night-primary:#5599dc;
+ --night-primary-2:#8bc4f4;
+ --night-dark:#326fae;
+ --night-rgb:85,153,220;
 }
 html[data-fv-mode="dark"][data-fv-palette="lavender"] {
- --night-bg:#1b1428;
- --night-surface:#2a203b;
- --night-raised:#3a2e50;
- --night-border:#5d4c77;
- --night-text:#eee5fa;
- --night-muted:#c5b5da;
- --night-primary:#7861aa;
- --night-primary-2:#bfa5e7;
- --night-dark:#514074;
- --night-rgb:120,97,170;
+ --night-primary:#9a83dd;
+ --night-primary-2:#c8b8f3;
+ --night-dark:#6e58ad;
+ --night-rgb:154,131,221;
 }
 html[data-fv-mode="dark"][data-fv-palette="coral"] {
- --night-bg:#251715;
- --night-surface:#382421;
- --night-raised:#4c322d;
- --night-border:#785049;
- --night-text:#f8e8e1;
- --night-muted:#d8b8ad;
- --night-primary:#a85449;
- --night-primary-2:#eba697;
- --night-dark:#763a32;
- --night-rgb:168,84,73;
+ --night-primary:#df7c70;
+ --night-primary-2:#f2ad9e;
+ --night-dark:#ae554c;
+ --night-rgb:223,124,112;
 }
 html[data-fv-mode="dark"] body.fv-app { background:var(--night-bg) !important; color:var(--night-text) !important; --fv-ink:var(--night-text); --fv-accent-soft:var(--care-soft) !important; }
+html[data-fv-mode="dark"] body.fv-app .fv-sidebar { background:linear-gradient(180deg,#18242f 0%,#131d26 100%) !important; }
+html[data-fv-mode="dark"] body.fv-app .fv-topbar { background:rgba(24,35,46,.96) !important; backdrop-filter:blur(12px); }
 html[data-fv-mode="dark"] .fv-products { --fv-ink:var(--night-text); --fv-muted:var(--night-muted); --fv-border:var(--night-border); }
 html[data-fv-mode="dark"] body.fv-app :is(.fv-sidebar,.fv-topbar,.fv-top-popover,.fv-top-control,.fv-scan-dialog),
 html[data-fv-mode="dark"] body.fv-app main :is(.card,.fv-panel,.fv-care-panel,.fv-care-stat,.fv-pos-card,.op-panel,.fv-editor-card) { background:var(--night-surface) !important; border-color:var(--night-border) !important; color:var(--night-text) !important; }
@@ -110,6 +94,7 @@ html[data-fv-mode="dark"] body.fv-app .fv-scan-dialog>p,
 html[data-fv-mode="dark"] body.fv-app footer { color:var(--night-muted) !important; }
 html[data-fv-mode="dark"] body.fv-app main .fv-product-list td[data-label]::before { color:var(--night-muted); }
 html[data-fv-mode="dark"] body.fv-app main .bg-light { background:var(--night-raised) !important; color:var(--night-text) !important; }
+html[data-fv-mode="dark"] body.fv-app main :is(.card,.fv-panel,.fv-care-panel,.fv-care-stat,.fv-pos-card,.op-panel,.fv-editor-card) { box-shadow:0 12px 32px rgba(0,0,0,.16) !important; }
 /* Mantener fondos claros al imprimir documentos. */
 @media print {
  html[data-fv-mode="dark"], html[data-fv-mode="dark"][data-fv-palette] { color-scheme:light; --night-bg:#fff; --night-surface:#fff; --night-raised:#f3f3f3; --night-border:#ccc; --night-text:#111; --night-muted:#444; --care-ink:#111; --care-soft:#f3f3f3; }

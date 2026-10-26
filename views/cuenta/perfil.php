@@ -1,5 +1,5 @@
 <?php require '../views/layouts/header.php'; ?>
-<link rel="stylesheet" href="css/fv-cuenta.css?v=1">
+<link rel="stylesheet" href="css/fv-cuenta.css">
 <section class="card fv-account-card"><div class="card-body p-4">
 <h1 class="h3">Mi perfil</h1>
 <?php require __DIR__.'/avisos.php'; ?>
@@ -12,5 +12,5 @@
 <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="form-control" data-image-preview="preview-foto">
 <p class="form-text">Hasta 5 MB. Se reduce a 256 px y se guarda como WebP optimizado.</p>
 <button class="btn btn-primary" type="submit">Guardar perfil</button>
-</form></div></section><script src="js/fv-cuenta.js?v=1"></script>
+</form></div></section><script src="js/fv-cuenta.js"></script>
 <?php require '../views/layouts/footer.php'; ?>

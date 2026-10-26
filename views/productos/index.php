@@ -1,5 +1,5 @@
 <?php require_once '../views/layouts/header.php'; ?>
-<link rel="stylesheet" href="css/fv-productos.css?v=9"><link rel="stylesheet" href="css/fv-operaciones.css?v=2">
+<link rel="stylesheet" href="css/fv-productos.css"><link rel="stylesheet" href="css/fv-operaciones.css">
 <div class="fv-products fv-product-catalog">
 <section class="fv-page-head">
     <div>

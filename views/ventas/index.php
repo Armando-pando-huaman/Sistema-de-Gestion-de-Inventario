@@ -1,7 +1,7 @@
 <?php 
 require_once '../views/layouts/header.php'; ?>
 
-<link rel="stylesheet" href="css/fv-ventas.css?v=20261017-5">
+<link rel="stylesheet" href="css/fv-ventas.css">
 <div class="fv-pos">
  <header class="fv-pos-head"><div class="fv-pos-brand"><small><?= $fvEsc($fvNombreBotica) ?> · Caja</small><h2><i class="bi bi-cart-check"></i> Punto de venta</h2><p>Escanea, selecciona la presentación y cobra con control de stock.</p></div><nav class="fv-pos-actions" aria-label="Acciones del punto de venta"><a class="btn btn-outline-primary" href="index.php?c=Venta&a=historial" title="Historial de ventas" aria-label="Historial de ventas"><i class="bi bi-clock-history" aria-hidden="true"></i><span class="fv-action-label"> Historial</span></a><a class="btn btn-outline-success" href="index.php?c=Producto&a=index" title="Configurar productos" aria-label="Configurar productos"><i class="bi bi-capsule" aria-hidden="true"></i><span class="fv-action-label"> Configurar productos</span></a></nav></header>
  <?php foreach (['error'=>'danger','success'=>'success'] as $key=>$style): if (!empty($_SESSION[$key])): ?><div class="alert alert-<?= $style ?>"><?= htmlspecialchars($_SESSION[$key],ENT_QUOTES,'UTF-8') ?></div><?php unset($_SESSION[$key]); endif; endforeach; ?>
@@ -27,6 +27,6 @@ require_once '../views/layouts/header.php'; ?>
  </div>
 </div>
 <div class="fv-scan-modal" id="fv-scan-modal" hidden role="dialog" aria-modal="true" aria-labelledby="fv-scan-title"><div class="fv-scan-dialog"><div class="fv-scan-heading"><h3 id="fv-scan-title">Escanear producto</h3><button type="button" data-fv-scan-close aria-label="Cerrar">×</button></div><p>Apunta la cámara al QR o código de barras.</p><video id="fv-scan-video" autoplay playsinline muted></video><div id="fv-scan-fallback" hidden></div><p id="fv-scan-status" role="status" aria-live="polite"></p><button type="button" class="btn btn-outline-secondary" data-fv-scan-close>Cerrar</button></div></div>
-<script src="js/fv-ventas.js?v=20261020-3"></script>
+<script src="js/fv-ventas.js"></script>
 <script src="js/fv-product-scan.js"></script>
 <?php require_once '../views/layouts/footer.php'; ?>

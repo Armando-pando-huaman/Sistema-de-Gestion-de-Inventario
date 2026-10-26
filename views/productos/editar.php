@@ -6,7 +6,7 @@ foreach (['codigo_barras','nombre','descripcion','precio_venta','stock_minimo','
 }
 if ($_SERVER['REQUEST_METHOD']==='POST') $producto['es_fraccionable']=($_POST['es_fraccionable']??'')==='1'?1:0;
 ?>
-<link rel="stylesheet" href="css/fv-productos.css?v=9">
+<link rel="stylesheet" href="css/fv-productos.css">
 <div class="fv-products fv-product-editor">
 <?php if (!empty($error)): ?><div class="alert alert-danger"><?= htmlspecialchars($error,ENT_QUOTES,'UTF-8') ?></div><?php endif; ?>
 <section class="fv-page-head">
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') $producto['es_fraccionable']=($_POST['e
  </div>
 </div>
 <div class="col-12"><small id="fv-stock-hint" class="text-muted" hidden></small></div>
-<script src="js/fv-fraccion-productos.js?v=6" defer></script>
+<script src="js/fv-fraccion-productos.js" defer></script>
 
 <div class="col-12">
                 <div class="fv-form-actions">

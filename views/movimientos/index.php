@@ -1,5 +1,5 @@
 <?php require_once '../views/layouts/header.php'; $esc = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); ?>
-<link rel="stylesheet" href="css/fv-operaciones.css?v=1">
+<link rel="stylesheet" href="css/fv-operaciones.css">
 <div class="fv-operations">
 <header class="op-heading"><div><h2>Movimientos de inventario</h2><p>Entradas, ventas automáticas y otras salidas de stock.</p></div><a class="btn btn-primary" href="index.php?c=Venta&a=index">Registrar venta</a></header>
 <?php if ($error): ?><div class="alert alert-danger" role="alert"><?= $esc($error) ?></div><?php endif; ?>

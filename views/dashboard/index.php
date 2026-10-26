@@ -10,6 +10,8 @@ $totalMovimientosVista = (int) ($totalMovimientos ?? 0);
 $stockBajoVista = is_array($productosBajos ?? null) ? $productosBajos : [];
 $movimientosVista = is_array($ultimosMovimientos ?? null) ? $ultimosMovimientos : [];
 $porVencerVista = (int) ($porVencer ?? 0);
+$totalVendidoHoyVista = (float) ($totalVendidoHoy ?? 0);
+$ventasHoyVista = (int) ($ventasHoy ?? 0);
 
 $nombreOriginal = (string) ($_SESSION['user_nombre'] ?? 'Usuario');
 $nombreVista = htmlspecialchars($nombreOriginal, ENT_QUOTES, 'UTF-8');
@@ -43,29 +45,33 @@ foreach ($movimientosVista as $movimiento) {
 }
 ?>
 
-<link rel="stylesheet" href="css/fv-dashboard.css?v=6">
+<link rel="stylesheet" href="css/fv-dashboard.css">
 <div class="fv-dashboard fv-dashboard-care">
     <!-- BIENVENIDA -->
     <section class="fv-care-greeting">
-        <div>
-            <span class="fv-care-date">
-                <i class="bi bi-calendar3"></i>
-                <?= $fechaTexto ?>
-            </span>
+        <span class="fv-care-date">
+            <i class="bi bi-calendar3"></i>
+            <?= $fechaTexto ?>
+        </span>
 
-            <h1><?= $saludo ?>, <?= $nombreCorto ?>
-                <i class="bi bi-stars"></i>
-            </h1>
+        <div class="fv-care-welcome">
+            <div class="fv-care-welcome-inner">
+                <div class="fv-care-welcome-copy">
+                    <h1><?= $saludo ?>, <?= $nombreCorto ?>
+                        <i class="bi bi-stars"></i>
+                    </h1>
 
-            <p>Aquí tienes un resumen de lo que ocurre en tu botica hoy.</p>
-        </div>
+                    <p>Aquí tienes un resumen de lo que ocurre en tu botica hoy.</p>
+                </div>
 
-        <div class="fv-care-greeting-icon">
-            <i class="bi bi-heart-pulse"></i>
+                <div class="fv-care-greeting-icon" aria-hidden="true">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- CUATRO INDICADORES -->
+    <!-- INDICADORES -->
     <section class="fv-care-stats" aria-label="Indicadores de la botica">
 
         <article class="fv-care-stat fv-care-stat--products">
@@ -144,34 +150,69 @@ foreach ($movimientosVista as $movimiento) {
             </div>
         </article>
 
+        <article class="fv-care-stat fv-care-stat--sales">
+            <div class="fv-care-stat-top">
+                <span class="fv-care-stat-icon"><i class="bi bi-cash-stack"></i></span>
+                <span class="fv-care-stat-tag">Hoy</span>
+            </div>
+            <div class="fv-care-stat-content">
+                <span class="fv-care-stat-label">Ventas acumuladas</span>
+                <strong class="fv-care-stat-value">S/ <?= number_format($totalVendidoHoyVista, 2, ',', '.') ?></strong>
+                <small><?= number_format($ventasHoyVista, 0, ',', '.') ?> <?= $ventasHoyVista === 1 ? 'venta realizada' : 'ventas realizadas' ?></small>
+            </div>
+            <div class="fv-care-stat-decoration"><i class="bi bi-graph-up-arrow"></i></div>
+        </article>
+
     </section>
 
     <!-- RESUMEN PRINCIPAL Y ACTIVIDAD -->
     <section class="fv-care-main-grid">
         <article class="fv-care-panel fv-care-chart-panel">
-          <header class="fv-care-panel-header"><div><h3>Movimientos de inventario</h3><p>Actividad registrada durante los últimos 7 días</p></div><span class="fv-care-chart-tag">Esta semana</span></header>
+          <header class="fv-care-panel-header"><div><h3>Movimientos de inventario</h3><p>Actividad por día y hora durante las últimas 24 horas</p></div><span class="fv-care-chart-tag">Últimas 24 h</span></header>
           <?php
-            $fvWeekCounts=array_fill(0,7,0);
-            $fvDates=[];
-            $fvDayDetails=[];
-            foreach (($movimientosPorDia ?? []) as $fvRow) { $fvDayDetails[$fvRow['dia']]=$fvRow; }
-            for($fvI=0;$fvI<7;$fvI++){$fvDates[$fvI]=date('Y-m-d',strtotime('-'.(6-$fvI).' days'));}
-            foreach($fvDates as $fvI=>$fvDay){$fvWeekCounts[$fvI]=(int)($fvDayDetails[$fvDay]['total']??0);}
-            $fvMax=max(1,max($fvWeekCounts));
+            $fvHourDetails=[];
+            foreach (($movimientosPorHora ?? []) as $fvRow) { $fvHourDetails[$fvRow['momento']]=$fvRow; }
+            $fvChartHours=[];$fvHourCounts=[];$fvEntries=[];$fvExits=[];
+            $fvChartStart=$ahoraPeru->setTime((int)$ahoraPeru->format('H'),0)->modify('-23 hours');
+            for($fvI=0;$fvI<24;$fvI++){
+                $fvMoment=$fvChartStart->modify('+'.$fvI.' hours');
+                $fvKey=$fvMoment->format('Y-m-d H:00:00');
+                $fvChartHours[]=$fvMoment;
+                $fvHourCounts[]=(int)($fvHourDetails[$fvKey]['total']??0);
+                $fvEntries[]=(int)($fvHourDetails[$fvKey]['entradas']??0);
+                $fvExits[]=(int)($fvHourDetails[$fvKey]['salidas']??0);
+            }
+            $fvMax=max(1,max($fvHourCounts));
+            $fvPoints=[];$fvAreaPoints=['10,190'];
+            foreach($fvHourCounts as $fvI=>$fvCount){
+                $fvX=10+($fvI*(700/23));$fvY=190-(($fvCount/$fvMax)*160);
+                $fvPoint=round($fvX,2).','.round($fvY,2);
+                $fvPoints[]=$fvPoint;$fvAreaPoints[]=$fvPoint;
+            }
+            $fvAreaPoints[]='710,190';
           ?>
-          <div class="fv-care-chart-body"><div class="fv-care-chart-summary"><strong><?= array_sum($fvWeekCounts) ?></strong><span>movimientos en los últimos 7 días. Pasa el cursor o toca una barra para ver el detalle.</span></div><div class="fv-care-chart-bars">
-          <?php foreach($fvWeekCounts as $fvI=>$fvCount):
-              $fvDateLabel=date('d/m/Y',strtotime($fvDates[$fvI]));
-              $fvEntries=(int)($fvDayDetails[$fvDates[$fvI]]['entradas']??0);
-              $fvExits=(int)($fvDayDetails[$fvDates[$fvI]]['salidas']??0);
-          ?>
-            <button type="button" class="fv-care-chart-column" aria-label="<?= $fvDateLabel ?>: <?= $fvCount ?> movimientos, <?= $fvEntries ?> entradas y <?= $fvExits ?> salidas" aria-describedby="fv-day-<?= $fvI ?>">
-                <span class="fv-care-chart-bar" style="height:<?= max(4,round(100*$fvCount/$fvMax)) ?>%" aria-hidden="true"></span>
-                <small><?= ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][(int)date('w',strtotime($fvDates[$fvI]))] ?></small>
-                <span class="fv-chart-tooltip" id="fv-day-<?= $fvI ?>" role="tooltip"><strong><?= $fvDateLabel ?></strong><span><?= $fvCount ?> movimientos</span><span>Entradas: <?= $fvEntries ?></span><span>Salidas: <?= $fvExits ?></span></span>
-            </button>
-          <?php endforeach; ?>
-          </div></div>
+          <div class="fv-care-chart-body">
+            <div class="fv-care-chart-summary"><strong><?= array_sum($fvHourCounts) ?></strong><span>movimientos en las últimas 24 horas. Selecciona un punto para ver día, hora y detalle.</span></div>
+            <div class="fv-care-line-chart">
+                <svg viewBox="0 0 720 210" role="img" aria-label="Línea de movimientos de inventario por hora" preserveAspectRatio="none">
+                    <defs><linearGradient id="fv-chart-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--care-primary)" stop-opacity=".28"/><stop offset="1" stop-color="var(--care-primary)" stop-opacity="0"/></linearGradient></defs>
+                    <line x1="10" y1="190" x2="710" y2="190" class="fv-chart-axis"/>
+                    <line x1="10" y1="110" x2="710" y2="110" class="fv-chart-grid"/>
+                    <line x1="10" y1="30" x2="710" y2="30" class="fv-chart-grid"/>
+                    <polygon points="<?= implode(' ', $fvAreaPoints) ?>" class="fv-chart-area"/>
+                    <polyline points="<?= implode(' ', $fvPoints) ?>" class="fv-chart-line"/>
+                </svg>
+                <?php foreach($fvHourCounts as $fvI=>$fvCount):
+                    $fvLeft=($fvI/23)*100;$fvBottom=9.5+(($fvCount/$fvMax)*76.2);
+                    $fvDateLabel=$fvChartHours[$fvI]->format('d/m/Y');$fvTimeLabel=$fvChartHours[$fvI]->format('H:00');
+                ?>
+                <button type="button" class="fv-line-point" style="left:<?= round($fvLeft,2) ?>%;bottom:<?= round($fvBottom,2) ?>%" aria-label="<?= $fvDateLabel ?> a las <?= $fvTimeLabel ?>: <?= $fvCount ?> movimientos">
+                    <span class="fv-chart-tooltip" role="tooltip"><strong><?= $fvDateLabel ?> · <?= $fvTimeLabel ?></strong><span><?= $fvCount ?> movimientos</span><span>Entradas: <?= $fvEntries[$fvI] ?></span><span>Salidas: <?= $fvExits[$fvI] ?></span></span>
+                </button>
+                <?php endforeach; ?>
+            </div>
+            <div class="fv-line-labels"><?php foreach([0,5,11,17,23] as $fvI): ?><span><?= $fvChartHours[$fvI]->format('d/m H:i') ?></span><?php endforeach; ?></div>
+          </div>
         </article>
         <!-- ACTIVIDAD RECIENTE -->
         <article class="fv-care-panel fv-care-activity">
@@ -323,41 +364,37 @@ foreach ($movimientosVista as $movimiento) {
         <div class="fv-care-shortcuts-grid">
             <?php
             $accesosVista = [
-                ['sale', 'Venta', 'index', 'bi-cart-plus', 'cllunfud', 'Nueva venta', 'Atiende a tus clientes'],
+                ['sale', 'Venta', 'index', 'bi-cart-plus', 'sale.json', 'Nueva venta', 'Atiende a tus clientes'],
             ];
             if ($esAdminVista) {
-                $accesosVista[] = ['product', 'Producto', 'crear', 'bi-plus-circle', 'wloilxuq', 'Nuevo producto', 'Ampl&#237;a tu cat&#225;logo'];
+                $accesosVista[] = ['product', 'Producto', 'crear', 'bi-plus-circle', 'product.json', 'Nuevo producto', 'Ampl&#237;a tu cat&#225;logo'];
             }
-            $accesosVista[] = ['movement', 'Movimiento', 'index', 'bi-arrow-left-right', 'gqdnbnwt', 'Movimientos', 'Controla entradas y salidas'];
-            $accesosVista[] = ['cash', 'Gestion', 'caja', 'bi-wallet2', 'qhviklyi', 'Mi caja', 'Revisa tu dinero del d&#237;a'];
+            $accesosVista[] = ['movement', 'Movimiento', 'index', 'bi-arrow-left-right', 'movement.json', 'Movimientos', 'Controla entradas y salidas'];
+            $accesosVista[] = ['cash', 'Gestion', 'caja', 'bi-wallet2', 'cash.json', 'Mi caja', 'Revisa tu dinero del d&#237;a'];
             foreach ($accesosVista as [$estilo, $controlador, $accion, $icono, $animacion, $titulo, $detalle]):
             ?>
                 <a href="index.php?c=<?= $controlador ?>&amp;a=<?= $accion ?>"
                    class="fv-care-shortcut fv-care-shortcut--<?= $estilo ?>" id="fv-shortcut-<?= $estilo ?>">
                     <span class="fv-shortcut-icon" aria-hidden="true">
-                        <i class="bi <?= $icono ?>"></i>
-                        <lord-icon src="https://cdn.lordicon.com/<?= $animacion ?>.json"
-                                   trigger="loop" delay="2400" target="#fv-shortcut-<?= $estilo ?>"
-                                   colors="primary:#ffffff,secondary:#ffffff"></lord-icon>
+                        <i class="bi <?= $icono ?> fv-lord-fallback"></i>
+                        <lord-icon
+                            src="icons/lordicon/<?= rawurlencode($animacion) ?>"
+                            trigger="hover"
+                            target="#fv-shortcut-<?= $estilo ?>"
+                            colors="primary:#ffffff,secondary:#ffffff"
+                            style="width:42px;height:42px">
+                        </lord-icon>
                     </span>
                     <span class="fv-shortcut-copy"><strong><?= $titulo ?></strong><small><?= $detalle ?></small></span>
-                    <i class="bi bi-arrow-up-right fv-shortcut-arrow" aria-hidden="true"></i>
                 </a>
             <?php endforeach; ?>
         </div>
-        <div class="fv-shortcuts-footer"><i class="bi bi-shield-check" aria-hidden="true"></i> Tu botica, siempre al d&#237;a</div>
+        <div class="fv-shortcuts-footer">
+            <span><i class="bi bi-shield-check" aria-hidden="true"></i> Tu botica, siempre al d&#237;a</span>
+            <a href="https://lordicon.com/" target="_blank" rel="noopener noreferrer">Iconos animados por Lordicon</a>
+        </div>
     </section>
 
 </div>
 
-<script>
-document.querySelectorAll('.fv-shortcut-icon lord-icon').forEach(function (icon) {
-    icon.addEventListener('ready', function () {
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            icon.parentElement.classList.add('is-ready');
-        }
-    });
-});
-</script>
-<script src="https://cdn.lordicon.com/lordicon.js" async></script>
 <?php require_once '../views/layouts/footer.php'; ?>
