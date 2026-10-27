@@ -12,6 +12,12 @@
     </div>
 </div>
 
+<?php require '../views/reportes/descarga.php'; ?>
+<form method="get" class="d-flex align-items-end flex-wrap gap-2 mb-4 d-print-none">
+ <input type="hidden" name="c" value="Reporte"><input type="hidden" name="a" value="productos">
+ <input type="hidden" name="orden_lotes" value="<?= htmlspecialchars($ordenLotes,ENT_QUOTES,'UTF-8') ?>">
+ <div><label for="productos-days" class="form-label">Período de ventas</label><select id="productos-days" name="dias" class="form-select"><?php foreach ([7,15,30,60,90,365] as $n): ?><option value="<?= $n ?>" <?= $dias === $n ? 'selected' : '' ?>>Últimos <?= $n ?> días</option><?php endforeach; ?></select></div><button class="btn btn-outline-primary">Actualizar</button>
+</form>
 <!-- Top 20 productos más vendidos -->
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-success text-white">

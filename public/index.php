@@ -6,7 +6,8 @@ require_once __DIR__.'/../config/Seguridad.php';
 $routes=[
  'Auth'=>['login','logout','registro'], 'Cuenta'=>['perfil','negocio'], 'Dashboard'=>['index'], 'Producto'=>['index','crear','editar','eliminar','consultarCodigo'],
  'Categoria'=>['index','guardar','eliminar'], 'Movimiento'=>['index'], 'Venta'=>['index','ver','historial','devolver','anular'],
- 'Usuario'=>['index','crear','editar','eliminar'], 'Reporte'=>['index','ventas','productos','inventario'],
+ 'Usuario'=>['index','crear','editar','eliminar'], 'Reporte'=>['index','ventas','productos','inventario','descargar'],
+ 'Documentacion'=>['index'],
  'Gestion'=>['index','compras','lotes','auditoria','caja','operar','operarCaja','finanzas']
 ];
 $c=is_string($_GET['c']??null)?ucfirst($_GET['c']):'Auth';$action=is_string($_GET['a']??null)?$_GET['a']:($c==='Auth'?'login':'index');

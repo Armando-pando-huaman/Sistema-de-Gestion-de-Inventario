@@ -3,6 +3,64 @@ require_once '../models/Reporte.php';
 
 class ReporteController {
 
+    public function descargar(): void {
+        $this->checkAuth();
+        require_once __DIR__.'/../config/ExportarCsv.php';
+        $model = new Reporte();
+        $dias = filter_var($_GET['dias'] ?? 30, FILTER_VALIDATE_INT);
+        if (!in_array($dias, [7,15,30,60,90,365], true)) $dias = 30;
+        $orden = ($_GET['orden_lotes'] ?? '') === 'recientes' ? 'recientes' : 'vencimiento';
+        $vista = is_string($_GET['vista'] ?? null) ? $_GET['vista'] : 'index';
+        $tipo = is_string($_GET['tipo'] ?? null) ? $_GET['tipo'] : '';
+        $esActual = false;
+        switch ($tipo) {
+            case 'finanzas':
+                $f = $model->finanzas($dias);
+                $etiquetas = ['bruto'=>'Ventas brutas','reembolsos'=>'Reembolsos','neto'=>'Ventas netas','costo'=>'Costo neto de ventas conocido','gastos'=>'Gastos','pendientes'=>'Detalles con costo pendiente','resultado'=>'Resultado (vacío si faltan costos)'];
+                $columnas = ['concepto'=>'Concepto','valor'=>'Valor (importes en PEN; pendientes en registros)'];
+                $filas = [];
+                foreach ($etiquetas as $clave=>$etiqueta) $filas[] = ['concepto'=>$etiqueta,'valor'=>$f[$clave]];
+                break;
+            case 'diario':
+                $columnas = ['dia'=>'Fecha','cantidad'=>'Ventas','total'=>'Ventas brutas PEN','anterior_dia'=>'Fecha período anterior','anterior'=>'Ventas brutas anteriores PEN'];
+                $filas = $model->progreso($dias)['serie']; break;
+            case 'movimientos':
+                $columnas = ['clase'=>'Clase de movimiento','registros'=>'Registros','unidades'=>'Unidades mínimas'];
+                $filas = $model->progreso($dias)['movimientos']; break;
+            case 'meses':
+                $columnas = ['mes'=>'Mes','cantidad'=>'Ventas','total'=>'Ventas brutas PEN'];
+                $filas = $model->ventasPorMes(); break;
+            case 'categorias':
+                $columnas = ['categoria'=>'Categoría','total_unidades'=>'Unidades mínimas netas','total_ingresos'=>'Ingresos netos PEN'];
+                $filas = $model->ventasPorCategoria($dias); break;
+            case 'vendedores':
+                $columnas = ['usuario'=>'Vendedor','rol'=>'Rol','num_ventas'=>'Ventas','total'=>'Ventas brutas PEN'];
+                $filas = $model->ventasPorUsuario($dias); break;
+            case 'horas':
+                $columnas = ['hora'=>'Hora','cantidad'=>'Ventas','total'=>'Ventas brutas PEN'];
+                $filas = $model->ventasPorHora($dias); break;
+            case 'distribucion':
+                $columnas = ['producto_id'=>'ID producto','nombre'=>'Producto','unidades'=>'Unidades mínimas netas','ingresos'=>'Ingresos netos PEN'];
+                $filas = $model->distribucionProductos($dias); break;
+            case 'top':
+                $columnas = ['id'=>'ID producto','nombre'=>'Producto','categoria'=>'Categoría','total_vendido'=>'Unidades mínimas netas','num_ventas'=>'Ventas','total_ingresos'=>'Ingresos netos PEN'];
+                $filas = $model->productosMasVendidos($vista === 'index' ? 5 : 20, $dias); break;
+            case 'bajos':
+                $columnas = ['id'=>'ID producto','nombre'=>'Producto','categoria'=>'Categoría','stock'=>'Stock actual','total_vendido'=>'Unidades mínimas netas históricas'];
+                $filas = $model->productosMenosVendidos($vista === 'inventario' ? 20 : 10);
+                $esActual = true; break;
+            case 'estado':
+                $columnas = ['total_productos'=>'Productos','total_unidades'=>'Unidades mínimas','valor_compra'=>'Valor de compra conocido PEN','unidades_sin_costo'=>'Unidades sin costo','valor_venta'=>'Valor de venta PEN','stock_bajo'=>'Productos con stock bajo','agotados'=>'Productos agotados'];
+                $filas = [$model->estadoInventario()]; $esActual = true; break;
+            case 'lotes':
+                $columnas = ['lote_id'=>'ID lote','nombre'=>'Producto','categoria'=>'Categoría','lote'=>'Lote','stock'=>'Unidades mínimas','fecha_ingreso'=>'Fecha de ingreso','fecha_compra'=>'Fecha de compra','fecha_vencimiento'=>'Vencimiento','dias_restantes'=>'Días restantes (negativo: vencido)','por_verificar'=>'Datos por verificar (1: sí; 0: no)'];
+                $filas = $model->lotesInventario($orden); $esActual = true; break;
+            default: http_response_code(400); echo 'Selecciona un reporte válido.'; return;
+        }
+        $periodo = $esActual ? 'actual' : ($tipo === 'meses' ? 'ultimos-12-meses' : $dias.'-dias');
+        ExportarCsv::descargar('reporte-'.$tipo.'-'.$periodo.'-'.date('Y-m-d-His'), $columnas, $filas);
+    }
+
     private function checkAuth() {
         if (!isset($_SESSION['user_id'])) {
             header("Location: index.php?c=Auth&a=login");

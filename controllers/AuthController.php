@@ -19,7 +19,16 @@ class AuthController {
                 $error = "Por favor completa todos los campos.";
             } else {
                 $usuarioModel = new Usuario();
-                $user = $usuarioModel->login($email, $password);
+                try {
+                    $user = $usuarioModel->login($email, $password);
+                } catch (AccesoBloqueado $e) {
+                    http_response_code(429);
+                    header('Retry-After: '.$e->espera);
+                    $error = $e->getMessage();
+                    $registroDisponible=(new Botica())->permiteRegistro();
+                    require '../views/auth/login.php';
+                    return;
+                }
 
                 if ($user) {
                     session_regenerate_id(true);

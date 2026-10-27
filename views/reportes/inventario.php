@@ -12,6 +12,7 @@
     </div>
 </div>
 
+<?php require '../views/reportes/descarga.php'; ?>
 <!-- KPIs de inventario -->
 <div class="row g-3 mb-4">
     <div class="col-md-3">

@@ -10,6 +10,7 @@ $fvRegistroHabilitado=!empty($fvBotica['registro_habilitado']);
 <script>try{document.documentElement.dataset.fvPalette=localStorage.getItem('fv-palette')||'mint';document.documentElement.dataset.fvLayout=localStorage.getItem('fv-layout')||'vertical'}catch(e){document.documentElement.dataset.fvPalette='mint';document.documentElement.dataset.fvLayout='vertical'}</script>
 <script>
 (() => {
+ document.documentElement.classList.add('fv-animated-icons');
  let mode = 'light';
  try { mode = localStorage.getItem('fv-mode') === 'dark' ? 'dark' : 'light'; } catch (_) {}
  document.documentElement.dataset.fvMode = mode;
@@ -31,6 +32,7 @@ $fvMenu = [
  ['Venta','historial','bi-clock-history','Historial'],
  ['Movimiento','index','bi-arrow-left-right','Movimientos'],
  ['Gestion','caja','bi-wallet2','Mi caja'],
+ ['Documentacion','index','bi-journal-text','Documentación'],
 ];
 if ($fvIsAdmin) { $fvMenu[]=['Gestion','lotes','bi-boxes','Lotes'];$fvMenu[]=['Gestion','auditoria','bi-journal-text','Auditoría']; $fvMenu[]=['Reporte','index','bi-bar-chart','Reportes'];$fvMenu[]=['Usuario','index','bi-people','Personal']; }
 ?>

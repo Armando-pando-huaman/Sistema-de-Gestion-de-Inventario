@@ -15,6 +15,7 @@
     </div>
 </div>
 
+<?php require '../views/reportes/descarga.php'; ?>
 <?php require '../views/reportes/progreso.php'; ?>
 <?php
  $distribucion=$data['distribucionProductos'];
