@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/Operacion.php';
+require_once __DIR__.'/operacion.php';
 class Stock {
     public static function producto(PDO $db, int $id): array {
         $s=$db->prepare('SELECT * FROM productos WHERE id=? FOR UPDATE');$s->execute([$id]);$p=$s->fetch();

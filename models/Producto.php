@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/Stock.php';
+require_once __DIR__.'/stock.php';
 class Producto {
  private PDO $conn;
  public function __construct(?PDO $db=null){$this->conn=$db??(new Database())->getConnection();}
@@ -28,7 +28,7 @@ class Producto {
   $stock=(int)$d['stock'];$d['stock']=0;$cols=array_keys($d);$s=$this->conn->prepare('INSERT INTO productos (`'.implode('`,`',$cols).'`) VALUES ('.implode(',',array_fill(0,count($d),'?')).')');$s->execute(array_values($d));$id=(int)$this->conn->lastInsertId();
   if($stock){$lote=Stock::entrada($this->conn,$id,$stock,$codigoLote??'ALTA-'.$id,$d['fecha_vencimiento'],(float)$d['precio_compra']/max(1,(int)$d['unidades_por_caja']));Stock::movimiento($this->conn,$id,'entrada',$stock,'Inventario inicial',(int)$_SESSION['user_id'],null,$lote);}
   if($inicial){
-   require_once __DIR__.'/Gestion.php';
+   require_once __DIR__.'/gestion.php';
    if(isset($inicial['nuevo_proveedor'])){
     $p=$inicial['nuevo_proveedor'];$this->conn->prepare('INSERT INTO proveedores(nombre,documento,telefono) VALUES(?,?,?)')->execute([Operacion::texto($p['nombre']??''),$p['documento']??'',$p['telefono']??'']);
     $inicial['proveedor_id']=(int)$this->conn->lastInsertId();Operacion::audit($this->conn,'crear','proveedores',$inicial['proveedor_id']);

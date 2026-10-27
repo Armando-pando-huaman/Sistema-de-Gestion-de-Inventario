@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/Operacion.php';
+require_once __DIR__.'/operacion.php';
 class Botica {
     private PDO $db;
     public function __construct(?PDO $db = null) { $this->db = $db ?? (new Database())->getConnection(); }

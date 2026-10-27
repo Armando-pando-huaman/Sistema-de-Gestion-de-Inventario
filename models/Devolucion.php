@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/Stock.php';
-require_once __DIR__.'/Caja.php';
+require_once __DIR__.'/stock.php';
+require_once __DIR__.'/caja.php';
 class Devolucion {
     public static function registrar(PDO $db,int $venta,int $usuario,array $cantidades,string $motivo,string $metodo,bool $anular=false,bool $reintegrar=true): int {
         return Operacion::transaccion($db,function()use($db,$venta,$usuario,$cantidades,$motivo,$metodo,$anular,$reintegrar){

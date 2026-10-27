@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/../models/Gestion.php';
+require_once __DIR__.'/../models/gestion.php';
 class GestionController {
     public function index(){ $this->compras(); }
     public function compras(){ $this->vista('compras'); }

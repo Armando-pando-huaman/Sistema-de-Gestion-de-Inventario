@@ -1,11 +1,11 @@
 <?php
-require_once '../models/Reporte.php';
+require_once '../models/reporte.php';
 
 class ReporteController {
 
     public function descargar(): void {
         $this->checkAuth();
-        require_once __DIR__.'/../config/ExportarCsv.php';
+        require_once __DIR__.'/../config/exportarcsv.php';
         $model = new Reporte();
         $dias = filter_var($_GET['dias'] ?? 30, FILTER_VALIDATE_INT);
         if (!in_array($dias, [7,15,30,60,90,365], true)) $dias = 30;

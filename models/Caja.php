@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/Operacion.php';
+require_once __DIR__.'/operacion.php';
 class Caja {
     public static function metodos(): array { return ['efectivo'=>'Efectivo','tarjeta'=>'Tarjeta','yape'=>'Yape','plin'=>'Plin','transferencia'=>'Transferencia']; }
     public static function abierta(PDO $db,int $usuario): array {

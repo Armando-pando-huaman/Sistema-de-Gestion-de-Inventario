@@ -1,5 +1,5 @@
 <?php
-require_once '../models/Categoria.php';
+require_once '../models/categoria.php';
 class CategoriaController {
     private function checkAuth() {
         if (!isset($_SESSION['user_id'])) {

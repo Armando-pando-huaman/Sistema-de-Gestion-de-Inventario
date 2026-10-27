@@ -1,5 +1,5 @@
 RewriteEngine On
-RewriteBase /Sistema-de-Gestion-de-Inventario/public/
+DirectoryIndex index.php
 
 # Si el archivo o directorio existe, no hacer nada
 RewriteCond %{REQUEST_FILENAME} !-f

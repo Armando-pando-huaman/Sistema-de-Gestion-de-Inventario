@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__.'/Stock.php';
-require_once __DIR__.'/Caja.php';
+require_once __DIR__.'/stock.php';
+require_once __DIR__.'/caja.php';
 class Venta {
     private $conn;
     public function __construct(?PDO $db=null) { $this->conn = $db??(new Database())->getConnection(); }

@@ -1,7 +1,7 @@
 <?php
-require_once '../models/Botica.php';
-require_once '../models/Usuario.php';
-require_once '../config/Imagen.php';
+require_once '../models/botica.php';
+require_once __DIR__.'/../models/usuario.php';
+require_once '../config/imagen.php';
 class CuentaController {
     public function perfil(): void {
         $modelo=new Botica(); $error=null;

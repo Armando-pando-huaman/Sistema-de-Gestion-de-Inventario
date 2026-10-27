@@ -1,7 +1,7 @@
 <?php
-require_once '../models/Producto.php';
-require_once '../models/Movimiento.php';
-require_once '../models/Venta.php';
+require_once '../models/producto.php';
+require_once '../models/movimiento.php';
+require_once '../models/venta.php';
 
 class DashboardController {
     public function index() {

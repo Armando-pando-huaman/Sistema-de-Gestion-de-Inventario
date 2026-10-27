@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__.'/Operacion.php';
-require_once __DIR__.'/Botica.php';
-require_once __DIR__.'/LimiteAcceso.php';
+require_once __DIR__.'/operacion.php';
+require_once __DIR__.'/botica.php';
+require_once __DIR__.'/limiteacceso.php';
 class Usuario {
  private PDO $conn;
  public function __construct(){$this->conn=(new Database())->getConnection();}

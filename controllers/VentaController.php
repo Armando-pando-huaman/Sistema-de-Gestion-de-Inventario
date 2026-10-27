@@ -1,6 +1,6 @@
 <?php
-require_once '../models/Venta.php';
-require_once '../models/Producto.php';
+require_once '../models/venta.php';
+require_once '../models/producto.php';
 class VentaController {
     private function checkAuth() { if (!isset($_SESSION['user_id'])) {header('Location: index.php?c=Auth&a=login');exit;} }
     public function index() {
@@ -35,7 +35,7 @@ class VentaController {
     public function devolver() { $this->reembolso(false); }
     public function anular() { $this->reembolso(true); }
     private function reembolso(bool $anular): void {
-        require_once '../models/Devolucion.php';
+        require_once '../models/devolucion.php';
         $id=Operacion::entero($_POST['id']??null);
         try { Devolucion::registrar((new Database())->getConnection(),$id,(int)$_SESSION['user_id'],$_POST['cantidades']??[],(string)($_POST['motivo']??''),(string)($_POST['metodo_pago']??'efectivo'),$anular,isset($_POST['reintegrar']));$_SESSION['success']='Reembolso registrado. El historial original se conserva.'; }
         catch(PDOException $e){error_log($e->getMessage());$_SESSION['error']='No se pudo registrar el reembolso.';}

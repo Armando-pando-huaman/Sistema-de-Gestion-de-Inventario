@@ -1,7 +1,10 @@
 RewriteEngine On
-RewriteRule ^(?:tests|\.git)(?:/|$) - [F,L]
-RewriteBase /Sistema-de-Gestion-de-Inventario/
+DirectoryIndex index.php
+RewriteRule \.(?:zip|sql|log)$ - [F,L,NC]
+RewriteRule ^(?:config|controllers|models|views|docs|tests|\.git)(?:/|$) - [F,L,NC]
 
 # Redirigir todo el tráfico a la carpeta public
-RewriteRule ^$ public/ [L]
-RewriteRule (.*) public/$1 [L]
+RewriteRule ^$ - [L]
+RewriteRule ^index\.php$ - [L]
+RewriteRule ^public(?:/|$) - [L]
+RewriteRule ^(.*)$ public/$1 [L]

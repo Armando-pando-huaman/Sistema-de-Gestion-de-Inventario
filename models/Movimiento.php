@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/Stock.php';
+require_once __DIR__.'/stock.php';
 class Movimiento {
     private $conn;
     private $table = "movimientos";

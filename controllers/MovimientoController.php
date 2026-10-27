@@ -1,6 +1,6 @@
 <?php
-require_once '../models/Movimiento.php';
-require_once '../models/Producto.php';
+require_once '../models/movimiento.php';
+require_once '../models/producto.php';
 class MovimientoController {
     public function index() {
         if (!isset($_SESSION['user_id'])) { header('Location: index.php?c=Auth&a=login'); exit; }

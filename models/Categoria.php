@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/Operacion.php';
+require_once __DIR__.'/operacion.php';
 class Categoria {
     private $conn;
     public function __construct() {

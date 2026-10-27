@@ -1,5 +1,5 @@
 <?php
-require_once '../models/Producto.php';
+require_once '../models/producto.php';
 class ProductoController {
     private function checkAuth() { if (!isset($_SESSION['user_id'])) { header('Location: index.php?c=Auth&a=login');exit; } }
     private function categorias() { return (new Database())->getConnection()->query('SELECT id,nombre FROM categorias ORDER BY nombre')->fetchAll(PDO::FETCH_ASSOC); }
